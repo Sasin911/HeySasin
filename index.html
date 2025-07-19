@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sanay | Legendary Web Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+* {margin:0; padding:0; box-sizing:border-box;}
+html, body {
+  height:100%; width:100%; scroll-behavior:smooth; font-family:'Poppins',sans-serif;
+  transition:background 1s ease;
+}
+body {
+  background:linear-gradient(180deg, #0f0f0f 0%, #1e1e1e 100%);
+  color:#fff; overflow-x:hidden;
+}
+header {
+  position:relative; height:100vh; display:flex; flex-direction:column;
+  justify-content:center; align-items:center; text-align:center;
+  overflow:hidden;
+}
+h1 {
+  font-size:3em; color:#fff; text-shadow:0 0 20px rgba(255,255,255,0.4);
+}
+h1 span {color:#00fff7;}
+.typing {
+  font-size:1.4em; margin-top:20px; color:#fff;
+  white-space:nowrap; border-right:3px solid #00fff7; overflow:hidden;
+}
+nav {
+  position:fixed; top:20px; left:50%; transform:translateX(-50%);
+  display:flex; gap:25px; background:rgba(255,255,255,0.05);
+  padding:8px 20px; border-radius:20px; backdrop-filter:blur(10px);
+  z-index:10;
+}
+nav a {
+  color:#fff; text-decoration:none; font-weight:600; font-size:1em;
+  transition:color 0.3s;
+}
+nav a:hover {color:#00fff7;}
+section {
+  padding:100px 20px; max-width:1200px; margin:auto;
+}
+section h2 {
+  text-align:center; font-size:2.4em; margin-bottom:60px;
+  background:linear-gradient(90deg,#00fff7,#a36aff);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.about, .services, .download {
+  background:rgba(255,255,255,0.05); border-radius:20px; padding:40px;
+  backdrop-filter:blur(15px); box-shadow:0 8px 30px rgba(0,0,0,0.4);
+  margin-bottom:60px;
+}
+.about p {font-size:1.2em; color:#ccc;}
+.services {
+  display:flex; flex-wrap:wrap; justify-content:center; gap:30px;
+}
+.card {
+  width:260px; background:rgba(255,255,255,0.08);
+  border-radius:15px; padding:25px; text-align:center;
+  box-shadow:0 8px 20px rgba(0,0,0,0.3);
+  transition:transform 0.4s, box-shadow 0.4s;
+}
+.card:hover {
+  transform:translateY(-10px) scale(1.05);
+  box-shadow:0 20px 40px rgba(0,0,0,0.5);
+}
+.card h3 {color:#00fff7; margin-bottom:10px;}
+.card p {color:#ccc;}
+.download .btns {
+  display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top:20px;
+}
+.download a {
+  background:linear-gradient(90deg,#00fff7,#a36aff); color:#000;
+  padding:12px 30px; border-radius:10px; font-weight:600; text-decoration:none;
+  transition:transform 0.3s;
+}
+.download a:hover {transform:scale(1.1);}
+footer {
+  text-align:center; padding:20px; font-size:1em; color:#ccc;
+}
+footer a {color:#00fff7; text-decoration:none;}
+/* Blobs / shapes */
+.blob {
+  position:absolute; border-radius:50%; filter:blur(60px);
+  opacity:0.4; animation:float 10s infinite alternate;
+}
+.blob1 {width:300px; height:300px; background:#00fff7; top:10%; left:20%;}
+.blob2 {width:200px; height:200px; background:#a36aff; top:60%; left:70%;}
+@keyframes float {
+  from{transform:translateY(0px);}
+  to{transform:translateY(-50px);}
+}
+/* Particle background */
+#particles-js {
+  position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+}
+</style>
+</head>
+<body>
+
+<!-- Particles + Blobs -->
+<div id="particles-js"></div>
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+
+<nav>
+  <a href="#about">About</a>
+  <a href="#services">Services</a>
+  <a href="#download">Bloxstrap</a>
+  <a href="https://www.dafont.com" target="_blank">Fonts</a>
+  <a href="https://youtube.com/@sasin699" target="_blank">YouTube</a>
+</nav>
+
+<header>
+  <h1>Hi, I'm <span>Sanay</span></h1>
+  <div class="typing" id="typing"></div>
+</header>
+
+<section id="about" class="about">
+  <h2>About Me</h2>
+  <p>Passionate web designer & developer crafting visually stunning, responsive and modern digital experiences that wow users and deliver real results.</p>
+</section>
+
+<section id="services" class="services">
+  <h2>My Services</h2>
+  <div class="card">
+    <h3>Web Design</h3>
+    <p>Elegant, modern designs tailored to your brand identity.</p>
+  </div>
+  <div class="card">
+    <h3>Development</h3>
+    <p>Clean, responsive code with top performance.</p>
+  </div>
+  <div class="card">
+    <h3>Brand Strategy</h3>
+    <p>Crafting visuals & messaging that connect and convert.</p>
+  </div>
+</section>
+
+<section id="download" class="download">
+  <h2>Download</h2>
+  <div class="btns">
+    <a href="https://www.mediafire.com/file/6akq2jwa2gakbvb/Bloxstrap-v2.8.6.exe/file" target="_blank">Bloxstrap</a>
+    <a href="https://www.dafont.com" target="_blank">Fonts</a>
+  </div>
+</section>
+
+<footer>
+  &copy; 2025 Sanay. All rights reserved. | <a href="https://youtube.com/@sasin699" target="_blank">YouTube</a>
+</footer>
+
+<!-- Typing effect -->
+<script>
+const txt = "Legendary Web Designer & Developer.";
+let i = 0;
+function type() {
+  if(i < txt.length){
+    document.getElementById("typing").innerHTML += txt.charAt(i);
+    i++; setTimeout(type, 50);
+  }
+}
+type();
+</script>
+
+<!-- Background color change on scroll -->
+<script>
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  if(scrollY < 200){
+    document.body.style.background = "linear-gradient(180deg, #0f0f0f 0%, #1e1e1e 100%)";
+  } else if(scrollY < 800){
+    document.body.style.background = "linear-gradient(180deg, #1e1e1e 0%, #3d0075 100%)";
+  } else {
+    document.body.style.background = "linear-gradient(180deg, #3d0075 0%, #000428 100%)";
+  }
+});
+</script>
+
+<!-- Particles.js via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script>
+particlesJS("particles-js",{
+  "particles":{"number":{"value":80},"size":{"value":2},"color":{"value":"#00fff7"},
+  "line_linked":{"enable":true,"distance":150,"color":"#00fff7","opacity":0.2,"width":1},
+  "move":{"speed":1}}, "interactivity":{"events":{"onhover":{"enable":true,"mode":"repulse"}}}
+});
+</script>
+
+</body>
+</html>
