@@ -1,0 +1,2740 @@
+/* ── State ────────────────────────────────────────────────── */
+let selectedClientId = null;
+let currentView = 'clients';
+let dashboardMode = 'home'; // 'home' or 'client'
+let clients = [];
+let toolCallCount = 0;
+let currentRelays = 0;
+let currentConnected = false;
+let settingsProvider = 'openai';
+
+let startTime = Date.now();
+
+/* ── DOM refs ────────────────────────────────────────────── */
+const $ = (id) => document.getElementById(id);
+
+const topbarSection = $('topbarSection');
+const topbarStatus = $('topbarStatus');
+const topbarRole = $('topbarRole');
+const clientSelectorBtn = $('clientSelectorBtn');
+const clientSelectorAvatar = $('clientSelectorAvatar');
+const clientSelectorName = $('clientSelectorName');
+const clientDropdown = $('clientDropdown');
+const clientDropdownSearch = $('clientDropdownSearch');
+const clientDropdownList = $('clientDropdownList');
+const uptimeChip = $('uptimeChip');
+
+const viewClients = $('viewClients');
+const viewOverview = $('viewOverview');
+const viewTools = $('viewTools');
+const viewServer = $('viewServer');
+const viewSettings = $('viewSettings');
+const viewServerLogs = $('viewServerLogs');
+const viewScripts = $('viewScripts');
+const topbarBack = $('topbarBack');
+const sidebarNavHome = $('sidebarNavHome');
+const sidebarNavClient = $('sidebarNavClient');
+
+const noClientSearch = $('noClientSearch');
+const noClientList = $('noClientList');
+const addClientBtn = $('addClientBtn');
+const addClientModal = $('addClientModal');
+const addClientCloseBtn = $('addClientCloseBtn');
+const addClientModalTitle = $('addClientModalTitle');
+const addClientModalDesc = $('addClientModalDesc');
+const addClientBody = $('addClientBody');
+
+const toolPanel = $('toolPanel');
+const toolPanelName = $('toolPanelName');
+const toolPanelBody = $('toolPanelBody');
+const toolPanelClose = $('toolPanelClose');
+const toolRunBtn = $('toolRunBtn');
+const toolPanelOutput = $('toolPanelOutput');
+const toolOutputBody = $('toolOutputBody');
+const semanticIndexBtn = $('semanticIndexBtn');
+const semanticIndexStatus = $('semanticIndexStatus');
+const scriptsFileMenu = $('scriptsFileMenu');
+const scriptsCodeMenuBtn = $('scriptsCodeMenuBtn');
+const scriptsCodeMenu = $('scriptsCodeMenu');
+const scriptsCodeSaveBtn = $('scriptsCodeSaveBtn');
+const scriptsCodeView = $('scriptsCodeView');
+const scriptsExportBtn = $('scriptsExportBtn');
+
+function updateCodeOverflowHint() {
+    if (!scriptsCodeView) return;
+    const hasOverflow = scriptsCodeView.scrollWidth > scriptsCodeView.clientWidth;
+    const atEnd = scriptsCodeView.scrollLeft + scriptsCodeView.clientWidth >= scriptsCodeView.scrollWidth - 8;
+    scriptsCodeView.classList.toggle('has-overflow-x', hasOverflow && !atEnd);
+}
+
+// Dynamic right-edge overflow hint
+if (scriptsCodeView) scriptsCodeView.addEventListener('scroll', updateCodeOverflowHint);
+window.addEventListener('resize', updateCodeOverflowHint);
+
+let semanticIndexJobId = null;
+
+/* ── Helpers ──────────────────────────────────────────────── */
+function getInitials(name) { return name.slice(0, 2).toUpperCase(); }
+
+function escapeHtml(str) {
+    if (!str) return '';
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return String(str).replace(/[&<>"']/g, m => map[m]);
+}
+
+function formatTime(date) {
+    const d = date instanceof Date ? date : new Date(date);
+    return d.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+function formatTimeFull(date) {
+    const d = date instanceof Date ? date : new Date(date);
+    const mon = d.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${mon} ${day} ${formatTime(d)}`;
+}
+
+function avatarHtml(userId, name, size) {
+    const sz = size || 28;
+    if (userId && userId > 0) {
+        return `<img src="/api/avatar?userId=${userId}" onerror="this.parentNode.textContent='${getInitials(name)}'" style="width:${sz}px;height:${sz}px;object-fit:cover;">`;
+    }
+    return getInitials(name);
+}
+
+function transportClass(t) { return t === 'ws' ? 'transport-ws' : 'transport-http'; }
+
+/* ── Uptime ──────────────────────────────────────────────── */
+function updateUptime() {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const h = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+    const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+    const s = String(elapsed % 60).padStart(2, '0');
+    const str = h + ':' + m + ':' + s;
+    uptimeChip.textContent = str;
+    const tu = $('tileUptime');
+    if (tu) tu.textContent = str;
+}
+setInterval(updateUptime, 1000);
+
+/* ── View switching ──────────────────────────────────────── */
+const allViews = () => [viewClients, viewOverview, viewTools, viewServer, viewSettings, viewServerLogs, viewScripts];
+
+function setSidebarMode(mode) {
+    dashboardMode = mode;
+    sidebarNavHome.style.display = mode === 'home' ? 'flex' : 'none';
+    sidebarNavClient.style.display = mode === 'client' ? 'flex' : 'none';
+    topbarBack.style.display = mode === 'client' ? 'inline-flex' : 'none';
+}
+
+function showView(name) {
+    const prevView = currentView;
+    currentView = name;
+    allViews().forEach(v => {
+        v.style.display = 'none';
+        v.classList.remove('view--entering');
+    });
+    const labels = {clients:'Clients',server:'Server','server-logs':'Logs',settings:'Settings',overview:'Overview',tools:'Tools',scripts:'Scripts'};
+    topbarSection.textContent = labels[name] || name;
+
+    let targetView = null;
+    if (name === 'clients') { targetView = viewClients; viewClients.style.display = 'flex'; }
+    else if (name === 'server') { targetView = viewServer; viewServer.style.display = 'block'; renderServerGraph(); renderOverviewClients(); }
+    else if (name === 'server-logs') { targetView = viewServerLogs; viewServerLogs.style.display = 'block'; fetchServerLogs(); }
+    else if (name === 'settings') { targetView = viewSettings; viewSettings.style.display = 'block'; loadSettings(); }
+    else if (name === 'overview') { targetView = viewOverview; viewOverview.style.display = 'block'; }
+    else if (name === 'tools') { 
+        targetView = viewTools;
+        viewTools.style.display = 'block'; 
+        if (!activeTool) selectTool('script-grep');
+    }
+    else if (name === 'scripts') { 
+        targetView = viewScripts;
+        viewScripts.style.display = 'block'; 
+        fetchScripts(); 
+        if (scriptsData.length > 0 && !scriptsViewingFile) renderScriptsBrowser();
+    }
+
+    // Only animate on actual navigation, not on re-entry to the same view
+    if (targetView && prevView !== name) {
+        targetView.classList.add('view--entering');
+        targetView.addEventListener('animationend', () => {
+            targetView.classList.remove('view--entering');
+        }, { once: true });
+    }
+
+    const activeNav = dashboardMode === 'home' ? sidebarNavHome : sidebarNavClient;
+    activeNav.querySelectorAll('.sidebar-item').forEach(btn => {
+        btn.classList.toggle('sidebar-item--active', btn.dataset.view === name);
+    });
+}
+
+function bindSidebarNav(nav) {
+    nav.querySelectorAll('.sidebar-item').forEach(btn => {
+        btn.addEventListener('click', () => showView(btn.dataset.view));
+    });
+}
+bindSidebarNav(sidebarNavHome);
+bindSidebarNav(sidebarNavClient);
+
+topbarBack.addEventListener('click', () => {
+    selectedClientId = null;
+    resetScriptsState();
+    clientSelectorName.textContent = 'Select Client';
+    clientSelectorAvatar.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>';
+    setSidebarMode('home');
+    showView('clients');
+    renderNoClientList('');
+});
+
+/* ── Client selector dropdown ────────────────────────────── */
+clientSelectorBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    clientDropdown.classList.toggle('open');
+    if (clientDropdown.classList.contains('open')) {
+        clientDropdownSearch.value = '';
+        clientDropdownSearch.focus();
+        renderDropdownClients('');
+    }
+});
+
+document.addEventListener('click', (e) => {
+    if (!clientDropdown.contains(e.target) && !clientSelectorBtn.contains(e.target)) {
+        clientDropdown.classList.remove('open');
+    }
+});
+
+clientDropdownSearch.addEventListener('input', () => {
+    renderDropdownClients(clientDropdownSearch.value.toLowerCase());
+});
+
+function renderDropdownClients(filter) {
+    const filtered = clients.filter(c => !filter || c.username.toLowerCase().includes(filter) || c.placeName.toLowerCase().includes(filter));
+    if (filtered.length === 0) {
+        clientDropdownList.innerHTML = '<div class="client-dropdown-empty">No clients found</div>';
+        return;
+    }
+    clientDropdownList.innerHTML = filtered.map(c => {
+        const active = c.clientId === selectedClientId ? ' active' : '';
+        return `<div class="client-dropdown-item${active}" data-cid="${c.clientId}">
+            <div class="client-dropdown-item-avatar">${avatarHtml(c.userId, c.username)}</div>
+            <div class="client-dropdown-item-info">
+                <div class="client-dropdown-item-name">${c.username}</div>
+                <div class="client-dropdown-item-place">${c.placeName}</div>
+            </div>
+            <span class="client-dropdown-item-transport ${transportClass(c.transport)}">${c.transport}</span>
+        </div>`;
+    }).join('');
+
+    clientDropdownList.querySelectorAll('.client-dropdown-item').forEach(el => {
+        el.addEventListener('click', () => {
+            selectClient(el.dataset.cid);
+            clientDropdown.classList.remove('open');
+        });
+    });
+}
+
+/* ── No-client picker list ───────────────────────────────── */
+noClientSearch.addEventListener('input', () => {
+    renderNoClientList(noClientSearch.value.toLowerCase());
+});
+
+function renderNoClientList(filter) {
+    const filtered = clients.filter(c => !filter || c.username.toLowerCase().includes(filter) || c.placeName.toLowerCase().includes(filter));
+    if (filtered.length === 0) {
+        noClientList.innerHTML = `<div class="no-client-empty">
+            <div class="no-client-empty-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg></div>
+            <span>No clients connected</span>
+        </div>`;
+        return;
+    }
+    noClientList.innerHTML = filtered.map(c => {
+        return `<div class="no-client-item" data-cid="${c.clientId}">
+            <div class="no-client-item-avatar">${avatarHtml(c.userId, c.username, 32)}</div>
+            <span class="no-client-item-name">${c.username}</span>
+            <span class="no-client-item-transport ${transportClass(c.transport)}">${c.transport}</span>
+        </div>`;
+    }).join('');
+
+    noClientList.querySelectorAll('.no-client-item').forEach(el => {
+        el.addEventListener('click', () => selectClient(el.dataset.cid));
+    });
+}
+
+/* ── Add client setup wizard ─────────────────────────────── */
+let clientSetupData = null;
+let addClientMode = 'intro';
+let addClientTarget = 'roblox';
+let addClientGuideOpen = false;
+let addClientAdminPrompt = null;
+let addClientOutput = '';
+let addClientAutoexecOutput = '';
+let addClientAutoexecSelected = null;
+let addClientDirectBridge = 'localhost:16384';
+let addClientBridgeOverrides = {
+    localNetwork: '',
+    authorizedMachines: '',
+};
+
+const SETUP_ICONS = {
+    current: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-laptop-icon lucide-laptop"><path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z"/><path d="M20.054 15.987H3.946"/></svg>',
+    network: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-router-icon lucide-router"><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6.01 18H6"/><path d="M10.01 18H10"/><path d="M15 10v4"/><path d="M17.84 7.17a4 4 0 0 0-5.66 0"/><path d="M20.66 4.34a8 8 0 0 0-11.31 0"/></svg>',
+    tailscale: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe-lock-icon lucide-globe-lock"><path d="M15.686 15A14.5 14.5 0 0 1 12 22a14.5 14.5 0 0 1 0-20 10 10 0 1 0 9.542 13"/><path d="M2 12h8.5"/><path d="M20 6V4a2 2 0 1 0-4 0v2"/><rect width="8" height="5" x="14" y="6" rx="1"/></svg>',
+    roblox: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="2" transform="rotate(12 12 12)"/><rect x="10" y="10" width="4" height="4" rx="1"/></svg>',
+    mcp: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 4 7l8 4 8-4-8-4Z"/><path d="m4 12 8 4 8-4"/><path d="m4 17 8 4 8-4"/></svg>',
+    chevron: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>',
+};
+
+const ADD_CLIENT_TARGETS = {
+    roblox: {
+        title: 'Roblox client',
+        shortTitle: 'Roblox',
+        codeTitle: 'Roblox connector',
+        action: 'Paste this in Roblox. It connects the game client only.',
+        description: 'Runs the Luau connector in Roblox. This does not relay host-side MCP tools.',
+    },
+    mcp: {
+        title: 'MCP relay',
+        shortTitle: 'MCP relay',
+        codeTitle: 'MCP config diff',
+        action: 'Add these entries to that MCP server args array on the other machine.',
+        description: 'Connects another MCP instance. This can relay host-side tools like screenshot-window.',
+    },
+};
+
+function normalizeDashboardBridgeUrl(value) {
+    const trimmed = String(value || '').trim().replace(/\/+$/, '');
+    if (!trimmed) return 'localhost:16384';
+    const withProtocol = /^https?:\/\//i.test(trimmed) ? trimmed : 'http://' + trimmed;
+    try {
+        const url = new URL(withProtocol);
+        if (!url.port) url.port = '16384';
+        return url.hostname + ':' + url.port;
+    } catch {
+        return 'localhost:16384';
+    }
+}
+
+function buildDashboardLoaderSnippet(bridgeUrl) {
+    const normalized = normalizeDashboardBridgeUrl(bridgeUrl);
+    if (normalized === 'localhost:16384') {
+        return 'local bridgeUrl = getgenv().BridgeURL or "localhost:16384"\nloadstring(game:HttpGet("http://" .. bridgeUrl .. "/script.luau"))()';
+    }
+    return 'getgenv().BridgeURL = "' + normalized + '"\nlocal bridgeUrl = getgenv().BridgeURL or "localhost:16384"\nloadstring(game:HttpGet("http://" .. bridgeUrl .. "/script.luau"))()';
+}
+
+function buildDashboardMcpRelaySnippet(bridgeUrl) {
+    const relayUrl = 'http://' + normalizeDashboardBridgeUrl(bridgeUrl);
+    return '{\n' +
+        '  "mcpServers": {\n' +
+        '    "roblox-mcp": {\n' +
+        '      "args": [\n' +
+        '        "...existing args",\n' +
+        '+       "--baseurl",\n' +
+        '+       "' + relayUrl + '"\n' +
+        '      ]\n' +
+        '    }\n' +
+        '  }\n' +
+        '}';
+}
+
+function buildDashboardMcpRelayCopySnippet(bridgeUrl) {
+    const relayUrl = 'http://' + normalizeDashboardBridgeUrl(bridgeUrl);
+    return '"--baseurl",\n"' + relayUrl + '"';
+}
+
+function makeConnector(bridgeUrl) {
+    const normalized = normalizeDashboardBridgeUrl(bridgeUrl);
+    return { bridgeUrl: normalized, loaderSnippet: buildDashboardLoaderSnippet(normalized) };
+}
+
+function getConnectorFor(mode) {
+    if (mode === 'directBridge') return makeConnector(addClientDirectBridge);
+
+    if (mode === 'currentMachine') {
+        return clientSetupData?.connectors?.currentMachine || makeConnector('localhost:16384');
+    }
+
+    const override = addClientBridgeOverrides[mode];
+    if (override) return makeConnector(override);
+
+    const connector = clientSetupData?.connectors?.[mode];
+    if (connector) return connector;
+
+    return null;
+}
+
+function getTargetCopy() {
+    return ADD_CLIENT_TARGETS[addClientTarget] || ADD_CLIENT_TARGETS.roblox;
+}
+
+function copyText(text, label) {
+    navigator.clipboard.writeText(text).then(() => {
+        showToast((label || 'Text') + ' copied', 'success');
+    }).catch(() => {
+        showToast('Failed to copy', 'error');
+    });
+}
+
+function shortenHomePath(path) {
+    if (!path) return '';
+    const home = path.replace(/^\/Users\/[^/]+/, '~');
+    if (home.length <= 56) return home;
+    const parts = home.split('/');
+    const file = parts.pop() || '';
+    const tail = parts.slice(-2).join('/');
+    return (tail ? '~/' + tail : '~') + '/' + file;
+}
+
+function renderAddClientLoading() {
+    addClientBody.innerHTML = '<div class="add-client-status">Loading setup options...</div>';
+}
+
+async function refreshClientSetupData() {
+    const res = await fetch('/api/client-setup');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to load setup options');
+    clientSetupData = data;
+    return data;
+}
+
+function openAddClientModal() {
+    addClientMode = 'intro';
+    addClientTarget = 'roblox';
+    addClientGuideOpen = false;
+    addClientAdminPrompt = null;
+    addClientOutput = '';
+    addClientAutoexecOutput = '';
+    addClientAutoexecSelected = null;
+    addClientDirectBridge = 'localhost:16384';
+    addClientModal.classList.add('open');
+    renderAddClientLoading();
+    refreshClientSetupData()
+        .then(renderAddClient)
+        .catch((error) => {
+            addClientBody.innerHTML = '<div class="add-client-status add-client-status--error">' + escapeHtml(error.message || error) + '</div>';
+        });
+}
+
+function closeAddClientModal() {
+    addClientModal.classList.remove('open');
+}
+
+function renderAddClient() {
+    if (addClientMode === 'intro') renderAddClientIntro();
+    else if (addClientMode === 'choices') renderAddClientChoices();
+    else if (addClientMode === 'directBridge') renderDirectBridge();
+    else if (addClientMode === 'currentMachine') renderConnectorChoice('currentMachine');
+    else if (addClientMode === 'localNetwork') renderConnectorChoice('localNetwork');
+    else if (addClientMode === 'authorizedMachines') renderAuthorizedMachines();
+    else renderAddClientIntro();
+    updateAddClientModalHeader();
+    syncAutoexecSelectAllUi();
+}
+
+function updateAddClientModalHeader() {
+    if (!addClientModalTitle || !addClientModalDesc) return;
+
+    let title = 'Connect';
+    let desc = '';
+    let descMono = false;
+
+    if (addClientMode === 'intro') {
+        desc = 'Roblox or another MCP instance.';
+    } else if (addClientMode === 'choices') {
+        desc = getTargetCopy().title;
+    } else if (addClientMode === 'currentMachine') {
+        title = 'This machine';
+        desc = getConnectorFor('currentMachine')?.bridgeUrl || 'localhost:16384';
+        descMono = true;
+    } else if (addClientMode === 'localNetwork') {
+        title = 'Local network';
+        const connector = getConnectorFor('localNetwork');
+        desc = connector?.bridgeUrl || 'Set bridge address';
+        descMono = Boolean(connector?.bridgeUrl);
+    } else if (addClientMode === 'authorizedMachines') {
+        title = 'Tailscale';
+        const ts = clientSetupData?.tailscale || {};
+        const connector = getConnectorFor('authorizedMachines');
+        if (connector?.bridgeUrl) {
+            desc = connector.bridgeUrl + (ts.ip ? ' · connected' : '');
+            descMono = true;
+        } else if (!ts.installed) {
+            desc = 'Not installed on this host';
+        } else {
+            desc = 'Not connected yet';
+        }
+    } else if (addClientMode === 'directBridge') {
+        title = 'Manual bridge';
+        desc = addClientDirectBridge || 'host:16384';
+        descMono = true;
+    }
+
+    addClientModalTitle.textContent = title;
+    addClientModalDesc.textContent = desc;
+    addClientModalDesc.hidden = !desc;
+    addClientModalDesc.classList.toggle('add-client-modal-desc--mono', descMono);
+}
+
+function renderAddClientIntro() {
+    addClientBody.innerHTML = '<div class="add-client-panel">' +
+        renderSafetyWarning() +
+        '<div class="add-client-intent-grid">' +
+        renderTargetChoice('roblox', SETUP_ICONS.roblox) +
+        renderTargetChoice('mcp', SETUP_ICONS.mcp) +
+        '</div>' +
+        '<div class="add-client-subactions">' +
+        '<button class="add-client-link-btn" data-action="skip-bridge">Enter bridge address manually</button>' +
+        '</div>' +
+        '</div>';
+}
+
+function renderSafetyWarning() {
+    return '<div class="add-client-warning">' +
+        '<strong>Keep port 16384 private.</strong>' +
+        '<span>Use localhost, your local network, SSH, or Tailscale. Do not port-forward this relay to the public internet.</span>' +
+        '</div>';
+}
+
+function renderTargetChoice(target, icon) {
+    const copy = ADD_CLIENT_TARGETS[target];
+    return '<button class="add-client-intent" data-action="choose-target" data-target="' + escapeHtml(target) + '">' +
+        '<span class="add-client-intent-icon">' + icon + '</span>' +
+        '<span class="add-client-intent-title">' + escapeHtml(copy.title) + '</span>' +
+        '<span class="add-client-intent-desc">' + escapeHtml(copy.description) + '</span>' +
+        '<span class="add-client-intent-meta">' + escapeHtml(copy.action) + '</span>' +
+        '</button>';
+}
+
+function renderAddClientChoices() {
+    const lan = clientSetupData?.lanIp ? clientSetupData.lanIp + ':16384' : 'Manual address';
+    const tail = clientSetupData?.tailscale?.ip ? clientSetupData.tailscale.ip + ':16384' : 'Tailscale address';
+    const target = getTargetCopy();
+    const routeCopy = addClientTarget === 'mcp'
+        ? {
+            current: 'Another MCP process is on this computer.',
+            network: 'Another MCP host is on this LAN.',
+            tailscale: 'Use Tailscale for an approved MCP relay.',
+        }
+        : {
+            current: 'Roblox is on this computer.',
+            network: 'Roblox is on another device on this network.',
+            tailscale: 'Use Tailscale for approved Roblox devices.',
+        };
+
+    addClientBody.innerHTML = '<div class="add-client-panel">' +
+        '<div class="add-client-top-row">' + renderBackButton() + renderSkipBridgeButton() + '</div>' +
+        '<div class="add-client-selected-target">' +
+        '<span>' + escapeHtml(target.title) + '</span>' +
+        '<button class="add-client-link-btn" data-action="change-target">Change</button>' +
+        '</div>' +
+        '<div class="add-client-options">' +
+        renderAddClientOption('currentMachine', SETUP_ICONS.current, 'This machine', routeCopy.current, 'localhost:16384') +
+        renderAddClientOption('localNetwork', SETUP_ICONS.network, 'Local network', routeCopy.network, lan) +
+        renderAddClientOption('authorizedMachines', SETUP_ICONS.tailscale, 'Authorized machines', routeCopy.tailscale, tail) +
+        '</div>' +
+        '</div>';
+}
+
+function renderAddClientOption(mode, icon, title, desc, meta) {
+    return '<button class="add-client-option" data-action="choose-setup" data-mode="' + escapeHtml(mode) + '">' +
+        '<span class="add-client-option-icon">' + icon + '</span>' +
+        '<span class="add-client-option-text"><span class="add-client-option-title">' + escapeHtml(title) + '</span><span class="add-client-option-desc">' + escapeHtml(desc) + '</span></span>' +
+        '<span class="add-client-option-meta">' + escapeHtml(meta) + ' ' + SETUP_ICONS.chevron + '</span>' +
+        '</button>';
+}
+
+function renderBackButton() {
+    return '<button class="add-client-back" data-action="setup-back">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>' +
+        'Back</button>';
+}
+
+function renderSkipBridgeButton() {
+    return '<button class="add-client-link-btn" data-action="skip-bridge">Skip to connector</button>';
+}
+
+function renderTargetSwitch() {
+    return '<div class="add-client-target-tabs" role="group" aria-label="Connector type">' +
+        '<button class="add-client-target-tab' + (addClientTarget === 'roblox' ? ' active' : '') + '" data-action="set-target" data-target="roblox">Roblox</button>' +
+        '<button class="add-client-target-tab' + (addClientTarget === 'mcp' ? ' active' : '') + '" data-action="set-target" data-target="mcp">MCP relay</button>' +
+        '</div>';
+}
+
+function renderConnectorChoice(mode) {
+    const connector = getConnectorFor(mode);
+    const defaultBridge = mode === 'currentMachine'
+        ? 'localhost:16384'
+        : (clientSetupData?.lanIp ? clientSetupData.lanIp + ':16384' : '');
+    const needsManual = mode === 'localNetwork';
+
+    addClientBody.innerHTML = '<div class="add-client-panel">' +
+        '<div class="add-client-top-row">' + renderBackButton() + renderSkipBridgeButton() + '</div>' +
+        renderTargetSwitch() +
+        (needsManual ? renderBridgeInput(mode, defaultBridge, 'Bridge address', true) : '') +
+        (connector ? renderConnectorCode(connector) : '<p class="add-client-hint add-client-hint--warn">Enter an address to generate the connector.</p>') +
+        (connector && mode === 'currentMachine' && addClientTarget === 'roblox' ? renderAutoexecSetup(connector) : '') +
+        '</div>';
+}
+
+function renderDirectBridge() {
+    const connector = getConnectorFor('directBridge');
+    addClientBody.innerHTML = '<div class="add-client-panel">' +
+        '<div class="add-client-top-row">' + renderBackButton() + '</div>' +
+        renderSafetyWarning() +
+        renderTargetSwitch() +
+        renderBridgeInput('directBridge', addClientDirectBridge, 'Bridge address', true) +
+        renderConnectorCode(connector) +
+        '</div>';
+}
+
+function renderBridgeInput(mode, fallback, label, compact) {
+    const value = mode === 'directBridge'
+        ? addClientDirectBridge
+        : (addClientBridgeOverrides[mode] || fallback || '');
+    const placeholder = mode === 'authorizedMachines' ? 'Tailscale address (host:16384)' : 'host:16384';
+    const fieldClass = compact ? 'add-client-field add-client-field--compact' : 'add-client-field';
+    const labelHtml = compact
+        ? '<label class="sr-only" for="addClientBridgeInput">' + escapeHtml(label) + '</label>'
+        : '<label for="addClientBridgeInput">' + escapeHtml(label) + '</label>';
+    return '<div class="' + fieldClass + '">' +
+        labelHtml +
+        '<div class="add-client-input-row">' +
+        '<input class="add-client-input" id="addClientBridgeInput" data-mode="' + escapeHtml(mode) + '" value="' + escapeHtml(value) + '" placeholder="' + escapeHtml(placeholder) + '">' +
+        '<button class="add-client-btn" data-action="apply-bridge">Apply</button>' +
+        '</div></div>';
+}
+
+function renderConnectorCode(connector) {
+    const target = getTargetCopy();
+    const code = addClientTarget === 'mcp'
+        ? buildDashboardMcpRelaySnippet(connector.bridgeUrl)
+        : connector.loaderSnippet;
+    const copyCode = addClientTarget === 'mcp'
+        ? buildDashboardMcpRelayCopySnippet(connector.bridgeUrl)
+        : code;
+    const codeHtml = addClientTarget === 'mcp'
+        ? code.split('\n').map(line => {
+            const cls = line.startsWith('+') ? ' add-client-code-line--add' : '';
+            return '<span class="add-client-code-line' + cls + '">' + escapeHtml(line) + '</span>';
+        }).join('')
+        : escapeHtml(code);
+
+    return '<div class="add-client-result">' +
+        '<div class="add-client-code-wrap">' +
+        '<div class="add-client-code-head">' +
+        '<span class="add-client-code-label">' + escapeHtml(target.codeTitle) + '</span>' +
+        '<button class="add-client-btn add-client-btn--ghost" data-action="copy-connector">Copy</button>' +
+        '</div>' +
+        '<pre class="add-client-code" id="addClientConnectorCode" data-copy-text="' + escapeHtml(copyCode) + '">' + codeHtml + '</pre>' +
+        '</div>' +
+        '<p class="add-client-hint add-client-hint--inline">' + escapeHtml(target.action) + '</p>' +
+        '</div>';
+}
+
+function getAutoexecTargets() {
+    const status = clientSetupData?.autoexec || {};
+    return Array.isArray(status.detectedTargets) ? status.detectedTargets : [];
+}
+
+function ensureAutoexecSelection(targets) {
+    const ids = targets.map((target) => target.id).filter(Boolean);
+    if (addClientAutoexecSelected === null) {
+        addClientAutoexecSelected = new Set(ids);
+        return;
+    }
+    const valid = new Set(ids);
+    addClientAutoexecSelected = new Set([...addClientAutoexecSelected].filter((id) => valid.has(id)));
+    if (!addClientAutoexecSelected.size && ids.length) {
+        addClientAutoexecSelected = new Set(ids);
+    }
+}
+
+function allAutoexecSelected(targets) {
+    const ids = targets.map((target) => target.id).filter(Boolean);
+    return ids.length > 0 && ids.every((id) => addClientAutoexecSelected.has(id));
+}
+
+function someAutoexecSelected(targets) {
+    const ids = targets.map((target) => target.id).filter(Boolean);
+    return ids.some((id) => addClientAutoexecSelected.has(id)) && !allAutoexecSelected(targets);
+}
+
+function getSelectedAutoexecIds(targets) {
+    const valid = new Set(targets.map((target) => target.id).filter(Boolean));
+    return [...addClientAutoexecSelected].filter((id) => valid.has(id));
+}
+
+function syncAutoexecSelectAllUi() {
+    const selectAll = $('addClientAutoexecSelectAll');
+    if (!selectAll) return;
+    const targets = getAutoexecTargets();
+    selectAll.checked = allAutoexecSelected(targets);
+    selectAll.indeterminate = someAutoexecSelected(targets);
+}
+
+function renderAutoexecTargetRow(target) {
+    const path = target.scriptPath || target.folder || '';
+    const installed = target.installedPath || (target.installed ? target.scriptPath : '');
+    const id = target.id || '';
+    const checked = addClientAutoexecSelected.has(id);
+    return '<label class="add-client-autoexec-target' + (checked ? ' is-selected' : '') + '">' +
+        '<input class="add-client-autoexec-check" type="checkbox" data-autoexec-id="' + escapeHtml(id) + '"' + (checked ? ' checked' : '') + '>' +
+        '<div class="add-client-autoexec-target-main">' +
+        '<span class="add-client-autoexec-name">' + escapeHtml(target.name || 'Executor') + '</span>' +
+        (path ? '<span class="add-client-autoexec-path" title="' + escapeHtml(path) + '">' + escapeHtml(shortenHomePath(path)) + '</span>' : '') +
+        '</div>' +
+        (installed ? '<span class="add-client-autoexec-note">Existing script</span>' : '') +
+        '</label>';
+}
+
+function renderAutoexecSelectAll(targets) {
+    const all = allAutoexecSelected(targets);
+    return '<label class="add-client-autoexec-select-all">' +
+        '<input class="add-client-autoexec-check" type="checkbox" id="addClientAutoexecSelectAll"' + (all ? ' checked' : '') + '>' +
+        '<span>Select all</span>' +
+        '</label>';
+}
+
+function renderAutoexecInstallButton(connector, targets) {
+    const selectedCount = getSelectedAutoexecIds(targets).length;
+    const bridge = escapeHtml(connector.bridgeUrl);
+    let label = 'Install selected';
+    if (selectedCount === targets.length && targets.length > 1) label = 'Install to all executors';
+    else if (selectedCount === 1) label = 'Install to 1 executor';
+    else if (selectedCount > 1) label = 'Install to ' + selectedCount + ' executors';
+    return '<button class="add-client-btn add-client-btn--primary" data-action="write-autoexec" data-bridge="' + bridge + '"' +
+        (selectedCount ? '' : ' disabled') + '>' + escapeHtml(label) + '</button>';
+}
+
+function renderAutoexecSetup(connector) {
+    const targets = getAutoexecTargets();
+
+    if (!targets.length) {
+        return '<div class="add-client-autoexec">' +
+            '<div class="add-client-autoexec-head">' +
+            '<span class="add-client-autoexec-title">Auto-install</span>' +
+            '<span class="add-client-autoexec-desc">Install the connector into your executor autoexec folder.</span>' +
+            '</div>' +
+            '<p class="add-client-hint add-client-hint--warn">No supported autoexec folder was detected. Known macOS and Windows executor paths are checked automatically.</p>' +
+            '</div>';
+    }
+
+    ensureAutoexecSelection(targets);
+
+    return '<div class="add-client-autoexec">' +
+        '<div class="add-client-autoexec-head">' +
+        '<span class="add-client-autoexec-title">Auto-install</span>' +
+        '<span class="add-client-autoexec-desc">Choose executors, then install the connector to their autoexec folders.</span>' +
+        '</div>' +
+        '<div class="add-client-autoexec-list">' +
+        renderAutoexecSelectAll(targets) +
+        '<div class="add-client-autoexec-targets">' + targets.map(renderAutoexecTargetRow).join('') + '</div>' +
+        '</div>' +
+        '<div class="add-client-actions">' +
+        renderAutoexecInstallButton(connector, targets) +
+        '</div>' +
+        (addClientAutoexecOutput ? '<pre class="add-client-output">' + escapeHtml(addClientAutoexecOutput) + '</pre>' : '') +
+        '</div>';
+}
+
+function renderTailscaleCallout(otherMachine, canAuto, ts) {
+    if (!canAuto) {
+        return '<p class="add-client-callout add-client-callout--warn">Open this dashboard locally to run Tailscale setup.</p>';
+    }
+    if (!ts.installed) {
+        return '<p class="add-client-callout add-client-callout--warn">Install Tailscale here and on ' + escapeHtml(otherMachine) + '.</p>';
+    }
+    if (!ts.ip) {
+        return '<p class="add-client-callout add-client-callout--warn">Sign in to Tailscale on this host.</p>';
+    }
+    return '<p class="add-client-callout">Also install Tailscale on ' + escapeHtml(otherMachine) + '.</p>';
+}
+
+function renderAuthorizedMachines() {
+    const connector = getConnectorFor('authorizedMachines');
+    const ts = clientSetupData?.tailscale || {};
+    const canAuto = clientSetupData?.isLocalRequest !== false;
+    const otherMachine = addClientTarget === 'mcp' ? 'the other MCP host' : 'the Roblox device';
+    const targetVerb = addClientTarget === 'mcp' ? 'update the MCP config with the relay diff' : 'paste the Roblox connector';
+
+    addClientBody.innerHTML = '<div class="add-client-panel add-client-panel--compact">' +
+        '<div class="add-client-top-row">' + renderBackButton() + renderSkipBridgeButton() + '</div>' +
+        renderTargetSwitch() +
+        renderTailscaleCallout(otherMachine, canAuto, ts) +
+        (addClientAdminPrompt ? renderAdminPrompt() : '') +
+        '<div class="add-client-actions add-client-actions--compact">' +
+        '<button class="add-client-btn add-client-btn--primary" data-action="tailscale-auto"' + (canAuto ? '' : ' disabled') + '>Set up</button>' +
+        '<button class="add-client-btn" data-action="tailscale-refresh">Refresh</button>' +
+        '<button class="add-client-btn" data-action="toggle-guide">' + (addClientGuideOpen ? 'Hide guide' : 'Guide') + '</button>' +
+        '</div>' +
+        renderBridgeInput('authorizedMachines', ts.ip ? ts.ip + ':16384' : '', 'Tailscale address', true) +
+        (connector ? renderConnectorCode(connector) : '<p class="add-client-hint add-client-hint--warn">Connect Tailscale or enter an address above.</p>') +
+        (addClientOutput ? '<pre class="add-client-output">' + escapeHtml(addClientOutput) + '</pre>' : '') +
+        (addClientGuideOpen ? renderTailscaleGuide(otherMachine, targetVerb) : '') +
+        '</div>';
+}
+
+function renderAdminPrompt() {
+    return '<div class="add-client-callout add-client-callout--warn">' +
+        '<div>' + escapeHtml(addClientAdminPrompt.message) + '</div>' +
+        (addClientAdminPrompt.error ? '<div>' + escapeHtml(addClientAdminPrompt.error) + '</div>' : '') +
+        '<div class="add-client-actions add-client-actions--compact add-client-actions--nested">' +
+        '<button class="add-client-btn add-client-btn--primary" data-action="tailscale-admin">Continue</button>' +
+        '<button class="add-client-btn" data-action="toggle-guide">Guide</button>' +
+        '</div></div>';
+}
+
+function renderTailscaleGuide(otherMachine, targetVerb) {
+    const downloadUrl = clientSetupData?.guide?.downloadUrl || 'https://tailscale.com/download';
+    const cliUrl = clientSetupData?.guide?.cliUrl || 'https://tailscale.com/docs/reference/tailscale-cli';
+    const linuxCommand = clientSetupData?.guide?.linuxInstallCommand || 'curl -fsSL https://tailscale.com/install.sh | sh';
+    return '<ol class="add-client-guide">' +
+        '<li>Install Tailscale on this MCP host from <a href="' + escapeHtml(downloadUrl) + '" target="_blank" rel="noreferrer">tailscale.com/download</a>.</li>' +
+        '<li>Install Tailscale on ' + escapeHtml(otherMachine) + ' too.</li>' +
+        '<li>Sign in to the same Tailscale account on both machines.</li>' +
+        '<li>On Linux, the official install command is <code>' + escapeHtml(linuxCommand) + '</code>.</li>' +
+        '<li>Use <a href="' + escapeHtml(cliUrl) + '" target="_blank" rel="noreferrer">the Tailscale CLI</a> to check status if needed.</li>' +
+        '<li>Return here, refresh status, then ' + escapeHtml(targetVerb) + ' on the authorized machine.</li>' +
+        '</ol>';
+}
+
+async function runClientSetupAction(action, elevated = false) {
+    addClientOutput = elevated ? 'Waiting for administrator permission...' : 'Running setup...';
+    addClientAdminPrompt = null;
+    renderAuthorizedMachines();
+
+    try {
+        const res = await fetch('/api/client-setup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action, elevated }),
+        });
+        const data = await res.json();
+        if (!res.ok || (data.error && !data.needsAdmin && !data.needsManualInstall && !data.needsInstall)) {
+            throw new Error(data.error || 'Setup failed');
+        }
+
+        addClientOutput = [data.output, data.error].filter(Boolean).join('\n') || (data.ok ? 'Done.' : '');
+
+        if (data.needsAdmin) {
+            addClientAdminPrompt = {
+                action: data.adminAction || action,
+                message: data.adminMessage || 'Administrator permission is required.',
+                error: data.error || '',
+            };
+        } else if (data.needsManualInstall) {
+            addClientGuideOpen = true;
+            addClientOutput = data.error || 'Manual install is required on this machine.';
+        } else if (data.needsInstall) {
+            addClientOutput = data.error || 'Tailscale needs to be installed first.';
+            addClientGuideOpen = true;
+        }
+
+        await refreshClientSetupData();
+        renderAuthorizedMachines();
+    } catch(e) {
+        addClientOutput = e.message || 'Setup failed';
+        addClientGuideOpen = true;
+        renderAuthorizedMachines();
+    }
+}
+
+if (addClientBtn) addClientBtn.addEventListener('click', openAddClientModal);
+if (addClientCloseBtn) addClientCloseBtn.addEventListener('click', closeAddClientModal);
+if (addClientModal) {
+    addClientModal.addEventListener('click', (e) => {
+        if (e.target === addClientModal) closeAddClientModal();
+    });
+}
+if (addClientBody) {
+    addClientBody.addEventListener('click', async (e) => {
+        const btn = e.target.closest('[data-action]');
+        if (!btn) return;
+        const action = btn.dataset.action;
+
+        if (action === 'choose-target') {
+            addClientTarget = btn.dataset.target || 'roblox';
+            addClientMode = 'choices';
+            renderAddClientChoices();
+        } else if (action === 'change-target') {
+            addClientMode = 'intro';
+            addClientGuideOpen = false;
+            addClientAdminPrompt = null;
+            addClientOutput = '';
+            renderAddClientIntro();
+        } else if (action === 'set-target') {
+            addClientTarget = btn.dataset.target || 'roblox';
+            renderAddClient();
+        } else if (action === 'skip-bridge') {
+            addClientMode = 'directBridge';
+            addClientAdminPrompt = null;
+            addClientOutput = '';
+            renderDirectBridge();
+        } else if (action === 'choose-setup') {
+            addClientMode = btn.dataset.mode || 'choices';
+            addClientAdminPrompt = null;
+            addClientOutput = '';
+            addClientAutoexecOutput = '';
+            addClientAutoexecSelected = null;
+            renderAddClient();
+        } else if (action === 'setup-back') {
+            if (addClientMode === 'choices' || addClientMode === 'directBridge') {
+                addClientMode = 'intro';
+                addClientGuideOpen = false;
+            } else {
+                addClientMode = 'choices';
+            }
+            addClientAdminPrompt = null;
+            addClientOutput = '';
+            addClientAutoexecOutput = '';
+            addClientAutoexecSelected = null;
+            renderAddClient();
+        } else if (action === 'copy-connector') {
+            const codeEl = $('addClientConnectorCode');
+            const code = codeEl?.dataset.copyText || codeEl?.textContent || '';
+            if (code) copyText(code, addClientTarget === 'mcp' ? 'MCP config diff' : 'Connector script');
+        } else if (action === 'write-autoexec') {
+            const bridgeUrl = btn.dataset.bridge || 'localhost:16384';
+            const targets = getAutoexecTargets();
+            const selectedIds = getSelectedAutoexecIds(targets);
+            if (!selectedIds.length) {
+                showToast('Select at least one executor', 'error');
+                return;
+            }
+            addClientAutoexecOutput = 'Writing autoexec loader...';
+            renderAddClient();
+            try {
+                const res = await fetch('/api/client-setup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'write-autoexec',
+                        bridgeUrl,
+                        autoexecTargetIds: selectedIds,
+                    }),
+                });
+                const data = await res.json();
+                if (!res.ok || !data.ok) throw new Error(data.error || 'Could not write autoexec loader');
+                addClientAutoexecOutput = 'Wrote:\n' + (data.written || []).map(item => {
+                    if (typeof item === 'string') return item;
+                    const previous = item.previousPath && item.previousPath !== item.scriptPath
+                        ? ' (existing connector detected at ' + item.previousPath + ')'
+                        : '';
+                    return item.scriptPath + previous;
+                }).join('\n');
+                await refreshClientSetupData();
+                showToast('Autoexec loader installed', 'success');
+            } catch (error) {
+                addClientAutoexecOutput = error.message || 'Could not write autoexec loader';
+                showToast('Autoexec install failed', 'error');
+            }
+            renderAddClient();
+        } else if (action === 'apply-bridge') {
+            const input = $('addClientBridgeInput');
+            if (input) {
+                if (input.dataset.mode === 'directBridge') {
+                    addClientDirectBridge = input.value.trim() || 'localhost:16384';
+                } else {
+                    addClientBridgeOverrides[input.dataset.mode] = input.value.trim();
+                }
+                renderAddClient();
+            }
+        } else if (action === 'tailscale-auto') {
+            await runClientSetupAction('tailscale-auto', false);
+        } else if (action === 'tailscale-admin') {
+            await runClientSetupAction(addClientAdminPrompt?.action || 'tailscale-auto', true);
+        } else if (action === 'tailscale-refresh') {
+            await refreshClientSetupData();
+            renderAuthorizedMachines();
+        } else if (action === 'toggle-guide') {
+            addClientGuideOpen = !addClientGuideOpen;
+            renderAuthorizedMachines();
+        }
+    });
+
+    addClientBody.addEventListener('change', (e) => {
+        const input = e.target;
+        if (!input?.classList?.contains('add-client-autoexec-check')) return;
+
+        const targets = getAutoexecTargets();
+        if (input.id === 'addClientAutoexecSelectAll') {
+            const ids = targets.map((target) => target.id).filter(Boolean);
+            addClientAutoexecSelected = new Set(input.checked ? ids : []);
+        } else {
+            const id = input.dataset.autoexecId;
+            if (!id) return;
+            if (input.checked) addClientAutoexecSelected.add(id);
+            else addClientAutoexecSelected.delete(id);
+        }
+        renderAddClient();
+    });
+}
+
+/* ── Select client ───────────────────────────────────────── */
+function selectClient(clientId) {
+    if (selectedClientId !== clientId) resetScriptsState();
+    selectedClientId = clientId;
+    const c = clients.find(x => x.clientId === clientId);
+    if (c) {
+        clientSelectorName.textContent = c.username;
+        clientSelectorAvatar.innerHTML = avatarHtml(c.userId, c.username, 24);
+    }
+    setSidebarMode('client');
+    showView('overview');
+    updateOverview();
+}
+
+/* ── Update overview ─────────────────────────────────────── */
+function updateOverview() {
+    const c = clients.find(x => x.clientId === selectedClientId);
+    if (!c) return;
+
+    $('overviewUsername').textContent = c.username;
+    $('overviewPlace').textContent = c.placeName;
+    $('overviewClientId').textContent = c.clientId;
+    $('overviewPlaceId').textContent = c.placeId || '—';
+    $('overviewUserId').textContent = c.userId || '—';
+    $('overviewJobId').textContent = c.jobId || '—';
+
+    const oa = $('overviewAvatar');
+    oa.innerHTML = avatarHtml(c.userId, c.username, 56);
+
+    const ot = $('overviewTransport');
+    ot.textContent = c.transport.toUpperCase();
+    ot.className = 'overview-transport ' + transportClass(c.transport);
+
+    $('tileTransport').textContent = c.transport === 'ws' ? 'WebSocket' : 'HTTP Polling';
+
+    const sync = c.scriptSync || { mappedSources: 0, sourcesToMap: 0, hasFinishedMapping: false };
+    const mapped = Number(sync.mappedSources) || 0;
+    const processed = Number(sync.processedSources) || mapped;
+    const skipped = Number(sync.skippedSources) || Math.max(0, processed - mapped);
+    const total = Number(sync.sourcesToMap) || 0;
+    const syncDone = sync.hasFinishedMapping === true;
+    const ssv = $('scriptsSyncCount'); if (ssv) ssv.textContent = `${mapped}/${total}`;
+    
+    // Update Sync Progress
+    const syncPerc = total > 0 ? Math.round((mapped / total) * 100) : 0;
+    const spv = $('scriptsSyncPerc'); if (spv) spv.textContent = `${syncPerc}%`;
+    const spf = $('syncProgressFill'); if (spf) spf.style.width = `${syncPerc}%`;
+
+    const sss = $('scriptsSyncStatus');
+    if (sss) {
+        sss.textContent = syncDone ? (skipped > 0 ? 'Synced (skips)' : 'Synced') : 'Syncing';
+        sss.className = 'scripts-sync-badge' + (syncDone ? ' scripts-sync-badge--synced' : '');
+    }
+
+    const oss = $('overviewScriptsSynced');
+    if (oss) oss.textContent = mapped;
+
+    const semantic = c.semanticIndex || { embeddedChunks: 0, chunkCount: 0 };
+    const embeddedChunks = Number(semantic.embeddedChunks) || 0;
+    const chunkCount = Number(semantic.chunkCount) || 0;
+    const isFullyIndexed = chunkCount > 0 && embeddedChunks >= chunkCount;
+    const scv = $('scriptsChunkCount'); if (scv) scv.textContent = `${embeddedChunks}/${chunkCount}`;
+    
+    // Update Index Progress
+    const indexPerc = chunkCount > 0 ? Math.round((embeddedChunks / chunkCount) * 100) : 0;
+    const ipv = $('scriptsIndexPerc'); if (ipv) ipv.textContent = `${indexPerc}%`;
+    const ipf = $('indexProgressFill'); if (ipf) ipf.style.width = `${indexPerc}%`;
+
+    if (!semanticIndexJobId && semanticIndexStatus) {
+        if (mapped === 0) {
+            semanticIndexStatus.textContent = 'Waiting for scripts';
+        } else if (isFullyIndexed && syncDone) {
+            semanticIndexStatus.textContent = 'Codebase fully indexed';
+        } else {
+            semanticIndexStatus.textContent = syncDone
+                ? `Ready to index ${mapped} scripts`
+                : `Ready to index ${mapped} synced scripts`;
+        }
+    }
+    if (semanticIndexBtn) {
+        semanticIndexBtn.disabled = mapped === 0 || !!semanticIndexJobId || (isFullyIndexed && syncDone);
+    }
+}
+
+/* ── Render overview clients ─────────────────────────────── */
+function renderOverviewClients() {
+    const el = $('overviewClientsList');
+    const count = $('overviewClientCount');
+    count.textContent = clients.length;
+
+    if (clients.length === 0) {
+        el.innerHTML = '<div class="no-client-empty"><span>No clients connected</span></div>';
+        return;
+    }
+    el.innerHTML = clients.map(c => {
+        return `<div class="section-client" data-cid="${c.clientId}">
+            <div class="section-client-avatar">${avatarHtml(c.userId, c.username, 32)}</div>
+            <div class="section-client-info">
+                <div class="section-client-name">${c.username}</div>
+                <div class="section-client-meta">${c.placeName} · ${c.clientId.slice(0, 8)}…</div>
+            </div>
+            <span class="section-client-transport ${transportClass(c.transport)}">${c.transport}</span>
+        </div>`;
+    }).join('');
+
+    el.querySelectorAll('.section-client').forEach(item => {
+        item.addEventListener('click', () => selectClient(item.dataset.cid));
+    });
+}
+
+
+/* ── Tools ───────────────────────────────────────────────── */
+const toolDefs = {
+    'script-grep': {
+        name: 'Script Grep',
+        desc: 'Search across all decompiled scripts using regex or literal patterns',
+        fields: [
+            { key: 'query', label: 'Search Pattern', type: 'text', placeholder: 'e.g. RemoteEvent or \\bfunction\\b' },
+            { key: 'literal', label: 'Literal Match', type: 'select', options: [['false','Regex'],['true','Literal']], default: 'false' },
+            { key: 'caseSensitive', label: 'Case Sensitive', type: 'select', options: [['true','Yes'],['false','No']], default: 'true' },
+            { key: 'limit', label: 'Max Scripts', type: 'text', placeholder: '50', default: '50' },
+        ],
+        buildPayload(vals) {
+            return { type: 'script-grep', query: vals.query, literal: vals.literal === 'true', caseSensitive: vals.caseSensitive === 'true', limit: parseInt(vals.limit) || 50 };
+        }
+    },
+    'semantic-search': {
+        name: 'Semantic Search',
+        desc: 'Natural language search across script sources using embeddings',
+        fields: [
+            { key: 'query', label: 'Natural Language Query', type: 'text', placeholder: 'e.g. inventory management logic' },
+            { key: 'limit', label: 'Max Results', type: 'text', placeholder: '10', default: '10' },
+        ],
+        buildPayload(vals) {
+            return { type: 'semantic-search', query: vals.query, limit: parseInt(vals.limit) || 10 };
+        }
+    },
+    'get-data-by-code': {
+        name: 'Get Data by Code',
+        desc: 'Execute Luau code and retrieve the returned values',
+        fields: [
+            { key: 'code', label: 'Luau Code (must return a value)', type: 'textarea', placeholder: 'return game.PlaceId' },
+            { key: 'timeout', label: 'Timeout (ms)', type: 'text', placeholder: '15000', default: '15000' },
+        ],
+        buildPayload(vals) {
+            return { type: 'get-data-by-code', code: vals.code, timeout: parseInt(vals.timeout) || 15000 };
+        }
+    },
+    'execute': {
+        name: 'Execute Code',
+        desc: 'Run Luau code in the Roblox client (fire-and-forget)',
+        fields: [
+            { key: 'code', label: 'Luau Code', type: 'textarea', placeholder: 'print("Hello from dashboard!")' },
+        ],
+        buildPayload(vals) { return { type: 'execute', code: vals.code }; }
+    },
+    'search-instances': {
+        name: 'Search Instances',
+        desc: 'Query game instances with QueryDescendants selectors',
+        fields: [
+            { key: 'selector', label: 'QueryDescendants Selector', type: 'text', placeholder: 'e.g. Part, Model > Humanoid, .Tagged' },
+            { key: 'root', label: 'Root', type: 'text', placeholder: 'game', default: 'game' },
+            { key: 'limit', label: 'Max Results', type: 'text', placeholder: '50', default: '50' },
+        ],
+        buildPayload(vals) {
+            return { type: 'search-instances', selector: vals.selector, root: vals.root || 'game', limit: parseInt(vals.limit) || 50 };
+        }
+    },
+    'get-console-output': {
+        name: 'Console Output',
+        desc: 'Retrieve the client\'s console/output log',
+        fields: [
+            { key: 'limit', label: 'Max Lines', type: 'text', placeholder: '50', default: '50' },
+            { key: 'filter', label: 'Filter (optional)', type: 'text', placeholder: 'Only include lines containing this text' },
+        ],
+        buildPayload(vals) {
+            const payload = { type: 'get-console-output', limit: parseInt(vals.limit) || 50 };
+            if (vals.filter) payload.filter = vals.filter;
+            return payload;
+        }
+    },
+    'get-descendants-tree': {
+        name: 'Descendants Tree',
+        desc: 'Explore the game instance hierarchy tree',
+        fields: [
+            { key: 'root', label: 'Root Instance', type: 'text', placeholder: 'game.Workspace' },
+            { key: 'maxDepth', label: 'Max Depth', type: 'text', placeholder: '3', default: '3' },
+            { key: 'classFilter', label: 'Class Filter (optional)', type: 'text', placeholder: 'e.g. BasePart' },
+        ],
+        buildPayload(vals) {
+            const p = { type: 'get-descendants-tree', root: vals.root, maxDepth: parseInt(vals.maxDepth) || 3 };
+            if (vals.classFilter) p.classFilter = vals.classFilter;
+            return p;
+        }
+    },
+    'get-game-info': {
+        name: 'Game Info',
+        desc: 'Get PlaceId, GameId, version, and other metadata',
+        fields: [],
+        buildPayload() { return { type: 'get-game-info' }; }
+    },
+};
+
+let activeTool = null;
+
+function selectTool(toolKey) {
+    const def = toolDefs[toolKey];
+    if (!def) return;
+
+    activeTool = toolKey;
+
+    // Update Sidebar
+    document.querySelectorAll('.tools-list-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.tool === toolKey);
+    });
+
+    // Update Header
+    $('toolExecName').textContent = def.name;
+    $('toolExecDesc').textContent = def.desc;
+
+    // Reset Result
+    $('toolOutputBody').textContent = 'Click Send to execute the tool';
+    $('toolResponseStatus').textContent = '';
+    $('toolResponseTime').textContent = '';
+
+    toolRunBtn.disabled = false;
+    toolRunBtn.innerHTML = '<span>Send</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+
+    // Build Form (Table Rows)
+    if (def.fields.length === 0) {
+        $('toolParamsBody').innerHTML = '<tr><td colspan="2" style="color:var(--text-tertiary);font-size:13px;padding:20px 32px;">No parameters required. Click Send to execute.</td></tr>';
+    } else {
+        $('toolParamsBody').innerHTML = def.fields.map(f => {
+            let input;
+            if (f.type === 'textarea') {
+                input = `<textarea id="tf_${f.key}" placeholder="${f.placeholder || ''}">${f.default || ''}</textarea>`;
+            } else if (f.type === 'select') {
+                const opts = f.options.map(([v, l]) => `<option value="${v}"${v === f.default ? ' selected' : ''}>${l}</option>`).join('');
+                input = `<select id="tf_${f.key}">${opts}</select>`;
+            } else {
+                input = `<input type="text" id="tf_${f.key}" placeholder="${f.placeholder || ''}" value="${f.default || ''}">`;
+            }
+            return `<tr><td>${f.label}</td><td>${input}</td></tr>`;
+        }).join('');
+    }
+}
+
+// Sidebar listeners
+document.querySelectorAll('.tools-list-item').forEach(item => {
+    item.addEventListener('click', () => selectTool(item.dataset.tool));
+});
+
+function formatProgress(job) {
+    const total = Number(job.total) || 0;
+    const completed = Number(job.completed) || 0;
+    const percent = total > 0 ? Math.min(100, Math.round((completed / total) * 100)) : 0;
+    const count = total > 0 ? `\n${completed}/${total} · ${percent}%` : '';
+    return `${job.message || 'Running…'}${count}`;
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function pollToolProgress(jobId, def) {
+    const startTime = performance.now();
+    $('toolOutputBody').textContent = 'Initializing…';
+    $('toolResponseStatus').textContent = 'Pending';
+    $('toolResponseStatus').className = 'tool-res-badge';
+    $('toolResponseTime').textContent = '';
+
+    while (true) {
+        const res = await fetch('/api/tool-progress?id=' + encodeURIComponent(jobId));
+        const job = await res.json();
+        
+        if (!res.ok || (job.error && !job.status)) {
+            throw new Error(job.error || 'Progress lookup failed');
+        }
+
+        if (job.status === 'done') {
+            const duration = Math.round(performance.now() - startTime);
+            $('toolOutputBody').textContent = typeof job.result === 'string' ? job.result : JSON.stringify(job.result, null, 2);
+            $('toolResponseStatus').textContent = '200 OK';
+            $('toolResponseStatus').classList.add('tool-res-badge--success');
+            $('toolResponseTime').textContent = duration + ' ms';
+            toolRunBtn.disabled = false;
+            toolRunBtn.innerHTML = '<span>Send</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+            return;
+        }
+
+        if (job.status === 'error') {
+            const duration = Math.round(performance.now() - startTime);
+            $('toolOutputBody').textContent = 'Error: ' + (job.error || job.message || 'Failed');
+            $('toolResponseStatus').textContent = 'Error';
+            $('toolResponseStatus').className = 'tool-res-badge tool-res-badge--error';
+            $('toolResponseTime').textContent = duration + ' ms';
+            toolRunBtn.disabled = false;
+            toolRunBtn.innerHTML = '<span>Send</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+            return;
+        }
+
+        const progressText = formatProgress(job);
+        $('toolOutputBody').textContent = progressText;
+        toolRunBtn.innerHTML = '<span>' + progressText.split('\n')[0] + '</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><circle cx="12" cy="12" r="10" stroke-dasharray="50" stroke-dashoffset="20"/></svg>';
+        await sleep(750);
+    }
+}
+
+async function pollOverviewIndexProgress(jobId) {
+    semanticIndexJobId = jobId;
+    if (semanticIndexBtn) semanticIndexBtn.disabled = true;
+
+    while (true) {
+        const res = await fetch('/api/tool-progress?id=' + encodeURIComponent(jobId));
+        const job = await res.json();
+        if (!res.ok || job.error && !job.status) {
+            throw new Error(job.error || 'Progress lookup failed');
+        }
+
+        if (job.status === 'done') {
+            semanticIndexStatus.textContent = job.result || 'Index ready';
+            semanticIndexJobId = null;
+            updateStatus();
+            return;
+        }
+
+        if (job.status === 'error') {
+            semanticIndexStatus.textContent = 'Error: ' + (job.error || job.message || 'Failed');
+            semanticIndexJobId = null;
+            updateOverview();
+            return;
+        }
+
+        semanticIndexStatus.textContent = formatProgress(job).replace('\n', ' · ');
+        await sleep(750);
+    }
+}
+
+async function triggerSemanticIndex() {
+    if (!selectedClientId || semanticIndexJobId) return;
+    semanticIndexStatus.textContent = 'Starting...';
+    semanticIndexBtn.disabled = true;
+
+    try {
+        const res = await fetch('/api/tool', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: 'semantic-search',
+                clientId: selectedClientId,
+                query: 'codebase overview',
+                limit: 1,
+                indexOnly: true,
+            }),
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        if (!data.jobId) throw new Error('No progress job returned');
+        await pollOverviewIndexProgress(data.jobId);
+    } catch (e) {
+        semanticIndexStatus.textContent = 'Error: ' + (e.message || e);
+        semanticIndexJobId = null;
+        updateOverview();
+    }
+}
+
+if (semanticIndexBtn) {
+    semanticIndexBtn.addEventListener('click', () => triggerSemanticIndex());
+}
+
+toolRunBtn.addEventListener('click', async () => {
+    if (!activeTool || !selectedClientId) return;
+    const def = toolDefs[activeTool];
+    if (!def) return;
+
+    const vals = {};
+    def.fields.forEach(f => {
+        const el = document.getElementById('tf_' + f.key);
+        if (el) vals[f.key] = el.value;
+    });
+
+    const payload = def.buildPayload(vals);
+    payload.clientId = selectedClientId;
+
+    toolRunBtn.disabled = true;
+    toolRunBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-dasharray="50" stroke-dashoffset="20"/></svg> Running…';
+
+
+    const startTime = performance.now();
+    try {
+        const res = await fetch('/api/tool', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+
+        if (data.error) {
+            const duration = Math.round(performance.now() - startTime);
+            $('toolOutputBody').textContent = 'Error: ' + data.error;
+            $('toolResponseStatus').textContent = 'ERROR';
+            $('toolResponseStatus').className = 'tool-res-badge tool-res-badge--error';
+            $('toolResponseTime').textContent = duration + ' ms';
+        } else if (data.jobId) {
+            await pollToolProgress(data.jobId, def);
+        } else {
+            const duration = Math.round(performance.now() - startTime);
+            $('toolOutputBody').textContent = typeof data.result === 'string' ? data.result : JSON.stringify(data.result, null, 2);
+            $('toolResponseStatus').textContent = '200 OK';
+            $('toolResponseStatus').className = 'tool-res-badge tool-res-badge--success';
+            $('toolResponseTime').textContent = duration + 'ms';
+        }
+    } catch (e) {
+        const duration = Math.round(performance.now() - startTime);
+        $('toolOutputBody').textContent = 'Network error: ' + e.message;
+        $('toolResponseStatus').textContent = 'ERROR';
+        $('toolResponseStatus').className = 'tool-res-badge tool-res-badge--error';
+        $('toolResponseTime').textContent = duration + ' ms';
+    }
+
+    toolRunBtn.disabled = false;
+    toolRunBtn.innerHTML = '<span>Send</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+});
+
+/* ── CSS spin animation ──────────────────────────────────── */
+const spinStyle = document.createElement('style');
+spinStyle.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+document.head.appendChild(spinStyle);
+
+/* ── Server logs ─────────────────────────────────────────── */
+let serverLogsLive = true;
+async function fetchServerLogs() {
+    try {
+        const res = await fetch('/api/server-logs?limit=200');
+        const data = await res.json();
+        renderServerLogs(data.logs || []);
+    } catch(e) {}
+}
+function renderServerLogs(entries) {
+    const body = $('serverLogsTableBody');
+    if (!entries.length) { body.innerHTML = '<div class="logs-empty">No server logs yet</div>'; return; }
+    
+    // Preserve scroll position during live updates
+    const savedScroll = body.scrollTop;
+    const wasAtBottom = body.scrollHeight - body.scrollTop - body.clientHeight < 30;
+    
+    body.innerHTML = entries.map(e => {
+        const d = new Date(e.timestamp);
+        const time = formatTimeFull(d);
+        const lvlClass = e.level === 'error' ? 'logs-type-error' : e.level === 'warn' ? 'logs-type-event' : 'logs-type-info';
+        const rowClass = e.level === 'error' ? ' logs-row--error' : '';
+        return `<div class="logs-row${rowClass}" style="grid-template-columns:160px 80px 1fr">
+            <div class="logs-col logs-col--time">${time}</div>
+            <div class="logs-col logs-col--type"><span class="${lvlClass}">${e.level}</span></div>
+            <div class="logs-col logs-col--message">${escapeHtml(e.message)}</div>
+        </div>`;
+    }).join('');
+    
+    // Restore scroll: if user was near bottom, auto-scroll to bottom; otherwise preserve position
+    if (wasAtBottom) {
+        body.scrollTop = body.scrollHeight;
+    } else {
+        body.scrollTop = savedScroll;
+    }
+}
+$('serverLogsClearBtn').addEventListener('click', async () => {
+    await fetch('/api/server-logs', { method: 'DELETE' });
+    renderServerLogs([]);
+    showToast('Server logs cleared', 'info');
+});
+$('serverLogsLiveBtn').addEventListener('click', () => {
+    serverLogsLive = !serverLogsLive;
+    const btn = $('serverLogsLiveBtn');
+    btn.classList.toggle('logs-btn--live', serverLogsLive);
+});
+
+/* ── Scripts view ────────────────────────────────────────── */
+let scriptsData = [];
+let scriptsSearchQuery = '';
+let scriptsSearchRequestId = 0;
+let scriptsSearchTimer = null;
+let scriptsBrowsePath = []; // current folder path segments
+let scriptsViewingFile = null; // currently viewing file debugId
+let scriptsViewingFileHasEmbeddings = false;
+let scriptsScrollPos = 0; // saved scroll position for the file list
+let scriptsDisplayInfo = new Map();
+
+const FOLDER_ICON = '<svg class="scripts-ficon scripts-ficon--folder" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M2 6a2 2 0 012-2h5l2 2h9a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>';
+const FILE_ICON = '<img class="scripts-ficon" src="luau.svg" width="16" height="16">';
+
+function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function updateScriptsExportButton() {
+    if (!scriptsExportBtn) return;
+    const canExport = !!selectedClientId && scriptsData.length > 0;
+    scriptsExportBtn.disabled = !canExport;
+    scriptsExportBtn.title = canExport
+        ? 'Export all stored scripts as a zip'
+        : 'No stored scripts to export';
+}
+
+function resetScriptsState() {
+    scriptsData = [];
+    scriptsSearchQuery = '';
+    scriptsSearchRequestId += 1;
+    if (scriptsSearchTimer) {
+        clearTimeout(scriptsSearchTimer);
+        scriptsSearchTimer = null;
+    }
+    scriptsBrowsePath = [];
+    scriptsViewingFile = null;
+    scriptsViewingFileHasEmbeddings = false;
+    scriptsScrollPos = 0;
+    scriptsDisplayInfo = new Map();
+
+    const search = $('scriptsSearch');
+    if (search) search.value = '';
+    const count = $('scriptsCount');
+    if (count) count.textContent = '0 scripts';
+    const breadcrumb = $('scriptsBreadcrumb');
+    if (breadcrumb) {
+        breadcrumb.innerHTML = '';
+        breadcrumb.style.display = 'none';
+    }
+    const list = $('scriptsFileList');
+    if (list) list.innerHTML = '<div class="logs-empty">No scripts indexed yet</div>';
+    const fileMode = $('scriptsFileMode');
+    const codeMode = $('scriptsCodeMode');
+    if (fileMode) fileMode.style.display = '';
+    if (codeMode) codeMode.style.display = 'none';
+    updateScriptsExportButton();
+}
+
+function filenameFromContentDisposition(header) {
+    if (!header) return null;
+    const utf8 = header.match(/filename\*=UTF-8''([^;]+)/i);
+    if (utf8) {
+        try { return decodeURIComponent(utf8[1].replace(/^"|"$/g, '')); } catch {}
+    }
+    const quoted = header.match(/filename="([^"]+)"/i);
+    if (quoted) return quoted[1];
+    const bare = header.match(/filename=([^;]+)/i);
+    return bare ? bare[1].trim() : null;
+}
+
+function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename || 'scripts-export.zip';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function exportScripts() {
+    if (!selectedClientId) return;
+    if (scriptsData.length === 0) {
+        showToast('No stored scripts to export', 'info');
+        updateScriptsExportButton();
+        return;
+    }
+
+    const label = scriptsExportBtn ? scriptsExportBtn.querySelector('span') : null;
+    const originalLabel = label ? label.textContent : '';
+    if (scriptsExportBtn) scriptsExportBtn.disabled = true;
+    if (label) label.textContent = 'Exporting';
+
+    try {
+        const res = await fetch(`/api/scripts/export?clientId=${encodeURIComponent(selectedClientId)}`);
+        if (!res.ok) {
+            let message = 'Failed to export scripts';
+            try {
+                const data = await res.json();
+                if (data.error) message = data.error;
+            } catch {}
+            showToast(message, 'error');
+            return;
+        }
+
+        const blob = await res.blob();
+        const filename = filenameFromContentDisposition(res.headers.get('Content-Disposition'));
+        downloadBlob(blob, filename);
+        showToast(`Exported ${scriptsData.length} scripts as zip`, 'success');
+    } catch(e) {
+        showToast('Failed to export scripts', 'error');
+    } finally {
+        if (label) label.textContent = originalLabel || 'Export';
+        updateScriptsExportButton();
+    }
+}
+
+if (scriptsExportBtn) scriptsExportBtn.addEventListener('click', exportScripts);
+
+async function fetchScripts() {
+    if (!selectedClientId) return;
+    try {
+        const res = await fetch(`/api/scripts?clientId=${selectedClientId}`);
+        const data = await res.json();
+        const newScripts = Array.isArray(data) ? data : (data.scripts || []);
+        
+        // Update and re-render if count changed or if currently viewing the empty state
+        if (newScripts.length !== scriptsData.length || (newScripts.length > 0 && $('scriptsFileList').querySelector('.logs-empty'))) {
+            scriptsData = newScripts;
+            if (scriptsSearchQuery) {
+                renderScriptsSearchResults();
+            } else {
+                $('scriptsCount').textContent = scriptsData.length + (scriptsData.length === 1 ? ' script' : ' scripts');
+            }
+            if (!scriptsViewingFile && !scriptsSearchQuery) {
+                renderScriptsBrowser();
+            }
+        }
+        updateScriptsExportButton();
+    } catch(e) {
+        updateScriptsExportButton();
+    }
+}
+
+function scriptPathParts(path) {
+    const parts = String(path || '').split('.').map(p => p.trim()).filter(Boolean);
+    return parts.length > 0 ? parts : ['script'];
+}
+
+function scriptPathKey(parts) {
+    return parts.join('\u0000');
+}
+
+function collectParentScriptPathKeys(scripts) {
+    const scriptPaths = new Set(scripts.map(s => scriptPathKey(scriptPathParts(s.path))));
+    const parents = new Set();
+
+    for (const script of scripts) {
+        const parts = scriptPathParts(script.path);
+        for (let i = 1; i < parts.length; i++) {
+            const parentKey = scriptPathKey(parts.slice(0, i));
+            if (scriptPaths.has(parentKey)) parents.add(parentKey);
+        }
+    }
+
+    return parents;
+}
+
+function ensureLuauFileName(name) {
+    return /\.(lua|luau)$/i.test(name) ? name : name + '.luau';
+}
+
+function uniqueScriptDisplayName(name, debugId, usedNames) {
+    if (!usedNames.has(name)) {
+        usedNames.add(name);
+        return name;
+    }
+
+    const extIdx = name.lastIndexOf('.');
+    const stem = extIdx === -1 ? name : name.slice(0, extIdx);
+    const ext = extIdx === -1 ? '' : name.slice(extIdx);
+    const suffix = String(debugId || 'copy').slice(0, 8).replace(/[^a-z0-9._-]+/gi, '-') || 'copy';
+    let i = 2;
+    let candidate = stem + '-' + suffix + ext;
+
+    while (usedNames.has(candidate)) {
+        candidate = stem + '-' + suffix + '-' + i + ext;
+        i += 1;
+    }
+
+    usedNames.add(candidate);
+    return candidate;
+}
+
+function buildScriptDisplayInfo(scripts) {
+    const sorted = [...scripts].sort((a, b) => a.path.localeCompare(b.path) || a.debugId.localeCompare(b.debugId));
+    const parentKeys = collectParentScriptPathKeys(sorted);
+    const usedNamesByFolder = new Map();
+    const info = new Map();
+
+    for (const script of sorted) {
+        const parts = scriptPathParts(script.path);
+        const hasChildren = parentKeys.has(scriptPathKey(parts));
+        const folderPath = hasChildren ? parts : parts.slice(0, -1);
+        const baseName = hasChildren ? 'init' : (parts[parts.length - 1] || 'script');
+        const folderKey = scriptPathKey(folderPath);
+        let usedNames = usedNamesByFolder.get(folderKey);
+
+        if (!usedNames) {
+            usedNames = new Set();
+            usedNamesByFolder.set(folderKey, usedNames);
+        }
+
+        const name = uniqueScriptDisplayName(ensureLuauFileName(baseName), script.debugId, usedNames);
+        info.set(script.debugId, {
+            folderPath,
+            name,
+            displayPath: [...folderPath, name].join('/')
+        });
+    }
+
+    return info;
+}
+
+function refreshScriptsDisplayInfo() {
+    scriptsDisplayInfo = buildScriptDisplayInfo(scriptsData);
+    return scriptsDisplayInfo;
+}
+
+function getScriptDisplayInfo(script) {
+    if (!scriptsDisplayInfo.has(script.debugId)) refreshScriptsDisplayInfo();
+    return scriptsDisplayInfo.get(script.debugId) || {
+        folderPath: scriptPathParts(script.path).slice(0, -1),
+        name: ensureLuauFileName(scriptPathParts(script.path).pop() || 'script'),
+        displayPath: ensureLuauFileName(scriptPathParts(script.path).join('/') || 'script')
+    };
+}
+
+function textRangesForQuery(text, query) {
+    const value = String(text || '');
+    const needle = String(query || '').toLowerCase();
+    const haystack = value.toLowerCase();
+    const ranges = [];
+    let from = 0;
+
+    while (needle && ranges.length < 20) {
+        const index = haystack.indexOf(needle, from);
+        if (index === -1) break;
+        ranges.push([index, index + needle.length]);
+        from = index + Math.max(needle.length, 1);
+    }
+
+    return ranges;
+}
+
+function highlightRanges(text, ranges) {
+    const value = String(text || '');
+    const sorted = [...(ranges || [])]
+        .filter(r => Array.isArray(r) && r.length === 2 && r[1] > r[0])
+        .sort((a, b) => a[0] - b[0]);
+    let html = '';
+    let cursor = 0;
+
+    for (const [rawStart, rawEnd] of sorted) {
+        const start = Math.max(cursor, Math.min(value.length, rawStart));
+        const end = Math.max(start, Math.min(value.length, rawEnd));
+        if (start > cursor) html += escapeHtml(value.slice(cursor, start));
+        html += '<mark class="scripts-search-mark">' + escapeHtml(value.slice(start, end)) + '</mark>';
+        cursor = end;
+    }
+
+    if (cursor < value.length) html += escapeHtml(value.slice(cursor));
+    return html || escapeHtml(value);
+}
+
+function highlightQuery(text, query) {
+    return highlightRanges(text, textRangesForQuery(text, query));
+}
+
+function scriptMatchesFileQuery(script, query, displayInfo) {
+    const q = String(query || '').toLowerCase();
+    if (!q) return false;
+    const info = displayInfo.get(script.debugId) || getScriptDisplayInfo(script);
+    return script.path.toLowerCase().includes(q) ||
+        script.debugId.toLowerCase().includes(q) ||
+        (info && info.displayPath.toLowerCase().includes(q));
+}
+
+function getLocalFileSearchHits(query, remoteFiles = []) {
+    const displayInfo = refreshScriptsDisplayInfo();
+    const byDebugId = new Map(scriptsData.map(script => [script.debugId, script]));
+    const seen = new Set();
+    const hits = [];
+
+    for (const script of scriptsData) {
+        if (!scriptMatchesFileQuery(script, query, displayInfo)) continue;
+        seen.add(script.debugId);
+        hits.push(script);
+    }
+
+    for (const remote of remoteFiles) {
+        if (!remote || seen.has(remote.debugId)) continue;
+        const local = byDebugId.get(remote.debugId);
+        if (local) {
+            seen.add(local.debugId);
+            hits.push(local);
+        }
+    }
+
+    return hits;
+}
+
+function codeMatchCountLabel(count) {
+    return count + ' ' + (count === 1 ? 'match' : 'matches');
+}
+
+// Build tree from flat script list
+function buildScriptTree(scripts) {
+    const root = { children: {}, scripts: [] };
+    const displayInfo = buildScriptDisplayInfo(scripts);
+    scriptsDisplayInfo = displayInfo;
+
+    for (const s of scripts) {
+        const info = displayInfo.get(s.debugId);
+        if (!info) continue;
+        let node = root;
+
+        for (const seg of info.folderPath) {
+            if (!node.children[seg]) node.children[seg] = { children: {}, scripts: [] };
+            node = node.children[seg];
+        }
+
+        node.scripts.push({ ...s, name: info.name, displayPath: info.displayPath });
+    }
+    return root;
+}
+
+function getNodeAt(tree, pathSegs) {
+    let node = tree;
+    for (const seg of pathSegs) {
+        if (!node.children[seg]) return null;
+        node = node.children[seg];
+    }
+    return node;
+}
+
+function countScriptsRecursive(node) {
+    let c = node.scripts.length;
+    for (const k of Object.keys(node.children)) c += countScriptsRecursive(node.children[k]);
+    return c;
+}
+
+function showFileMode() {
+    $('scriptsFileMode').style.display = '';
+    $('scriptsFileMode').classList.remove('scripts-file-mode--search');
+    $('scriptsCodeMode').style.display = 'none';
+    scriptsViewingFile = null;
+    
+    // Restore scroll position after a short delay to ensure DOM is updated
+    setTimeout(() => {
+        const list = $('scriptsFileList');
+        if (list) list.scrollTop = scriptsScrollPos;
+    }, 0);
+}
+
+function showCodeMode() {
+    $('scriptsFileMode').style.display = 'none';
+    $('scriptsCodeMode').style.display = '';
+    setCodeTab('code');
+}
+
+function setCodeTab(tab) {
+    const tabs = document.querySelectorAll('.scripts-code-tab');
+    tabs.forEach(t => t.classList.toggle('scripts-code-tab--active', t.dataset.tab === tab));
+    const codeEl = $('scriptsCodeBody');
+    const isEdit = tab === 'edit';
+    
+    codeEl.contentEditable = isEdit ? 'true' : 'false';
+    codeEl.classList.toggle('scripts-edit-active', isEdit);
+    if (isEdit) {
+        codeEl.focus();
+        codeEl.addEventListener('input', onCodeEditInput);
+    } else {
+        codeEl.removeEventListener('input', onCodeEditInput);
+    }
+    
+    // Show/hide save button
+    scriptsCodeSaveBtn.style.display = isEdit ? '' : 'none';
+}
+
+function renderBreadcrumb(fileName) {
+    const bc = $('scriptsBreadcrumb');
+    const atRoot = scriptsBrowsePath.length === 0;
+    
+    if (atRoot && !fileName) {
+        bc.style.display = 'none';
+        return;
+    }
+    
+    bc.style.display = 'flex';
+    let html = '<button class="scripts-bc-seg' + (!fileName && scriptsBrowsePath.length === 0 ? ' scripts-bc-seg--current' : '') + '" data-bc-idx="-1">game</button>';
+    scriptsBrowsePath.forEach((seg, i) => {
+        const isCurrent = !fileName && i === scriptsBrowsePath.length - 1;
+        html += '<span class="scripts-bc-sep">/</span>';
+        html += '<button class="scripts-bc-seg' + (isCurrent ? ' scripts-bc-seg--current' : '') + '" data-bc-idx="' + i + '">' + escapeHtml(seg) + '</button>';
+    });
+    if (fileName) {
+        html += '<span class="scripts-bc-sep">/</span>';
+        html += '<span class="scripts-bc-seg scripts-bc-seg--current">' + escapeHtml(fileName) + '</span>';
+    }
+    bc.innerHTML = html;
+}
+
+function renderScriptsBrowser() {
+    // Ensure file mode is showing (but don't reset scriptsViewingFile or touch scroll)
+    $('scriptsFileMode').style.display = '';
+    $('scriptsFileMode').classList.remove('scripts-file-mode--search');
+    $('scriptsCodeMode').style.display = 'none';
+    
+    const tree = buildScriptTree(scriptsData);
+    renderBreadcrumb();
+
+    const node = getNodeAt(tree, scriptsBrowsePath);
+    const list = $('scriptsFileList');
+    if (!list) return;
+
+    // Save current scroll before re-rendering
+    const currentScroll = list.scrollTop;
+
+    if (!node) {
+        list.innerHTML = '<div class="logs-empty">Path not found</div>';
+        return;
+    }
+
+    const folderNames = Object.keys(node.children).sort((a, b) => a.localeCompare(b));
+    const scripts = [...node.scripts].sort((a, b) => a.name.localeCompare(b.name));
+
+    if (folderNames.length === 0 && scripts.length === 0) {
+        list.innerHTML = '<div class="logs-empty">No scripts indexed yet</div>';
+        return;
+    }
+
+    let html = '';
+
+    // ".." go up row
+    if (scriptsBrowsePath.length > 0) {
+        html += '<div class="scripts-frow scripts-frow--up" data-action="up"><div class="scripts-fname">' + FOLDER_ICON + '<span class="scripts-fname-text">..</span></div><div></div><div></div><div></div></div>';
+    }
+
+    // Folders first
+    for (const name of folderNames) {
+        const count = countScriptsRecursive(node.children[name]);
+        html += '<div class="scripts-frow scripts-frow--folder" data-folder="' + escapeHtml(name) + '">';
+        html += '<div class="scripts-fname">' + FOLDER_ICON + '<span class="scripts-fname-text">' + escapeHtml(name) + '</span><span class="scripts-fname-count">' + count + '</span></div>';
+        html += '<div class="scripts-fmeta"></div>';
+        html += '<div class="scripts-fmeta"></div>';
+        html += '<div class="scripts-fmeta scripts-factions"></div>';
+        html += '</div>';
+    }
+
+    // Scripts
+    for (const s of scripts) {
+        html += '<div class="scripts-frow scripts-frow--file" data-debug-id="' + escapeHtml(s.debugId) + '" data-path="' + escapeHtml(s.path) + '">';
+        html += '<div class="scripts-fname">' + FILE_ICON + '<span class="scripts-fname-text">' + escapeHtml(s.name) + '</span></div>';
+        html += '<div class="scripts-fmeta">' + s.lines + '</div>';
+        html += '<div class="scripts-fmeta">' + formatBytes(s.bytes) + '</div>';
+        html += '<div class="scripts-fmeta scripts-factions"><button class="scripts-menu-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button></div>';
+        html += '</div>';
+    }
+
+    list.innerHTML = html;
+    
+    // Restore scroll position
+    list.scrollTop = currentScroll;
+}
+
+function renderSearchFileHits(files, query) {
+    if (!files.length) return '';
+
+    return '<div class="scripts-search-section">' +
+        '<div class="scripts-search-heading"><span>Files</span><span>' + files.length + '</span></div>' +
+        files.map(script => {
+            const info = getScriptDisplayInfo(script);
+            return '<button class="scripts-search-file" data-debug-id="' + escapeHtml(script.debugId) + '">' +
+                '<span class="scripts-search-file-name">' + FILE_ICON + '<span>' + highlightQuery(info.displayPath, query) + '</span></span>' +
+                '<span class="scripts-search-file-meta">' + script.lines + ' lines · ' + formatBytes(script.bytes) + '</span>' +
+                '</button>';
+        }).join('') +
+        '</div>';
+}
+
+function renderSearchCodeHits(results, query) {
+    if (!results.length) return '';
+
+    return '<div class="scripts-search-section">' +
+        '<div class="scripts-search-heading"><span>Code</span><span>' + results.length + '</span></div>' +
+        results.map(result => {
+            const script = scriptsData.find(s => s.debugId === result.debugId) || result;
+            const info = script.debugId ? getScriptDisplayInfo(script) : null;
+            const displayPath = info ? info.displayPath : ensureLuauFileName(scriptPathParts(result.path).join('/') || 'script');
+            const matchCount = Number(result.matchCount) || (Array.isArray(result.matches) ? result.matches.length : 0);
+            const snippets = (result.matches || []).map(match => (
+                '<button class="scripts-search-hit" data-debug-id="' + escapeHtml(result.debugId) + '" data-line="' + escapeHtml(match.lineNumber) + '">' +
+                    '<span class="scripts-search-line">' + escapeHtml(match.lineNumber) + '</span>' +
+                    '<code>' + highlightRanges(match.line, match.ranges) + '</code>' +
+                '</button>'
+            )).join('');
+
+            return '<div class="scripts-search-code-result">' +
+                '<button class="scripts-search-code-head" data-debug-id="' + escapeHtml(result.debugId) + '">' +
+                    '<span class="scripts-search-file-name">' + FILE_ICON + '<span>' + highlightQuery(displayPath, query) + '</span></span>' +
+                    '<span class="scripts-search-file-meta">' + codeMatchCountLabel(matchCount) + '</span>' +
+                '</button>' +
+                '<div class="scripts-search-snippets">' + snippets + '</div>' +
+                '</div>';
+        }).join('') +
+        '</div>';
+}
+
+async function renderScriptsSearchResults() {
+    const query = scriptsSearchQuery.trim();
+    const requestId = ++scriptsSearchRequestId;
+    const list = $('scriptsFileList');
+
+    if (!selectedClientId) return;
+
+    if (!query) {
+        $('scriptsCount').textContent = scriptsData.length + (scriptsData.length === 1 ? ' script' : ' scripts');
+        renderScriptsBrowser();
+        return;
+    }
+
+    $('scriptsFileMode').style.display = '';
+    $('scriptsFileMode').classList.add('scripts-file-mode--search');
+    $('scriptsCodeMode').style.display = 'none';
+    $('scriptsCount').textContent = 'Searching';
+    $('scriptsBreadcrumb').style.display = 'flex';
+    $('scriptsBreadcrumb').innerHTML = '<span class="scripts-bc-seg scripts-bc-seg--current">Search results</span>';
+    list.innerHTML = '<div class="scripts-search-loading">Searching...</div>';
+
+    try {
+        const res = await fetch(`/api/scripts/search?clientId=${encodeURIComponent(selectedClientId)}&q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        if (requestId !== scriptsSearchRequestId || query !== scriptsSearchQuery.trim()) return;
+
+        if (!res.ok) {
+            list.innerHTML = '<div class="logs-empty">' + escapeHtml(data.error || 'Search failed') + '</div>';
+            $('scriptsCount').textContent = '0 results';
+            return;
+        }
+
+        const fileHits = getLocalFileSearchHits(query, data.files || []);
+        const codeHits = Array.isArray(data.code) ? data.code : [];
+        const codeMatchCount = Number(data.totalCodeMatches) || codeHits.reduce((sum, result) => sum + (Number(result.matchCount) || 0), 0);
+        const total = fileHits.length + codeMatchCount;
+        const limited = data.limited ? ' · limited' : '';
+        $('scriptsCount').textContent = total === 0
+            ? '0 results'
+            : fileHits.length + ' files · ' + codeMatchCount + ' code' + limited;
+
+        if (total === 0) {
+            list.innerHTML = '<div class="logs-empty">No matching scripts</div>';
+            return;
+        }
+
+        list.innerHTML =
+            renderSearchFileHits(fileHits, query) +
+            renderSearchCodeHits(codeHits, query);
+    } catch(e) {
+        if (requestId !== scriptsSearchRequestId) return;
+        $('scriptsCount').textContent = '0 results';
+        list.innerHTML = '<div class="logs-empty">Search failed</div>';
+    }
+}
+
+$('scriptsSearch').addEventListener('input', (e) => {
+    scriptsSearchQuery = e.target.value.trim();
+    scriptsSearchRequestId += 1;
+    if (scriptsSearchTimer) {
+        clearTimeout(scriptsSearchTimer);
+        scriptsSearchTimer = null;
+    }
+
+    if (scriptsSearchQuery) {
+        scriptsSearchTimer = setTimeout(() => {
+            scriptsSearchTimer = null;
+            renderScriptsSearchResults();
+        }, 160);
+    } else {
+        $('scriptsCount').textContent = scriptsData.length + (scriptsData.length === 1 ? ' script' : ' scripts');
+        renderScriptsBrowser();
+    }
+});
+
+function clearScriptsSearchState() {
+    scriptsSearchQuery = '';
+    scriptsSearchRequestId += 1;
+    if (scriptsSearchTimer) {
+        clearTimeout(scriptsSearchTimer);
+        scriptsSearchTimer = null;
+    }
+    $('scriptsSearch').value = '';
+    $('scriptsCount').textContent = scriptsData.length + (scriptsData.length === 1 ? ' script' : ' scripts');
+}
+
+function setBrowsePathForScript(debugId) {
+    const script = scriptsData.find(s => s.debugId === debugId);
+    if (!script) return;
+    scriptsBrowsePath = [...getScriptDisplayInfo(script).folderPath];
+}
+
+function openScriptFromSearch(debugId, lineNumber = null) {
+    setBrowsePathForScript(debugId);
+    clearScriptsSearchState();
+    openScriptSource(debugId, lineNumber);
+}
+
+// Navigation clicks
+$('scriptsFileList').addEventListener('click', (e) => {
+    // Three-dot menu button clicks
+    const menuBtn = e.target.closest('.scripts-menu-btn');
+    if (menuBtn) {
+        e.stopPropagation();
+        showFileContextMenu(menuBtn);
+        return;
+    }
+
+    const searchTarget = e.target.closest('.scripts-search-file, .scripts-search-code-head, .scripts-search-hit');
+    if (searchTarget && searchTarget.dataset.debugId) {
+        const lineNumber = searchTarget.dataset.line ? Number(searchTarget.dataset.line) : null;
+        openScriptFromSearch(searchTarget.dataset.debugId, lineNumber);
+        return;
+    }
+
+    const row = e.target.closest('.scripts-frow');
+    if (!row) return;
+
+    if (row.dataset.action === 'up') {
+        scriptsBrowsePath.pop();
+        renderScriptsBrowser();
+        return;
+    }
+    if (row.dataset.folder) {
+        scriptsBrowsePath.push(row.dataset.folder);
+        renderScriptsBrowser();
+        return;
+    }
+    if (row.dataset.debugId) {
+        // Find the script to navigate to its parent folder first
+        setBrowsePathForScript(row.dataset.debugId);
+        if (scriptsSearchQuery) clearScriptsSearchState();
+        openScriptSource(row.dataset.debugId);
+    }
+});
+
+// Breadcrumb clicks
+$('scriptsBreadcrumb').addEventListener('click', (e) => {
+    const btn = e.target.closest('.scripts-bc-seg');
+    if (!btn || btn.classList.contains('scripts-bc-seg--current')) return;
+    const idx = parseInt(btn.dataset.bcIdx, 10);
+    scriptsBrowsePath = idx < 0 ? [] : scriptsBrowsePath.slice(0, idx + 1);
+    scriptsViewingFile = null;
+    renderScriptsBrowser();
+});
+
+function scrollScriptCodeToLine(lineNumber) {
+    const line = Number(lineNumber);
+    if (!scriptsCodeView || !Number.isFinite(line) || line < 1) return;
+
+    const gutter = $('scriptsCodeGutter');
+    gutter.querySelectorAll('.scripts-code-gutter--target').forEach(el => {
+        el.classList.remove('scripts-code-gutter--target');
+    });
+
+    const target = gutter.children[line - 1];
+    const lineHeight = target ? target.getBoundingClientRect().height || 20 : 20;
+    scriptsCodeView.scrollTop = Math.max(0, (line - 1) * lineHeight - scriptsCodeView.clientHeight * 0.35);
+
+    if (target) target.classList.add('scripts-code-gutter--target');
+}
+
+// Inline code viewer
+async function openScriptSource(debugId, lineNumber = null) {
+    if (!selectedClientId) return;
+    
+    // Save current scroll position before switching to code mode
+    const list = $('scriptsFileList');
+    if (list) scriptsScrollPos = list.scrollTop;
+
+    try {
+        const res = await fetch(`/api/scripts/source?clientId=${selectedClientId}&debugId=${encodeURIComponent(debugId)}`);
+        const data = await res.json();
+        if (data.error) { showToast(data.error, 'error'); return; }
+
+        scriptsViewingFile = debugId;
+        const lines = data.source.split('\n');
+
+        // Track whether this script has embeddings
+        const scriptMeta = scriptsData.find(s => s.debugId === debugId);
+        scriptsViewingFileHasEmbeddings = scriptMeta ? !!scriptMeta.hasEmbeddings : false;
+        const displayInfo = scriptMeta ? getScriptDisplayInfo(scriptMeta) : null;
+        const fileName = displayInfo ? displayInfo.name : ensureLuauFileName(scriptPathParts(data.path).pop() || 'script');
+
+        // Update breadcrumb to show file
+        renderBreadcrumb(fileName);
+
+        // Update code info bar
+        $('scriptsCodeInfo').textContent = lines.length + ' lines (' + lines.filter(l => l.trim()).length + ' loc) · ' + formatBytes(data.source.length);
+
+        // Build line number gutter
+        let gutterHtml = '';
+        for (let i = 1; i <= lines.length; i++) {
+            gutterHtml += '<span>' + i + '</span>';
+        }
+        $('scriptsCodeGutter').innerHTML = gutterHtml;
+
+        // Set code and highlight
+        const codeEl = $('scriptsCodeBody');
+        codeEl.textContent = data.source;
+        codeEl.className = 'language-lua';
+        
+        if (typeof hljs !== 'undefined') {
+            delete codeEl.dataset.highlighted;
+            hljs.highlightElement(codeEl);
+        }
+
+        showCodeMode();
+        updateCodeMenuReindex();
+
+        requestAnimationFrame(() => {
+            updateCodeOverflowHint();
+            if (lineNumber) scrollScriptCodeToLine(lineNumber);
+        });
+    } catch(e) {
+        showToast('Failed to load script source', 'error');
+    }
+}
+
+/* ── Code viewer tab switching ───────────────────────────── */
+document.querySelectorAll('.scripts-code-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        setCodeTab(tab.dataset.tab);
+    });
+});
+
+/* ── Cursor preservation helpers ───────────────────────────── */
+function saveCaret(el) {
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return null;
+    const range = sel.getRangeAt(0);
+    if (!el.contains(range.commonAncestorContainer)) return null;
+    const preRange = range.cloneRange();
+    preRange.selectNodeContents(el);
+    preRange.setEnd(range.endContainer, range.endOffset);
+    const offset = preRange.toString().length;
+    return { offset, collapsed: range.collapsed };
+}
+
+function restoreCaret(el, saved) {
+    if (!saved) { el.focus(); return; }
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    let pos = 0, node;
+    while ((node = walker.nextNode())) {
+        const len = node.nodeValue.length;
+        if (pos + len >= saved.offset) {
+            const range = document.createRange();
+            range.setStart(node, saved.offset - pos);
+            range.collapse(true);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+            return;
+        }
+        pos += len;
+    }
+    el.focus();
+}
+
+let codeEditDebounce = null;
+
+function onCodeEditInput() {
+    const codeEl = $('scriptsCodeBody');
+    clearTimeout(codeEditDebounce);
+
+    // Update line count gutter
+    syncGutterFromCode();
+    
+    codeEditDebounce = setTimeout(() => {
+        if (typeof hljs === 'undefined') return;
+        const saved = saveCaret(codeEl);
+        codeEl.className = 'language-lua';
+        delete codeEl.dataset.highlighted;
+        hljs.highlightElement(codeEl);
+        restoreCaret(codeEl, saved);
+    }, 300);
+}
+
+function syncGutterFromCode() {
+    const codeEl = $('scriptsCodeBody');
+    const text = codeEl.textContent || '';
+    const lines = text.split('\n');
+    const oldCount = $('scriptsCodeGutter').childElementCount;
+    if (lines.length === oldCount) return;
+    let html = '';
+    for (let i = 1; i <= lines.length; i++) {
+        html += '<span>' + i + '</span>';
+    }
+    $('scriptsCodeGutter').innerHTML = html;
+    $('scriptsCodeInfo').textContent = lines.length + ' lines (' + lines.filter(l => l.trim()).length + ' loc) · ' + formatBytes(text.length);
+}
+
+/* ── Save button ───────────────────────────────────────────── */
+scriptsCodeSaveBtn.addEventListener('click', async () => {
+    const codeEl = $('scriptsCodeBody');
+    const source = codeEl.textContent || '';
+    scriptsCodeSaveBtn.disabled = true;
+    scriptsCodeSaveBtn.textContent = 'Saving…';
+    try {
+        const res = await fetch('/api/scripts/source', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                clientId: selectedClientId,
+                debugId: scriptsViewingFile,
+                source,
+            }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+            showToast('Source saved', 'success');
+            $('scriptsCodeInfo').textContent =
+                data.lines + ' lines (' + source.split('\n').filter(l => l.trim()).length + ' loc) · ' + formatBytes(data.bytes);
+            // Update the script in scriptsData so hasEmbeddings stays in sync
+            const script = scriptsData.find(s => s.debugId === scriptsViewingFile);
+            if (script) {
+                script.lines = data.lines;
+                script.bytes = data.bytes;
+            }
+        } else {
+            showToast(data.error || 'Failed to save', 'error');
+        }
+    } catch(e) {
+        showToast('Failed to save source', 'error');
+    }
+    scriptsCodeSaveBtn.disabled = false;
+    scriptsCodeSaveBtn.textContent = 'Save';
+});
+
+/* ── Code viewer three-dot menu ──────────────────────────── */
+function updateCodeMenuReindex() {
+    const item = scriptsCodeMenu.querySelector('[data-action="reindex"]');
+    if (item) {
+        item.style.display = '';
+        item.textContent = scriptsViewingFileHasEmbeddings ? 'Re-index' : 'Index';
+    }
+}
+
+scriptsCodeMenuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    updateCodeMenuReindex();
+    scriptsCodeMenu.classList.toggle('open');
+    closeFileMenu();
+});
+
+scriptsCodeMenu.addEventListener('click', (e) => {
+    const item = e.target.closest('.scripts-menu-item');
+    if (!item) return;
+    scriptsCodeMenu.classList.remove('open');
+
+    const action = item.dataset.action;
+    if (action === 'copy-source') {
+        const codeEl = $('scriptsCodeBody');
+        const source = codeEl.textContent || '';
+        navigator.clipboard.writeText(source).then(() => {
+            showToast('Source copied to clipboard', 'success');
+        }).catch(() => {
+            showToast('Failed to copy', 'error');
+        });
+    } else if (action === 'reindex') {
+        triggerSemanticIndex();
+    }
+});
+
+/* ── File row context menu ───────────────────────────────── */
+let activeFileMenuDebugId = null;
+
+function clampMenuPosition(value, min, max) {
+    if (max < min) return min;
+    return Math.min(Math.max(value, min), max);
+}
+
+function positionFileContextMenu(btn) {
+    const gap = 6;
+    const viewportPad = 8;
+    const rect = btn.getBoundingClientRect();
+
+    scriptsFileMenu.style.visibility = 'hidden';
+    scriptsFileMenu.style.left = '0px';
+    scriptsFileMenu.style.top = '0px';
+    scriptsFileMenu.classList.add('open');
+
+    const menuRect = scriptsFileMenu.getBoundingClientRect();
+    const menuWidth = menuRect.width || 160;
+    const menuHeight = menuRect.height || 120;
+    const maxLeft = window.innerWidth - menuWidth - viewportPad;
+    const maxTop = window.innerHeight - menuHeight - viewportPad;
+    const left = clampMenuPosition(rect.right - menuWidth, viewportPad, maxLeft);
+    let top = rect.bottom + gap;
+
+    if (top + menuHeight > window.innerHeight - viewportPad) {
+        top = rect.top - menuHeight - gap;
+    }
+
+    scriptsFileMenu.style.left = left + 'px';
+    scriptsFileMenu.style.top = clampMenuPosition(top, viewportPad, maxTop) + 'px';
+    scriptsFileMenu.style.visibility = '';
+}
+
+function showFileContextMenu(btn) {
+    const row = btn.closest('.scripts-frow');
+    const debugId = row.dataset.debugId;
+    activeFileMenuDebugId = debugId;
+
+    // Always show re-index, but change label based on index status
+    const script = scriptsData.find(s => s.debugId === debugId);
+    const reindexItem = scriptsFileMenu.querySelector('[data-action="reindex"]');
+    if (reindexItem) {
+        reindexItem.style.display = '';
+        reindexItem.textContent = (script && script.hasEmbeddings) ? 'Re-index' : 'Index';
+    }
+
+    // Close code menu if open
+    scriptsCodeMenu.classList.remove('open');
+
+    positionFileContextMenu(btn);
+}
+
+function closeFileMenu() {
+    scriptsFileMenu.classList.remove('open');
+    activeFileMenuDebugId = null;
+}
+
+// File menu item clicks
+scriptsFileMenu.addEventListener('click', (e) => {
+    const item = e.target.closest('.scripts-menu-item');
+    if (!item || !activeFileMenuDebugId) return;
+    e.stopPropagation();
+    const action = item.dataset.action;
+    const debugId = activeFileMenuDebugId;
+    closeFileMenu();
+
+    if (action === 'edit') {
+        openScriptSource(debugId).then(() => setCodeTab('edit'));
+    } else if (action === 'open') {
+        openScriptSource(debugId);
+    } else if (action === 'reindex') {
+        triggerSemanticIndex();
+    }
+});
+
+// Click outside to close menus
+document.addEventListener('click', (e) => {
+    if (!scriptsCodeMenuBtn.contains(e.target) && !scriptsCodeMenu.contains(e.target)) {
+        scriptsCodeMenu.classList.remove('open');
+    }
+    if (!scriptsFileMenu.contains(e.target) && !e.target.closest('.scripts-menu-btn')) {
+        closeFileMenu();
+    }
+});
+window.addEventListener('resize', closeFileMenu);
+window.addEventListener('scroll', closeFileMenu, true);
+
+
+/* ── Server graph ────────────────────────────────────────── */
+let lastGraphKey = '';
+
+function layoutGraphSide(count, side, w, h, makeNode) {
+    if (count <= 0) return [];
+
+    const cx = w / 2;
+    const cy = h / 2;
+    const yPad = 28;
+    const availableY = Math.max(120, h - yPad * 2);
+    const minRowGap = 44;
+    const maxRows = Math.max(1, Math.floor(availableY / minRowGap) + 1);
+    const sidePad = Math.max(42, Math.min(64, w * 0.05));
+    const hubGap = Math.max(48, Math.min(120, w * 0.12));
+    const outerX = side === 'l' ? sidePad : w - sidePad;
+    const innerX = side === 'l' ? cx - hubGap : cx + hubGap;
+    const availableX = Math.max(1, Math.abs(innerX - outerX));
+    const minColGap = 36;
+    const maxCols = Math.max(1, Math.floor(availableX / minColGap) + 1);
+    const cols = Math.max(1, Math.min(count, maxCols, Math.ceil(count / maxRows)));
+    const rows = Math.ceil(count / cols);
+    const rowGap = rows > 1 ? availableY / (rows - 1) : 0;
+    const colGap = cols > 1 ? Math.min(96, availableX / (cols - 1)) : 0;
+    const density = Math.min(rowGap || 999, colGap || 999);
+    const radius = density < 28 ? 11 : density < 36 ? 13 : density < 44 ? 16 : 20;
+    const fontSize = radius <= 12 ? 8 : radius <= 14 ? 9 : 10;
+    const nodes = [];
+
+    for (let col = 0; col < cols; col++) {
+        const first = col * rows;
+        const rowsInCol = Math.min(rows, count - first);
+        const columnHeight = rowsInCol > 1 ? rowGap * (rowsInCol - 1) : 0;
+        const x = side === 'l' ? outerX + col * colGap : outerX - col * colGap;
+
+        for (let row = 0; row < rowsInCol; row++) {
+            const index = first + row;
+            nodes.push({
+                ...makeNode(index),
+                x,
+                y: cy - columnHeight / 2 + row * rowGap,
+                r: radius,
+                fontSize
+            });
+        }
+    }
+
+    return nodes;
+}
+
+function renderServerGraph() {
+    const el = $('serverGraph'); if (!el) return;
+    const rc = Math.max(currentRelays, 0), cc = clients.length;
+    const w = Math.max(320, Math.round(el.clientWidth || 600));
+    const h = Math.max(260, Math.round(el.clientHeight || 300));
+    const graphKey = w + ':' + h + ':' + rc + ':' + cc + ':' + clients.map(c => [c.clientId, c.userId, c.username].join('/')).join(',');
+    $('serverStatClients').textContent = cc;
+    $('serverStatRelays').textContent = rc;
+    const ss = $('serverStatStatus');
+    ss.textContent = currentConnected ? 'Connected' : 'Disconnected';
+    ss.className = 'server-stat-value' + (currentConnected ? ' server-stat-value--green' : '');
+    if (graphKey === lastGraphKey) return;
+    lastGraphKey = graphKey;
+    const cx = w/2, cy = h/2;
+    const leftNodes = layoutGraphSide(rc, 'l', w, h, (i) => ({ label: 'R' + (i + 1) }));
+    const rightNodes = layoutGraphSide(cc, 'r', w, h, (i) => ({
+        label: getInitials(clients[i].username || ''),
+        userId: clients[i].userId
+    }));
+    const colors = ['#a855f7','#f97316','#3b82f6','#22c55e','#ec4899'];
+    let s = '<svg viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg"><defs>';
+    const allN = [...leftNodes.map((n,i)=>({...n,side:'l',i})), ...rightNodes.map((n,i)=>({...n,side:'r',i}))];
+    allN.forEach((n,idx) => {
+        const c = colors[idx % colors.length];
+        s += '<linearGradient id="bg'+idx+'" x1="0" y1="0" x2="1" y2="0">';
+        s += '<stop offset="0%" stop-color="'+c+'" stop-opacity="0"/><stop offset="50%" stop-color="'+c+'"/><stop offset="100%" stop-color="'+c+'" stop-opacity="0"/></linearGradient>';
+    });
+    rightNodes.forEach((n,i) => {
+        s += '<clipPath id="ac'+i+'"><circle cx="'+n.x+'" cy="'+n.y+'" r="'+Math.max(8, n.r - 2)+'"/></clipPath>';
+    });
+    s += '</defs>';
+    allN.forEach((n,idx) => {
+        const dx = n.side==='l' ? (cx-n.x)*0.4 : (n.x-cx)*0.4;
+        const c1x = n.side==='l' ? n.x+dx : cx+dx, c2x = n.side==='l' ? cx-dx : n.x-dx;
+        const p = 'M'+n.x+','+n.y+' C'+c1x+','+n.y+' '+c2x+','+cy+' '+cx+','+cy;
+        // Static base line
+        s += '<path d="'+p+'" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" pathLength="100"/>';
+        // Animated beam using SMIL
+        const fromOff = n.side==='l' ? '0' : '-100';
+        const toOff = n.side==='l' ? '-100' : '0';
+        const delay = (idx * 0.4);
+        const c = colors[idx % colors.length];
+        s += '<path d="'+p+'" fill="none" stroke="'+c+'" stroke-width="2.5" pathLength="100" stroke-dasharray="20 80" stroke-dashoffset="'+fromOff+'" opacity="0.85">';
+        s += '<animate attributeName="stroke-dashoffset" from="'+fromOff+'" to="'+toOff+'" dur="2.5s" begin="'+delay+'s" repeatCount="indefinite"/>';
+        s += '</path>';
+    });
+    s += '<circle cx="'+cx+'" cy="'+cy+'" r="28" fill="#111" stroke="var(--border-light)" stroke-width="1.5"/>';
+    s += '<g transform="translate('+(cx-10)+','+(cy-10)+')">';
+    s += '<path d="M8.4 1.4L0.6 5.4l8.4 4.2 8.4-4.2-8.4-4z" fill="none" stroke="var(--text)" stroke-width="1.5" stroke-linejoin="round"/>';
+    s += '<path d="M0.6 10.2l8.4 4.2 8.4-4.2" fill="none" stroke="var(--text)" stroke-width="1.5" stroke-linejoin="round"/>';
+    s += '<path d="M0.6 14.8l8.4 4.2 8.4-4.2" fill="none" stroke="var(--text)" stroke-width="1.5" stroke-linejoin="round"/>';
+    s += '</g>';
+    leftNodes.forEach(n => {
+        s += '<circle cx="'+n.x+'" cy="'+n.y+'" r="'+n.r+'" fill="#111" stroke="var(--border)" stroke-width="1"/>';
+        s += '<text x="'+n.x+'" y="'+(n.y+Math.max(3, n.fontSize/2.5))+'" text-anchor="middle" fill="var(--text-secondary)" font-size="'+n.fontSize+'" font-family="var(--mono)">'+escapeHtml(n.label)+'</text>';
+    });
+    rightNodes.forEach((n,i) => {
+        s += '<circle cx="'+n.x+'" cy="'+n.y+'" r="'+n.r+'" fill="#111" stroke="var(--border)" stroke-width="1"/>';
+        if (n.userId) {
+            const avatarSize = Math.max(16, (n.r - 2) * 2);
+            s += '<image href="/api/avatar?userId='+encodeURIComponent(String(n.userId))+'" x="'+(n.x-avatarSize/2)+'" y="'+(n.y-avatarSize/2)+'" width="'+avatarSize+'" height="'+avatarSize+'" clip-path="url(#ac'+i+')" preserveAspectRatio="xMidYMid slice"/>';
+        } else {
+            s += '<text x="'+n.x+'" y="'+(n.y+Math.max(3, n.fontSize/2.5))+'" text-anchor="middle" fill="var(--text-secondary)" font-size="'+n.fontSize+'" font-family="var(--mono)">'+escapeHtml(n.label)+'</text>';
+        }
+    });
+    if (rc===0 && cc===0) {
+        s += '<text x="'+cx+'" y="'+(cy+50)+'" text-anchor="middle" fill="var(--text-tertiary)" font-size="13">No peers connected</text>';
+    }
+    s += '</svg>';
+    el.innerHTML = s;
+}
+
+window.addEventListener('resize', () => {
+    lastGraphKey = '';
+    if (dashboardMode === 'home' && currentView === 'server') renderServerGraph();
+});
+
+/* ── Settings ────────────────────────────────────────────── */
+/* Toast notifications */
+const toastIcons = {
+    success: '<svg class="toast-icon toast-icon--success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>',
+    error: '<svg class="toast-icon toast-icon--error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    info: '<svg class="toast-icon toast-icon--info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+};
+function showToast(message, type = 'info', duration = 3500) {
+    const container = $('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = (toastIcons[type]||toastIcons.info) +
+        '<span class="toast-msg">' + escapeHtml(message) + '</span>' +
+        '<button class="toast-close" onclick="this.parentElement.classList.add(\'toast--removing\');setTimeout(()=>this.parentElement.remove(),200)">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+    container.appendChild(toast);
+    setTimeout(() => {
+        if (toast.parentElement) {
+            toast.classList.add('toast--removing');
+            setTimeout(() => toast.remove(), 200);
+        }
+    }, duration);
+}
+
+async function loadSettings() {
+    try {
+        const res = await fetch('/api/semantic-settings');
+        const d = await res.json();
+        settingsProvider = d.provider || 'openai';
+        updateProviderUI();
+        $('settingsOpenaiUrl').value = d.openaiBaseUrl || '';
+        $('settingsOpenaiModel').value = d.openaiModel || '';
+        $('settingsOpenaiKey').value = d.openaiApiKeySet ? '••••••••' : '';
+        $('settingsOllamaUrl').value = d.ollamaBaseUrl || '';
+        $('settingsOllamaModel').value = d.ollamaModel || '';
+        $('settingsSaveEmbeddings').checked = d.saveEmbeddingsToDisk === true;
+    } catch(e) {}
+}
+function updateProviderUI() {
+    document.querySelectorAll('#providerToggle .settings-provider-btn').forEach(b => {
+        b.classList.toggle('settings-provider-btn--active', b.dataset.provider === settingsProvider);
+    });
+    $('settingsOpenai').style.display = settingsProvider === 'openai' ? 'block' : 'none';
+    $('settingsOllama').style.display = settingsProvider === 'ollama' ? 'block' : 'none';
+}
+document.querySelectorAll('#providerToggle .settings-provider-btn').forEach(b => {
+    b.addEventListener('click', () => { settingsProvider = b.dataset.provider; updateProviderUI(); });
+});
+async function saveSettings(body) {
+    try {
+        const res = await fetch('/api/semantic-settings', { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+        if (res.ok) {
+            await loadSettings();
+            showToast('Settings saved successfully', 'success');
+        } else {
+            showToast('Failed to save settings', 'error');
+        }
+    } catch(e) {
+        showToast('Network error saving settings', 'error');
+    }
+}
+$('saveProviderBtn').addEventListener('click', () => saveSettings({provider:settingsProvider}));
+$('saveOpenaiBtn').addEventListener('click', () => {
+    const key = $('settingsOpenaiKey').value;
+    const body = {
+        openaiBaseUrl: $('settingsOpenaiUrl').value,
+        openaiModel: $('settingsOpenaiModel').value
+    };
+    if (key && !key.startsWith('••')) body.openaiApiKey = key;
+    saveSettings(body);
+});
+$('saveOllamaBtn').addEventListener('click', () => saveSettings({ollamaBaseUrl:$('settingsOllamaUrl').value,ollamaModel:$('settingsOllamaModel').value}));
+async function showConfirmDialog({ title, desc }) {
+    return new Promise((resolve) => {
+        const modal = $('confirmModal');
+        const okBtn = $('confirmOkBtn');
+        const cancelBtn = $('confirmCancelBtn');
+        const titleEl = $('confirmTitle');
+        const descEl = $('confirmDesc');
+
+        titleEl.textContent = title || 'Are you absolutely sure?';
+        descEl.textContent = desc || 'This action cannot be undone.';
+        
+        modal.classList.add('open');
+
+        const cleanup = (val) => {
+            modal.classList.remove('open');
+            okBtn.removeEventListener('click', onOk);
+            cancelBtn.removeEventListener('click', onCancel);
+            resolve(val);
+        };
+
+        const onOk = () => cleanup(true);
+        const onCancel = () => cleanup(false);
+
+        okBtn.addEventListener('click', onOk);
+        cancelBtn.addEventListener('click', onCancel);
+    });
+}
+
+async function deleteEmbeddingCache() {
+    const confirmed = await showConfirmDialog({
+        title: 'Delete Embedding Cache?',
+        desc: 'This will clear all stored script embeddings. They will need to be re-indexed, which may take some time depending on your the game\'s size.'
+    });
+
+    if (!confirmed) return;
+
+    try {
+        const res = await fetch('/api/semantic-settings', { method:'DELETE' });
+        if (res.ok) {
+            showToast('Embedding cache cleared', 'success');
+        } else {
+            const data = await res.json();
+            showToast(data.error || 'Failed to clear cache', 'error');
+        }
+    } catch(e) {
+        showToast('Network error clearing cache', 'error');
+    }
+}
+$('saveEmbeddingCacheBtn').addEventListener('click', () => saveSettings({saveEmbeddingsToDisk:$('settingsSaveEmbeddings').checked}));
+$('deleteEmbeddingCacheBtn').addEventListener('click', () => deleteEmbeddingCache());
+$('settingsTestBtn').addEventListener('click', async () => {
+    const r = $('settingsTestResult'); r.innerHTML = 'Testing…'; r.className = '';
+    try {
+        const body = {
+            provider: settingsProvider,
+            openaiBaseUrl: $('settingsOpenaiUrl').value,
+            openaiModel: $('settingsOpenaiModel').value,
+            ollamaBaseUrl: $('settingsOllamaUrl').value,
+            ollamaModel: $('settingsOllamaModel').value
+        };
+        const key = $('settingsOpenaiKey').value;
+        if (key && !key.startsWith('••')) body.openaiApiKey = key;
+        const res = await fetch('/api/semantic-settings/test', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+        const d = await res.json();
+        r.textContent = d.ok ? `✓ Success (${d.dimensions||'?'}d, ${d.latencyMs||'?'}ms)` : '✗ ' + (d.error||'Failed');
+        r.className = 'settings-test-result ' + (d.ok ? 'settings-test-result--ok' : 'settings-test-result--err');
+        showToast(d.ok ? 'Connection test passed' : 'Connection test failed', d.ok ? 'success' : 'error');
+    } catch(e) { r.textContent = '✗ Network error'; r.className = 'settings-test-result settings-test-result--err'; showToast('Network error testing connection', 'error'); }
+});
+
+/* ── Polling ─────────────────────────────────────────────── */
+async function updateStatus() {
+    try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        clients = data.clients || [];
+        currentRelays = data.relayClients || 0;
+        currentConnected = !!data.connected;
+        if (data.startedAt) startTime = data.startedAt;
+
+        // Overview tiles
+        const cb = $('connBadge'); if(cb) { cb.textContent = data.connected?'Active':'Inactive'; cb.className='status-tile-badge '+(data.connected?'status-tile-badge--green':''); }
+
+        if (selectedClientId && !clients.find(c => c.clientId === selectedClientId)) {
+            showToast('Client disconnected', 'error');
+            selectedClientId = null;
+            resetScriptsState();
+            clientSelectorName.textContent = 'Select Client';
+            clientSelectorAvatar.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>';
+            setSidebarMode('home');
+            showView('clients');
+        }
+
+        if (dashboardMode === 'home' && currentView === 'clients') {
+            renderNoClientList(noClientSearch.value.toLowerCase());
+        } else if (dashboardMode === 'home' && currentView === 'server') {
+            renderServerGraph();
+            renderOverviewClients();
+        } else if (dashboardMode === 'home' && currentView === 'server-logs' && serverLogsLive) {
+            fetchServerLogs();
+        } else if (dashboardMode === 'client' && selectedClientId) {
+            updateOverview();
+        }
+    } catch (e) {}
+}
+
+setInterval(updateStatus, 2000);
+setInterval(() => {
+    if (dashboardMode === 'client' && currentView === 'scripts' && !scriptsViewingFile) {
+        fetchScripts();
+    }
+}, 5000);
+
+updateStatus();
+setSidebarMode('home');
+showView('clients');

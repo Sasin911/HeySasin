@@ -1,0 +1,19 @@
+MCP Server started and connected via stdio.
+[Router] Loaded 29 HTTP route(s), 1 WS route(s) + WS fallback.
+[Secondary] Connecting to primary relay at ws://localhost:16384/mcp-relay ...
+[Secondary] Connected to primary via relay.
+[Secondary] Lost connection to primary. Attempting promotion...
+[Promote] Waiting 240ms before attempting promotion...
+[Primary] MCP Bridge listening on port 16384 (WebSocket + HTTP)
+[Promote] Successfully promoted to primary!
+[Primary] Relay client connected. Total: 1
+[Primary] Relay client connected. Total: 2
+[Primary] Relay client connected. Total: 3
+[Primary] Relay client disconnected. Total: 2
+[Primary] Relay client disconnected. Total: 1
+[Primary] Relay client connected. Total: 2
+[Primary] Relay client connected. Total: 3
+[Primary] Relay client connected. Total: 4
+[Primary] Relay client disconnected. Total: 3
+[Primary] Relay client connected. Total: 4
+[Primary] Relay client disconnected. Total: 3

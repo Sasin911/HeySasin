@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey Sasin Gaming - Guides</title>
+    <meta name="description" content="Step-by-step guides for downloading, installing, and using Roblox executors safely.">
+    <meta property="og:title" content="Hey Sasin Gaming - Guides">
+    <meta property="og:description" content="Step-by-step executor installation and usage guides.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://heysasingaming.github.io/guides.html">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="splash" class="splash-screen" onclick="enterSite()">
+        <div class="splash-content">
+            <img src="logos/chill.gif" alt="" class="splash-gif">
+            <div class="splash-logo">Hey Sasin Gaming</div>
+            <p class="splash-tagline">Your trusted Roblox executor directory</p>
+            <button class="splash-btn" onclick="event.stopPropagation();enterSite()">Click to Enter</button>
+        </div>
+        <span class="splash-hint">&#9660; Click anywhere to enter</span>
+    </div>
+    <script>
+    if (sessionStorage.getItem('entered')) {
+        document.getElementById('splash').classList.add('hidden');
+    }
+    function enterSite() {
+        sessionStorage.setItem('entered', '1');
+        document.getElementById('splash').classList.add('hidden');
+    }
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    </script>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Hey Sasin Gaming</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="executors.html">Executors</a>
+                <a href="scripts.html">Scripts</a>
+                <a href="guides.html" class="active">Guides</a>
+                <a href="faq.html">FAQ</a>
+                <a href="changelog.html">Changelog</a>
+                <a href="https://discord.gg/qVHWC4xk7w" target="_blank" class="discord-link" title="Join our Discord">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="page-header">
+            <div class="glow"></div>
+            <h1>Executor <span class="highlight">Guides</span></h1>
+            <p>Step-by-step tutorials for downloading, installing, and using each executor safely.</p>
+        </section>
+
+        <section class="guides-list">
+
+            <div class="guide-card">
+                <div class="guide-header">
+                    <div>
+                        <h2>Xeno</h2>
+                        <span class="guide-tag windows">Windows</span>
+                    </div>
+                </div>
+                <div class="guide-body">
+                    <div class="guide-step">
+                        <span class="guide-step-num">1</span>
+                        <div><strong>Download</strong> — Go to <a href="https://xeno.now" target="_blank">xeno.now</a> and download the latest version.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">2</span>
+                        <div><strong>Extract</strong> — Right-click the downloaded ZIP and select "Extract All". Use password if prompted (check the site).</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">3</span>
+                        <div><strong>Run</strong> — Open the extracted folder and run <code>Xeno.exe</code> as Administrator.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">4</span>
+                        <div><strong>Inject</strong> — Launch Roblox, then click "Inject" in Xeno. Once injected, paste your script and click "Execute".</div>
+                    </div>
+                    <div class="guide-tip">Xeno is keyless and external — no keys or DLL injection needed.</div>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-header">
+                    <div>
+                        <h2>Solara</h2>
+                        <span class="guide-tag windows">Windows</span>
+                    </div>
+                </div>
+                <div class="guide-body">
+                    <div class="guide-step">
+                        <span class="guide-step-num">1</span>
+                        <div><strong>Download</strong> — Go to <a href="https://getsolara.dev" target="_blank">getsolara.dev</a> and download the installer.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">2</span>
+                        <div><strong>Install</strong> — Run the installer and follow the on-screen instructions.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">3</span>
+                        <div><strong>Launch</strong> — Open Solara from your desktop shortcut. It will auto-update if needed.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">4</span>
+                        <div><strong>Attach & Execute</strong> — Launch Roblox, click "Attach" in Solara, then paste and execute your script.</div>
+                    </div>
+                    <div class="guide-tip">Solara is external and keyless. It was the first executor to bypass Byfron.</div>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-header">
+                    <div>
+                        <h2>Velocity</h2>
+                        <span class="guide-tag windows">Windows</span>
+                    </div>
+                </div>
+                <div class="guide-body">
+                    <div class="guide-step">
+                        <span class="guide-step-num">1</span>
+                        <div><strong>Download</strong> — Go to <a href="https://getvelocity.llc" target="_blank">getvelocity.llc</a> and download the latest build.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">2</span>
+                        <div><strong>Extract</strong> — Unzip the downloaded file to a folder of your choice.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">3</span>
+                        <div><strong>Launch</strong> — Run the executable as Administrator.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">4</span>
+                        <div><strong>Inject</strong> — Launch Roblox, click "Inject" in Velocity, then execute your scripts. Velocity uses internal DLL injection for high performance.</div>
+                    </div>
+                    <div class="guide-tip">Velocity boasts a 99% sUNC score — one of the highest compatibility ratings available.</div>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-header">
+                    <div>
+                        <h2>Madium</h2>
+                        <span class="guide-tag windows">Windows</span>
+                    </div>
+                </div>
+                <div class="guide-body">
+                    <div class="guide-step">
+                        <span class="guide-step-num">1</span>
+                        <div><strong>Download</strong> — Go to <a href="https://getmadium.net" target="_blank">getmadium.net</a> and download the latest release.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">2</span>
+                        <div><strong>Extract</strong> — Extract the ZIP file using Windows Explorer or 7-Zip.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">3</span>
+                        <div><strong>Run</strong> — Open <code>Madium.exe</code> as Administrator.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">4</span>
+                        <div><strong>Execute</strong> — Launch Roblox, wait for Madium to detect it, then paste and run your scripts. Built-in script hub included.</div>
+                    </div>
+                    <div class="guide-tip">Madium offers 96% UNC and 100% sUNC — excellent compatibility for a free executor.</div>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-header">
+                    <div>
+                        <h2>Real</h2>
+                        <span class="guide-tag windows">Windows</span>
+                    </div>
+                </div>
+                <div class="guide-body">
+                    <div class="guide-step">
+                        <span class="guide-step-num">1</span>
+                        <div><strong>Download</strong> — Go to <a href="https://projectreal.gg" target="_blank">projectreal.gg</a> and download the installer.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">2</span>
+                        <div><strong>Get a Key</strong> — Real uses a key system. Follow the linkvertise steps on the site to obtain your free key, or purchase premium.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">3</span>
+                        <div><strong>Install & Launch</strong> — Run the installer, then open Real. Enter your key when prompted.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">4</span>
+                        <div><strong>Execute</strong> — Launch Roblox, click "Inject" in Real, then use the built-in script hub or paste your own scripts. Features VS Code integration.</div>
+                    </div>
+                    <div class="guide-tip">Real has a free tier with key ads and a paid tier for ad-free premium access.</div>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-header">
+                    <div>
+                        <h2>Potassium</h2>
+                        <span class="guide-tag windows">Windows</span>
+                    </div>
+                </div>
+                <div class="guide-body">
+                    <div class="guide-step">
+                        <span class="guide-step-num">1</span>
+                        <div><strong>Purchase</strong> — Go to <a href="https://potassium.pro" target="_blank">potassium.pro</a> and purchase a license ($22.99 lifetime).</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">2</span>
+                        <div><strong>Download</strong> — After purchase, download the executor from the member's area.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">3</span>
+                        <div><strong>Install</strong> — Run the installer. Potassium operates at kernel level for maximum stealth.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">4</span>
+                        <div><strong>Execute</strong> — Launch Roblox, open Potassium, and run your scripts. Kernel-level injection makes it highly undetectable.</div>
+                    </div>
+                    <div class="guide-tip">Potassium is the only paid executor on our list. Kernel-level access means it bypasses Hyperion reliably.</div>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-header">
+                    <div>
+                        <h2>Delta</h2>
+                        <span class="guide-tag android">Android</span>
+                    </div>
+                </div>
+                <div class="guide-body">
+                    <div class="guide-step">
+                        <span class="guide-step-num">1</span>
+                        <div><strong>Download</strong> — Go to <a href="https://deltaexploits.gg" target="_blank">deltaexploits.gg</a> and download the Delta APK.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">2</span>
+                        <div><strong>Enable Unknown Sources</strong> — Go to Settings > Security > toggle "Install from Unknown Sources".</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">3</span>
+                        <div><strong>Install</strong> — Open the downloaded APK file and install Delta.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">4</span>
+                        <div><strong>Execute</strong> — Open Delta, get a key (free, through linkvertise), then launch Roblox and use the built-in script hub or paste scripts.</div>
+                    </div>
+                    <div class="guide-tip">Delta is the most popular Android executor with 100% UNC. It requires a free key through linkvertise.</div>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-header">
+                    <div>
+                        <h2>Codex</h2>
+                        <span class="guide-tag android">Android</span>
+                    </div>
+                </div>
+                <div class="guide-body">
+                    <div class="guide-step">
+                        <span class="guide-step-num">1</span>
+                        <div><strong>Download</strong> — Go to <a href="https://codex.lol" target="_blank">codex.lol</a> and download the Codex APK.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">2</span>
+                        <div><strong>Enable Unknown Sources</strong> — Go to Settings > Security > toggle "Install from Unknown Sources".</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">3</span>
+                        <div><strong>Install</strong> — Open the downloaded APK and install Codex.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">4</span>
+                        <div><strong>Execute</strong> — Open Codex, launch Roblox from within the app, paste your script, and hit execute. No key required.</div>
+                    </div>
+                    <div class="guide-tip">Codex is completely keyless and free. It receives frequent updates for compatibility.</div>
+                </div>
+            </div>
+
+            <div class="guide-card safety-card">
+                <div class="guide-header">
+                    <h2>Safety Tips</h2>
+                </div>
+                <div class="guide-body">
+                    <div class="guide-step">
+                        <span class="guide-step-num">&#9888;</span>
+                        <div><strong>Always download from official sources</strong> — Only use the links listed on our Executors page. Never download from YouTube descriptions or random Discord DMs.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">&#9888;</span>
+                        <div><strong>Use an alt account</strong> — Executors violate Roblox ToS. Always use a secondary account to avoid losing your main account.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">&#9888;</span>
+                        <div><strong>Disable antivirus temporarily</strong> — Many executors are detected as "hack tools" by antivirus software. Add an exception rather than disabling permanently.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">&#9888;</span>
+                        <div><strong>Keep executors updated</strong> — Roblox updates frequently. Check our update badges to see which executors are still current.</div>
+                    </div>
+                    <div class="guide-step">
+                        <span class="guide-step-num">&#9888;</span>
+                        <div><strong>Run as Administrator</strong> — Most Windows executors need admin privileges to inject into Roblox properly.</div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <div class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#9650;</div>
+    <script>
+    window.addEventListener('scroll', function() {
+        var btn = document.querySelector('.back-to-top');
+        if (window.scrollY > 300) { btn.classList.add('visible'); } else { btn.classList.remove('visible'); }
+    });
+    </script>
+    <footer class="footer">
+        <p>&copy; 2026 Hey Sasin Gaming. Not affiliated with Roblox Corporation.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey Sasin Gaming - Executors</title>
+    <meta name="description" content="Top-rated Roblox executors with UNC/sUNC scores, official links, and detailed information. Find the best executor for Windows and Android.">
+    <meta property="og:title" content="Hey Sasin Gaming - Executors">
+    <meta property="og:description" content="Top-rated Roblox executors with UNC/sUNC scores and official links.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://heysasingaming.github.io/executors.html">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="splash" class="splash-screen" onclick="enterSite()">
+        <div class="splash-content">
+            <img src="logos/chill.gif" alt="" class="splash-gif">
+            <div class="splash-logo">Hey Sasin Gaming</div>
+            <p class="splash-tagline">Your trusted Roblox executor directory</p>
+            <button class="splash-btn" onclick="event.stopPropagation();enterSite()">Click to Enter</button>
+        </div>
+        <span class="splash-hint">&#9660; Click anywhere to enter</span>
+    </div>
+    <script>
+    if (sessionStorage.getItem('entered')) {
+        document.getElementById('splash').classList.add('hidden');
+    }
+    function enterSite() {
+        sessionStorage.setItem('entered', '1');
+        document.getElementById('splash').classList.add('hidden');
+    }
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    </script>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Hey Sasin Gaming</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="executors.html" class="active">Executors</a>
+                <a href="scripts.html">Scripts</a>
+                <a href="guides.html">Guides</a>
+                <a href="faq.html">FAQ</a>
+                <a href="changelog.html">Changelog</a>
+                <a href="https://discord.gg/qVHWC4xk7w" target="_blank" class="discord-link" title="Join our Discord">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="page-header">
+            <div class="glow"></div>
+            <h1>Roblox <span class="highlight">Executors</span></h1>
+            <p>Top-rated executors tested for performance and reliability. Click any executor to visit its official site.</p>
+        </section>
+
+        <div class="filter-bar">
+            <div class="filter-group">
+                <input type="text" id="filterSearch" class="filter-input" placeholder="Search executors..." oninput="applyFilters()">
+            </div>
+            <div class="filter-group">
+                <label>Platform</label>
+                <select id="filterPlatform" class="filter-select" onchange="applyFilters()">
+                    <option value="all">All</option>
+                    <option value="windows">Windows</option>
+                    <option value="android">Android</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Pricing</label>
+                <select id="filterPricing" class="filter-select" onchange="applyFilters()">
+                    <option value="all">All</option>
+                    <option value="free">Free</option>
+                    <option value="freemium">Free / Paid</option>
+                    <option value="paid">Paid</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Keyless</label>
+                <select id="filterKeyless" class="filter-select" onchange="applyFilters()">
+                    <option value="all">All</option>
+                    <option value="yes">Keyless</option>
+                    <option value="no">Keyed</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Sort By</label>
+                <select id="filterSort" class="filter-select" onchange="applyFilters()">
+                    <option value="name">Name</option>
+                    <option value="unc">UNC Score</option>
+                    <option value="updated">Last Updated</option>
+                </select>
+            </div>
+        </div>
+
+        <section class="category-section">
+            <div class="category-header">
+                <span class="category-icon">&#9000;</span>
+                <h2>Windows</h2>
+            </div>
+            <div class="executors-list">
+                <div class="executor-card" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-15">
+                    <div class="executor-logo">
+                        <div class="logo-placeholder">
+                            <img src="logos/xeno.png" alt="Xeno" class="executor-img">
+                        </div>
+                    </div>
+                    <div class="executor-info">
+                        <h2>Xeno</h2>
+                        <p class="executor-desc">Free, keyless external executor with fast execution and wide script compatibility. Built for performance and reliability.</p>
+                        <div class="executor-stats">
+                            <div class="stat">
+                                <span class="stat-label">UNC Score</span>
+                                <span class="stat-value">75%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Keyless</span>
+                                <span class="stat-value yes">Yes</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Platform</span>
+                                <span class="stat-value">Windows</span>
+                            </div>
+                        </div>
+                        <div class="executor-links">
+                            <a href="https://xeno.now" target="_blank" class="btn btn-primary">xeno.now &#8599;</a>
+                            <a href="https://rscripts.wiki" target="_blank" class="btn btn-secondary">rscripts.wiki &#8599;</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="executor-card" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-18">
+                    <div class="executor-logo">
+                        <div class="logo-placeholder">
+                            <img src="logos/solara.webp" alt="Solara" class="executor-img">
+                        </div>
+                    </div>
+                    <div class="executor-info">
+                        <h2>Solara</h2>
+                        <p class="executor-desc">The first & best external executor after Byfron. Keyless, auto-updating, and trusted by millions of users worldwide.</p>
+                        <div class="executor-stats">
+                            <div class="stat">
+                                <span class="stat-label">sUNC Score</span>
+                                <span class="stat-value">60%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">UNC Score</span>
+                                <span class="stat-value">66%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Keyless</span>
+                                <span class="stat-value yes">Yes</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Platform</span>
+                                <span class="stat-value">Windows</span>
+                            </div>
+                        </div>
+                        <a href="https://getsolara.dev" target="_blank" class="btn btn-primary">Visit Official Site &#8599;</a>
+                    </div>
+                </div>
+
+                <div class="executor-card" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="unstable" data-updated="2026-05-20">
+                    <div class="executor-logo">
+                        <div class="logo-placeholder">
+                            <img src="logos/velocity.ico" alt="Velocity" class="executor-img">
+                        </div>
+                    </div>
+                    <div class="executor-info">
+                        <h2>Velocity</h2>
+                        <p class="executor-desc">Top-rated internal executor boasting a 99% sUNC success rate. Fast, keyless, and completely free for Windows.</p>
+                        <div class="executor-stats">
+                            <div class="stat">
+                                <span class="stat-label">sUNC Score</span>
+                                <span class="stat-value">99%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Keyless</span>
+                                <span class="stat-value yes">Yes</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Platform</span>
+                                <span class="stat-value">Windows</span>
+                            </div>
+                        </div>
+                        <a href="https://getvelocity.llc" target="_blank" class="btn btn-primary">Visit Official Site &#8599;</a>
+                    </div>
+                </div>
+
+                <div class="executor-card" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-10">
+                    <div class="executor-logo">
+                        <div class="logo-placeholder">
+                            <img src="logos/madium-logo.webp" alt="Madium" class="executor-img">
+                        </div>
+                    </div>
+                    <div class="executor-info">
+                        <h2>Madium</h2>
+                        <p class="executor-desc">High UNC free executor by Olemad with 96% UNC and 100% sUNC. Keyless, built-in script hub, and simple UI for easy scripting.</p>
+                        <div class="executor-stats">
+                            <div class="stat">
+                                <span class="stat-label">UNC Score</span>
+                                <span class="stat-value">96%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">sUNC Score</span>
+                                <span class="stat-value">100%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Keyless</span>
+                                <span class="stat-value yes">Yes</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Platform</span>
+                                <span class="stat-value">Windows</span>
+                            </div>
+                        </div>
+                        <a href="https://getmadium.net" target="_blank" class="btn btn-primary">Visit Official Site &#8599;</a>
+                    </div>
+                </div>
+
+                <div class="executor-card" data-platform="windows" data-pricing="freemium" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-05-25">
+                    <div class="executor-logo">
+                        <div class="logo-placeholder">
+                            <img src="logos/real.ico" alt="Real" class="executor-img">
+                        </div>
+                    </div>
+                    <div class="executor-info">
+                        <h2>Real</h2>
+                        <p class="executor-desc">Modern, fast Roblox executor with 98% UNC. Built-in script hub, multi-tab editor, deep customization, and VS Code integration.</p>
+                        <div class="executor-stats">
+                            <div class="stat">
+                                <span class="stat-label">UNC Score</span>
+                                <span class="stat-value">98%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">sUNC Score</span>
+                                <span class="stat-value">98%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Pricing</span>
+                                <span class="stat-value">Free / Paid</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Platform</span>
+                                <span class="stat-value">Windows</span>
+                            </div>
+                        </div>
+                        <a href="https://projectreal.gg" target="_blank" class="btn btn-primary">Visit Official Site &#8599;</a>
+                    </div>
+                </div>
+
+                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-20">
+                    <div class="executor-logo">
+                        <div class="logo-placeholder">
+                            <img src="logos/potassium.png" alt="Potassium" class="executor-img">
+                        </div>
+                    </div>
+                    <div class="executor-info">
+                        <h2>Potassium</h2>
+                        <p class="executor-desc">Premium kernel-level executor with 99% UNC and 100% sUNC. Highly undetectable, crash-free, and bypasses Hyperion.</p>
+                        <div class="executor-stats">
+                            <div class="stat">
+                                <span class="stat-label">UNC Score</span>
+                                <span class="stat-value">99%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">sUNC Score</span>
+                                <span class="stat-value">100%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Pricing</span>
+                                <span class="stat-value">$22.99 Lifetime</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Platform</span>
+                                <span class="stat-value">Windows</span>
+                            </div>
+                        </div>
+                        <a href="https://potassium.pro" target="_blank" class="btn btn-primary">Visit Official Site &#8599;</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-section">
+            <div class="category-header">
+                <span class="category-icon">&#128241;</span>
+                <h2>Android</h2>
+            </div>
+            <div class="executors-list">
+                <div class="executor-card" data-platform="android" data-pricing="free" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-05">
+                    <div class="executor-logo">
+                        <div class="logo-placeholder">
+                            <img src="logos/delta.ico" alt="Delta" class="executor-img">
+                        </div>
+                    </div>
+                    <div class="executor-info">
+                        <h2>Delta</h2>
+                        <p class="executor-desc">The most popular Roblox executor for mobile. 100% UNC support, built-in script hub, fast key system, and a user-friendly interface.</p>
+                        <div class="executor-stats">
+                            <div class="stat">
+                                <span class="stat-label">UNC Score</span>
+                                <span class="stat-value">100%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Key System</span>
+                                <span class="stat-value">Fast Key</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Price</span>
+                                <span class="stat-value">Free</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Platform</span>
+                                <span class="stat-value">Android</span>
+                            </div>
+                        </div>
+                        <a href="https://deltaexploits.gg" target="_blank" class="btn btn-primary">Visit Official Site &#8599;</a>
+                    </div>
+                </div>
+
+                <div class="executor-card" data-platform="android" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="unstable" data-updated="2026-05-30">
+                    <div class="executor-logo">
+                        <div class="logo-placeholder">
+                            <img src="logos/codex.svg" alt="Codex" class="executor-img">
+                        </div>
+                    </div>
+                    <div class="executor-info">
+                        <h2>Codex</h2>
+                        <p class="executor-desc">Powerful mobile executor for Android with consistent updates and broad script compatibility. User-friendly interface with fast execution.</p>
+                        <div class="executor-stats">
+                            <div class="stat">
+                                <span class="stat-label">UNC Score</span>
+                                <span class="stat-value">90%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Key System</span>
+                                <span class="stat-value">Keyless</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Price</span>
+                                <span class="stat-value">Free</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Platform</span>
+                                <span class="stat-value">Android</span>
+                            </div>
+                        </div>
+                        <a href="https://codex.lol" target="_blank" class="btn btn-primary">Visit Official Site &#8599;</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+    function renderBadges(dates) {
+        document.querySelectorAll('.executor-card[data-updated]').forEach(function(card) {
+            var name = card.querySelector('h2').childNodes[0].textContent.trim();
+            var dateStr = (dates && dates[name]) || card.getAttribute('data-updated');
+            var updated = new Date(dateStr);
+            var now = new Date();
+            var diff = Math.floor((now - updated) / (1000 * 60 * 60 * 24));
+            var old = card.querySelector('.update-badge');
+            if (old) old.remove();
+            var badge = document.createElement('span');
+            badge.className = 'update-badge';
+            if (diff <= 14) {
+                badge.className += ' updated';
+                badge.textContent = 'Updated (' + diff + 'd ago)';
+            } else if (diff <= 30) {
+                badge.className += ' stale';
+                badge.textContent = diff + 'd ago';
+            } else {
+                badge.className += ' outdated';
+                badge.textContent = diff + 'd ago';
+            }
+            card.querySelector('.executor-info h2').appendChild(badge);
+        });
+    }
+
+    function renderSafety() {
+        document.querySelectorAll('.executor-card[data-safety]').forEach(function(card) {
+            var safety = card.getAttribute('data-safety');
+            var old = card.querySelector('.safety-badge');
+            if (old) old.remove();
+            var badge = document.createElement('span');
+            badge.className = 'safety-badge ' + safety;
+            if (safety === 'verified') {
+                badge.textContent = 'Verified Safe';
+            } else {
+                badge.textContent = 'Community Trusted';
+            }
+            var h2 = card.querySelector('.executor-info h2');
+            if (!card.querySelector('.safety-badge')) {
+                h2.appendChild(badge);
+            }
+        });
+    }
+
+    function renderStatus() {
+        document.querySelectorAll('.executor-card[data-status]').forEach(function(card) {
+            var status = card.getAttribute('data-status');
+            var old = card.querySelector('.status-badge');
+            if (old) old.remove();
+            var badge = document.createElement('span');
+            badge.className = 'status-badge ' + status;
+            if (status === 'working') {
+                badge.textContent = 'Working';
+            } else if (status === 'unstable') {
+                badge.textContent = 'Unstable';
+            } else {
+                badge.textContent = 'Broken';
+            }
+            var h2 = card.querySelector('.executor-info h2');
+            if (!card.querySelector('.status-badge')) {
+                h2.insertBefore(badge, h2.firstChild);
+            }
+        });
+    }
+
+    function applyFilters() {
+        var search = document.getElementById('filterSearch').value.toLowerCase();
+        var platform = document.getElementById('filterPlatform').value;
+        var pricing = document.getElementById('filterPricing').value;
+        var keyless = document.getElementById('filterKeyless').value;
+        var sort = document.getElementById('filterSort').value;
+
+        var lists = document.querySelectorAll('.executors-list');
+        lists.forEach(function(list) {
+            var cards = Array.from(list.querySelectorAll('.executor-card'));
+            cards.forEach(function(card) {
+                var p = card.getAttribute('data-platform');
+                var pr = card.getAttribute('data-pricing');
+                var k = card.getAttribute('data-keyless');
+                var name = card.querySelector('h2').childNodes[0].textContent.trim().toLowerCase();
+                var desc = (card.querySelector('.executor-desc') || {}).textContent || '';
+
+                var match = true;
+                if (search && name.indexOf(search) === -1 && desc.indexOf(search) === -1) match = false;
+                if (platform !== 'all' && p !== platform) match = false;
+                if (pricing !== 'all' && pr !== pricing) match = false;
+                if (keyless !== 'all' && k !== keyless) match = false;
+                card.style.display = match ? '' : 'none';
+            });
+
+            var visible = cards.filter(function(c) { return c.style.display !== 'none'; });
+            visible.sort(function(a, b) {
+                var va = 0, vb = 0;
+                if (sort === 'name') {
+                    va = a.querySelector('h2').childNodes[0].textContent.trim().toLowerCase();
+                    vb = b.querySelector('h2').childNodes[0].textContent.trim().toLowerCase();
+                    return va < vb ? -1 : va > vb ? 1 : 0;
+                }
+                if (sort === 'unc') {
+                    var statsA = a.querySelectorAll('.stat-value');
+                    var statsB = b.querySelectorAll('.stat-value');
+                    for (var i = 0; i < statsA.length; i++) {
+                        if (statsA[i].textContent.indexOf('%') > -1) {
+                            va = parseInt(statsA[i].textContent);
+                            vb = parseInt(statsB[i].textContent);
+                            break;
+                        }
+                    }
+                    return vb - va;
+                }
+                if (sort === 'updated') {
+                    va = new Date(a.getAttribute('data-updated'));
+                    vb = new Date(b.getAttribute('data-updated'));
+                    return vb - va;
+                }
+                return 0;
+            });
+            visible.forEach(function(c) { list.appendChild(c); });
+        });
+    }
+
+    renderSafety();
+    renderStatus();
+
+    var cached = localStorage.getItem('hsg_updates');
+    if (cached) {
+        try { renderBadges(JSON.parse(cached)); } catch(e) { renderBadges(null); }
+    } else {
+        renderBadges(null);
+    }
+
+    fetch('updates.json?t=' + Date.now())
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            localStorage.setItem('hsg_updates', JSON.stringify(data));
+            renderBadges(data);
+        })
+        .catch(function() {
+            if (!cached) renderBadges(null);
+        });
+    </script>
+    <div class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#9650;</div>
+    <script>
+    window.addEventListener('scroll', function() {
+        var btn = document.querySelector('.back-to-top');
+        if (window.scrollY > 300) { btn.classList.add('visible'); } else { btn.classList.remove('visible'); }
+    });
+    </script>
+    <footer class="footer">
+        <p>&copy; 2026 Hey Sasin Gaming. Not affiliated with Roblox Corporation.</p>
+    </footer>
+</body>
+</html>

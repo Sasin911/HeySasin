@@ -1,0 +1,17 @@
+# Build artifacts
+dist/*
+
+# node modules
+node_modules/*
+
+# pnpm store
+.pnpm-store/*
+
+# Cursor
+.cursor/*
+
+# Cursor
+.cursor/*
+
+# macOS
+.DS_Store

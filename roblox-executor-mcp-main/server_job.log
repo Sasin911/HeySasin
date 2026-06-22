@@ -1,0 +1,10 @@
+﻿node : MCP Server started and connected via stdio.
+At line:1 char:100
++ ... r-mcp-main\roblox-executor-mcp-main"; node dist/index.js 2>&1 | Out-F ...
++                                           ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (MCP Server star...cted via stdio.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[Router] Loaded 29 HTTP route(s), 1 WS route(s) + WS fallback.
+[Secondary] Connecting to primary relay at ws://localhost:16384/mcp-relay ...
+[Secondary] Connected to primary via relay.

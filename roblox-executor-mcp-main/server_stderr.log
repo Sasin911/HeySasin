@@ -1,0 +1,4 @@
+MCP Server started and connected via stdio.
+[Router] Loaded 29 HTTP route(s), 1 WS route(s) + WS fallback.
+[Secondary] Connecting to primary relay at ws://localhost:16384/mcp-relay ...
+[Secondary] Connected to primary via relay.
