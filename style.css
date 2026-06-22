@@ -449,6 +449,48 @@ main {
     line-height: 1;
 }
 
+.sub-category {
+    margin-bottom: 40px;
+}
+
+.sub-category:last-child {
+    margin-bottom: 0;
+}
+
+.sub-category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 0 4px;
+}
+
+.sub-category-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.sub-category-header .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.06), transparent);
+}
+
+.sub-category-tag {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: rgba(192, 132, 252, 0.06);
+    color: #c084fc;
+    border: 1px solid rgba(192, 132, 252, 0.1);
+}
+
 .executors-list {
     max-width: 800px;
     margin: 0 auto;
