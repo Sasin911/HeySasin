@@ -51,7 +51,7 @@
     </script>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo">Hey Sasin Gaming</a>
+            <a href="index.html" class="logo"><img src="logos/logo.svg" alt="" class="logo-img"> Hey Sasin Gaming</a>
             <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">
                 <span></span><span></span><span></span>
             </button>
@@ -87,7 +87,8 @@
                 <label>Platform</label>
                 <select id="filterPlatform" class="filter-select" onchange="applyFilters()">
                     <option value="all">All</option>
-                    <option value="windows">Windows</option>
+                    <option value="windows-external">Windows-External</option>
+                    <option value="windows-internal">Windows-Internal</option>
                     <option value="mac">macOS</option>
                     <option value="android">Android</option>
                     <option value="ios">iOS</option>
@@ -118,6 +119,10 @@
                     <option value="updated">Last Updated</option>
                 </select>
             </div>
+            <div class="filter-group" style="justify-content:flex-end;flex:1;">
+                <label>&nbsp;</label>
+                <a href="#comparison" class="btn btn-primary" style="padding:9px 18px;font-size:12px;">Compare All &#8595;</a>
+            </div>
         </div>
 
         <section class="category-section">
@@ -134,7 +139,7 @@
                         <div class="line"></div>
                     </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-15">
+                <div class="executor-card" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-15">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/xeno.png" alt="Xeno" class="executor-img">
@@ -168,7 +173,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-18">
+                <div class="executor-card" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-18">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/solara.webp" alt="Solara" class="executor-img">
@@ -203,7 +208,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-10">
+                <div class="executor-card" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-10">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/madium-logo.webp" alt="Madium" class="executor-img">
@@ -238,7 +243,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-21">
+                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-21">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/wave.png" alt="Wave" class="executor-img">
@@ -246,7 +251,7 @@
                     </div>
                     <div class="executor-info">
                         <h2>Wave</h2>
-                        <p class="executor-desc">Free and keyless Windows executor with 100% UNC score. Fast execution, clean UI, and reliable performance for all your scripting needs.</p>
+                        <p class="executor-desc">Paid Windows executor with 100% UNC score. Fast execution, clean UI, and reliable performance for all your scripting needs.</p>
                         <div class="executor-stats">
                             <div class="stat">
                                 <span class="stat-label">UNC Score</span>
@@ -254,22 +259,21 @@
                             </div>
                             <div class="stat">
                                 <span class="stat-label">Pricing</span>
-                                <span class="stat-value">Free</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Keyless</span>
-                                <span class="stat-value yes">Yes</span>
+                                <span class="stat-value">Paid</span>
                             </div>
                             <div class="stat">
                                 <span class="stat-label">Platform</span>
                                 <span class="stat-value">Windows</span>
                             </div>
                         </div>
-                        <a href="https://getwave.gg" target="_blank" class="btn btn-primary">Visit Official Site &#8599;</a>
+                        <div class="executor-links">
+                            <a href="https://getwave.gg" target="_blank" class="btn btn-primary">Visit Official Site &#8599;</a>
+                            <a href="https://key-empire.com" target="_blank" class="btn btn-secondary">key-empire.com &#8599;</a>
+                        </div>
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-19">
+                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-19">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/sirhurt.png" alt="SirHurt" class="executor-img">
@@ -296,7 +300,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-20">
+                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-20">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/volt.png" alt="Volt" class="executor-img">
@@ -330,7 +334,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/aimmy.png" alt="Aimmy" class="executor-img">
@@ -364,7 +368,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/matcha.png" alt="Matcha" class="executor-img">
@@ -395,7 +399,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/matrix.png" alt="Matrix" class="executor-img">
@@ -429,7 +433,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/ronin.webp" alt="Ronin" class="executor-img">
@@ -460,38 +464,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
-                    <div class="executor-logo">
-                        <div class="logo-placeholder">
-                            <img src="logos/severe.ico" alt="Severe" class="executor-img">
-                        </div>
-                    </div>
-                    <div class="executor-info">
-                        <h2>Severe</h2>
-                        <p class="executor-desc">External executor with a strong emphasis on stability and a handy built-in decompiler. One-time $20 purchase grants lifetime access with no subscription.</p>
-                        <div class="executor-stats">
-                            <div class="stat">
-                                <span class="stat-label">Type</span>
-                                <span class="stat-value">External</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Pricing</span>
-                                <span class="stat-value">$20 Lifetime</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Decompiler</span>
-                                <span class="stat-value yes">Yes</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Platform</span>
-                                <span class="stat-value">Windows</span>
-                            </div>
-                        </div>
-                        <a href="https://discord.gg/4QmWjQCgzV" target="_blank" class="btn btn-primary">Discord &#8599;</a>
-                    </div>
-                </div>
-
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/yerba.png" alt="Yerba" class="executor-img">
@@ -522,7 +495,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows mac" data-pricing="free" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-20">
+                <div class="executor-card" data-platform="windows-external mac" data-pricing="free" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-20">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/bunni.png" alt="Bunni" class="executor-img">
@@ -553,7 +526,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows mac android ios" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card" data-platform="windows-external mac android ios" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/cryptic.ico" alt="Cryptic" class="executor-img">
@@ -597,7 +570,7 @@
                         <div class="line"></div>
                     </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="unstable" data-updated="2026-05-20">
+                <div class="executor-card" data-platform="windows-internal" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="unstable" data-updated="2026-05-20">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/velocity.ico" alt="Velocity" class="executor-img">
@@ -628,7 +601,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="freemium" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-05-25">
+                <div class="executor-card" data-platform="windows-internal" data-pricing="freemium" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-05-25">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/real.ico" alt="Real" class="executor-img">
@@ -659,7 +632,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-20">
+                <div class="executor-card" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-20">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/potassium.png" alt="Potassium" class="executor-img">
@@ -690,7 +663,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/cosmic.svg" alt="Cosmic" class="executor-img">
@@ -724,7 +697,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card" data-platform="windows-internal" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/exoliner.png" alt="Exoliner" class="executor-img">
@@ -758,7 +731,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/isaeva.webp" alt="Isaeva" class="executor-img">
@@ -792,69 +765,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="free" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
-                    <div class="executor-logo">
-                        <div class="logo-placeholder">
-                            <img src="logos/milkers.png" alt="Milkers" class="executor-img">
-                        </div>
-                    </div>
-                    <div class="executor-info">
-                        <h2>Milkers</h2>
-                        <p class="executor-desc">Invite-only kernel-level executor for advanced users. Free with multi-instance support, decompiler, and raknet protocol access. High-performance and low-detection.</p>
-                        <div class="executor-stats">
-                            <div class="stat">
-                                <span class="stat-label">Type</span>
-                                <span class="stat-value">Kernel</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Pricing</span>
-                                <span class="stat-value">Free</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Decompiler</span>
-                                <span class="stat-value yes">Yes</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Platform</span>
-                                <span class="stat-value">Windows</span>
-                            </div>
-                        </div>
-                        <a href="https://milkers.best" target="_blank" class="btn btn-primary">milkers.best &#8599;</a>
-                    </div>
-                </div>
-
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
-                    <div class="executor-logo">
-                        <div class="logo-placeholder">
-                            <img src="logos/seliware.ico" alt="Seliware" class="executor-img">
-                        </div>
-                    </div>
-                    <div class="executor-info">
-                        <h2>Seliware</h2>
-                        <p class="executor-desc">Internal Windows executor with both a decompiler and multi-instance capability. Weekly ($3.99) and monthly ($9.99) plans available for flexible access.</p>
-                        <div class="executor-stats">
-                            <div class="stat">
-                                <span class="stat-label">Type</span>
-                                <span class="stat-value">Internal</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Pricing</span>
-                                <span class="stat-value">From $3.99/wk</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Decompiler</span>
-                                <span class="stat-value yes">Yes</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Platform</span>
-                                <span class="stat-value">Windows</span>
-                            </div>
-                        </div>
-                        <a href="https://seliware.com" target="_blank" class="btn btn-primary">seliware.com &#8599;</a>
-                    </div>
-                </div>
-
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card" data-platform="windows-internal" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/serotonin.png" alt="Serotonin" class="executor-img">
@@ -888,41 +799,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
-                    <div class="executor-logo">
-                        <div class="logo-placeholder">
-                            <img src="logos/tomato.png" alt="Tomato" class="executor-img">
-                        </div>
-                    </div>
-                    <div class="executor-info">
-                        <h2>Tomato</h2>
-                        <p class="executor-desc">Lightweight free internal executor designed for simplicity. No key system, minimal footprint, and straightforward execution for basic Roblox scripting tasks.</p>
-                        <div class="executor-stats">
-                            <div class="stat">
-                                <span class="stat-label">Type</span>
-                                <span class="stat-value">Internal</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Pricing</span>
-                                <span class="stat-value">Free</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Keyless</span>
-                                <span class="stat-value yes">Yes</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Platform</span>
-                                <span class="stat-value">Windows</span>
-                            </div>
-                        </div>
-                        <div class="executor-links">
-                            <a href="https://get-tomato.lol" target="_blank" class="btn btn-primary">get-tomato.lol &#8599;</a>
-                            <a href="https://discord.com/invite/eVWSgQ84SA" target="_blank" class="btn btn-secondary">Discord &#8599;</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="executor-card" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/volcano.svg" alt="Volcano" class="executor-img">
@@ -956,7 +833,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows" data-pricing="free" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card" data-platform="windows-internal" data-pricing="free" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/yubx.png" alt="YuB-x" class="executor-img">
@@ -1212,7 +1089,7 @@
                 <span class="category-icon">&#128200;</span>
                 <h2>Comparison</h2>
             </div>
-            <div class="compare-section">
+            <div id="comparison" class="compare-section">
                 <table class="compare-table">
                     <thead>
                         <tr>
@@ -1231,14 +1108,13 @@
                         <tr><td class="cmp-name">Xeno</td><td>External</td><td class="cmp-platform">Win</td><td>75%</td><td class="status-na">-</td><td>Free</td><td class="status-yes">Yes</td><td class="status-no">No</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Solara</td><td>External</td><td class="cmp-platform">Win</td><td>100%</td><td>83%</td><td>Free</td><td class="status-yes">Yes</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Madium</td><td>External</td><td class="cmp-platform">Win</td><td>100%</td><td>89%</td><td>Free</td><td class="status-yes">Yes</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
-                        <tr><td class="cmp-name">Wave</td><td>External</td><td class="cmp-platform">Win</td><td>100%</td><td class="status-na">-</td><td>Free</td><td class="status-yes">Yes</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
+                        <tr><td class="cmp-name">Wave</td><td>External</td><td class="cmp-platform">Win</td><td>100%</td><td class="status-na">-</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">SirHurt</td><td>External</td><td class="cmp-platform">Win</td><td>100%</td><td class="status-na">-</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Volt</td><td>External</td><td class="cmp-platform">Win</td><td>99%</td><td>100%</td><td>Paid</td><td class="status-no">No</td><td class="status-no">No</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Aimmy</td><td>External</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Free</td><td class="status-yes">Yes</td><td class="status-no">No</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Matcha</td><td>External</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Matrix</td><td>External</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Paid</td><td class="status-yes">Yes</td><td class="status-no">No</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Ronin</td><td>External</td><td class="cmp-platform">Win</td><td>99%</td><td class="status-na">-</td><td>Paid</td><td class="status-yes">Yes</td><td class="status-no">No</td><td class="status-yes">Working</td></tr>
-                        <tr><td class="cmp-name">Severe</td><td>External</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Yerba</td><td>External</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Bunni</td><td>External</td><td class="cmp-platform">Win/Mac</td><td class="status-na">-</td><td>95%</td><td>Free</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Cryptic</td><td>External</td><td class="cmp-platform">Win/Mac/Android/iOS</td><td>100%</td><td>92%</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
@@ -1248,10 +1124,7 @@
                         <tr><td class="cmp-name">Cosmic</td><td>Internal</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Exoliner</td><td>Serverside</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Paid</td><td class="status-yes">Yes</td><td class="status-no">No</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Isaeva</td><td>Internal</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
-                        <tr><td class="cmp-name">Milkers</td><td>Kernel</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Free</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
-                        <tr><td class="cmp-name">Seliware</td><td>Internal</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Serotonin</td><td>Kernel</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Paid</td><td class="status-yes">Yes</td><td class="status-no">No</td><td class="status-yes">Working</td></tr>
-                        <tr><td class="cmp-name">Tomato</td><td>Internal</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Free</td><td class="status-yes">Yes</td><td class="status-no">No</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Volcano</td><td>Internal</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">YuB-x</td><td>Internal</td><td class="cmp-platform">Win</td><td class="status-na">-</td><td class="status-na">-</td><td>Free</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
                         <tr><td class="cmp-name">Hydrogen</td><td>Internal</td><td class="cmp-platform">Mac</td><td class="status-na">-</td><td>96%</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
