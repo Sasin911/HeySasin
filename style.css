@@ -1448,6 +1448,163 @@ main {
 .lua-builtin { color: #f472b6; }
 .lua-constant { color: #eab308; }
 
+/* Hamburger Menu */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 101;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #888;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 98;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-overlay.show {
+    opacity: 1;
+}
+
+/* Back-to-top active state fix */
+#back-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Comparison Table */
+.compare-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 40px;
+}
+
+.compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 16px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+}
+
+.compare-table thead {
+    background: rgba(192, 132, 252, 0.06);
+}
+
+.compare-table th {
+    padding: 14px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: #c084fc;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.compare-table td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    color: #aaa;
+}
+
+.compare-table tr:hover td {
+    background: rgba(255,255,255,0.02);
+}
+
+.compare-table .status-yes { color: #22c55e; }
+.compare-table .status-no { color: #ef4444; }
+.compare-table .status-na { color: #555; }
+
+.compare-table .cmp-name {
+    color: #e0e0e0;
+    font-weight: 700;
+}
+
+.compare-table .cmp-link {
+    color: #60a5fa;
+    text-decoration: none;
+}
+
+.compare-table .cmp-link:hover {
+    text-decoration: underline;
+}
+
+.compare-table .cmp-platform {
+    font-size: 11px;
+}
+
+/* Script Copy Button */
+.copy-btn {
+    background: rgba(192, 132, 252, 0.08);
+    border: 1px solid rgba(192, 132, 252, 0.1);
+    color: #c084fc;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.copy-btn:hover {
+    background: rgba(192, 132, 252, 0.15);
+    border-color: rgba(192, 132, 252, 0.2);
+}
+
+.copy-btn.copied {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+}
+
+/* YouTube link in navbar */
+.youtube-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 10px !important;
+    color: #555 !important;
+    transition: all 0.3s ease;
+}
+
+.youtube-link:hover {
+    color: #ff0033 !important;
+    background: rgba(255, 0, 51, 0.08) !important;
+}
+
 @media (max-width: 768px) {
     .hero h1 {
         font-size: 32px;
@@ -1599,6 +1756,65 @@ main {
 
     .scripts-filter-bar {
         padding: 0 16px 16px;
+    }
+
+    .scripts-filter-bar .filter-input {
+        min-width: 100%;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 260px;
+        height: 100vh;
+        flex-direction: column;
+        background: rgba(10, 10, 20, 0.98);
+        backdrop-filter: blur(24px);
+        padding: 80px 20px 24px;
+        gap: 4px;
+        transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 99;
+        border-left: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .nav-links.open {
+        right: 0;
+    }
+
+    .nav-links a {
+        padding: 14px 16px;
+        font-size: 15px;
+        width: 100%;
+        text-align: left;
+    }
+
+    .nav-links .discord-link,
+    .nav-links .youtube-link {
+        padding: 14px 16px !important;
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .nav-links a.active {
+        background: rgba(192, 132, 252, 0.1);
+    }
+
+    .compare-table {
+        font-size: 11px;
+    }
+
+    .compare-table th,
+    .compare-table td {
+        padding: 8px 6px;
+    }
+
+    .compare-table .cmp-platform {
+        font-size: 10px;
     }
 
     .scripts-filter-bar .filter-input {

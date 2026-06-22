@@ -10,8 +10,24 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://heysasingaming.github.io/executors.html">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <link rel="search" type="application/opensearchdescription+xml" title="Hey Sasin Gaming" href="opensearch.xml">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Hey Sasin Gaming",
+        "url": "https://sasin911.github.io/HeySasin/",
+        "description": "Your trusted Roblox executor directory",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://sasin911.github.io/HeySasin/executors.html?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
 </head>
 <body>
     <div id="splash" class="splash-screen" onclick="enterSite()">
@@ -36,7 +52,10 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="logo">Hey Sasin Gaming</a>
-            <div class="nav-links">
+            <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="nav-links" id="navLinks">
                 <a href="index.html">Home</a>
                 <a href="executors.html" class="active">Executors</a>
                 <a href="scripts.html">Scripts</a>
@@ -45,6 +64,9 @@
                 <a href="changelog.html">Changelog</a>
                 <a href="https://discord.gg/qVHWC4xk7w" target="_blank" class="discord-link" title="Join our Discord">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                </a>
+                <a href="https://www.youtube.com/@sasin699" target="_blank" class="youtube-link" title="YouTube">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                 </a>
             </div>
         </div>
@@ -574,9 +596,70 @@
                 </div>
             </div>
         </section>
+
+        <section class="category-section">
+            <div class="category-header">
+                <span class="category-icon">&#128200;</span>
+                <h2>Comparison</h2>
+            </div>
+            <div class="compare-section">
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>Executor</th>
+                            <th>Platform</th>
+                            <th>UNC</th>
+                            <th>sUNC</th>
+                            <th>Pricing</th>
+                            <th>Keyless</th>
+                            <th>Decompiler</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="cmp-name">Xeno</td><td class="cmp-platform">Win</td><td>75%</td><td class="status-na">-</td><td>Free</td><td class="status-yes">Yes</td><td class="status-no">No</td><td class="status-yes">Working</td></tr>
+                        <tr><td class="cmp-name">Solara</td><td class="cmp-platform">Win</td><td>100%</td><td>83%</td><td>Free</td><td class="status-yes">Yes</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
+                        <tr><td class="cmp-name">Velocity</td><td class="cmp-platform">Win</td><td>100%</td><td>77%</td><td>Free</td><td class="status-yes">Yes</td><td class="status-yes">Yes</td><td class="status-no">Unstable</td></tr>
+                        <tr><td class="cmp-name">Madium</td><td class="cmp-platform">Win</td><td>100%</td><td>89%</td><td>Free</td><td class="status-yes">Yes</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
+                        <tr><td class="cmp-name">Real</td><td class="cmp-platform">Win</td><td>100%</td><td>85%</td><td>Free/Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
+                        <tr><td class="cmp-name">Potassium</td><td class="cmp-platform">Win</td><td>98%</td><td>87%</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
+                        <tr><td class="cmp-name">Wave</td><td class="cmp-platform">Win</td><td>100%</td><td class="status-na">-</td><td>Free</td><td class="status-yes">Yes</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
+                        <tr><td class="cmp-name">SirHurt</td><td class="cmp-platform">Win</td><td>100%</td><td class="status-na">-</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
+                        <tr><td class="cmp-name">Cryptic</td><td class="cmp-platform">Win/Mac/Android/iOS</td><td>100%</td><td>92%</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
+                        <tr><td class="cmp-name">Bunni</td><td class="cmp-platform">Win/Mac</td><td class="status-na">-</td><td>95%</td><td>Free</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
+                        <tr><td class="cmp-name">Hydrogen</td><td class="cmp-platform">Mac</td><td class="status-na">-</td><td>96%</td><td>Paid</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
+                        <tr><td class="cmp-name">Delta</td><td class="cmp-platform">Android</td><td>100%</td><td class="status-na">-</td><td>Free</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
+                        <tr><td class="cmp-name">Codex</td><td class="cmp-platform">Android</td><td>90%</td><td class="status-na">-</td><td>Free</td><td class="status-yes">Yes</td><td class="status-yes">Yes</td><td class="status-no">Unstable</td></tr>
+                        <tr><td class="cmp-name">Arceus X</td><td class="cmp-platform">Android/iOS</td><td>98%</td><td>80%</td><td>Free</td><td class="status-no">No</td><td class="status-yes">Yes</td><td class="status-yes">Working</td></tr>
+                        <tr><td class="cmp-name">Vega X</td><td class="cmp-platform">Android</td><td>98%</td><td class="status-na">-</td><td>Paid</td><td class="status-no">No</td><td class="status-no">No</td><td class="status-yes">Working</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
+    <div class="mobile-overlay" id="mobileOverlay" onclick="closeMenu()"></div>
     <script>
+    function toggleMenu() {
+        document.getElementById('navLinks').classList.toggle('open');
+        document.querySelector('.menu-toggle').classList.toggle('active');
+        document.getElementById('mobileOverlay').classList.toggle('show');
+    }
+    function closeMenu() {
+        document.getElementById('navLinks').classList.remove('open');
+        document.querySelector('.menu-toggle').classList.remove('active');
+        document.getElementById('mobileOverlay').classList.remove('show');
+    }
+    document.addEventListener('keydown', function(e) {
+        if ((e.key === '/' || (e.ctrlKey && e.key === 'k')) && !['INPUT','TEXTAREA'].includes(e.target.tagName)) {
+            e.preventDefault();
+            var input = document.querySelector('.filter-input');
+            if (input) input.focus();
+        }
+    });
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(function(){});
+    }
     function renderBadges(dates) {
         document.querySelectorAll('.executor-card[data-updated]').forEach(function(card) {
             var name = card.querySelector('h2').childNodes[0].textContent.trim();
