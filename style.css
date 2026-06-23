@@ -600,17 +600,21 @@ main {
     background: linear-gradient(90deg, var(--border), transparent);
 }
 
-.sub-category-tag {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 3px 10px;
-    border-radius: 6px;
-    background: rgba(6,182,212,0.06);
-    color: var(--accent);
-    border: 1px solid rgba(6,182,212,0.1);
+/* Filter visibility */
+.sub-category.hidden { display: none; }
+
+.category-section.hidden { display: none; }
+
+.no-results {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-3);
+    font-size: 15px;
+    max-width: 800px;
+    margin: 0 auto;
 }
+.no-results.visible { display: block; }
 
 .executors-list {
     max-width: 800px;
@@ -1011,28 +1015,20 @@ main {
     border: 1px solid rgba(6,182,212,0.15);
 }
 
-.filter-bar {
+.filter-toolbar {
     max-width: 800px;
     margin: 0 auto;
     padding: 0 24px 24px;
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
     gap: 10px;
-    align-items: flex-end;
 }
 
-.filter-group {
+.filter-toolbar-left {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.filter-group label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-3);
-    font-weight: 600;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
 }
 
 .filter-input {
@@ -1043,9 +1039,11 @@ main {
     font-size: 13px;
     font-family: inherit;
     color: var(--text-2);
-    min-width: 200px;
+    min-width: 160px;
     transition: all 0.25s ease;
     outline: none;
+    flex: 1;
+    max-width: 260px;
 }
 
 .filter-input:focus {
@@ -1053,33 +1051,281 @@ main {
     box-shadow: 0 0 0 3px rgba(6,182,212,0.04);
 }
 
-.filter-select {
+.filter-trigger {
+    padding: 9px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 9px 14px;
-    font-size: 13px;
-    font-family: inherit;
     color: var(--text-2);
-    min-width: 120px;
-    transition: all 0.25s ease;
-    outline: none;
     cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%23555'%3E%3Cpath d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 32px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
 }
 
-.filter-select:focus {
+.filter-trigger:hover {
+    border-color: rgba(6,182,212,0.25);
+    color: var(--accent);
+}
+
+/* Filter Drawer */
+.filter-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 110;
+    display: flex;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.filter-drawer.is-open {
+    visibility: visible;
+    opacity: 1;
+}
+
+.filter-drawer-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    transition: background 0.3s ease;
+}
+
+.filter-drawer-panel {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 340px;
+    max-width: 100%;
+    background: #0f1117;
+    border-left: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.filter-drawer.is-open .filter-drawer-panel {
+    transform: translateX(0);
+}
+
+.filter-drawer-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.filter-drawer-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter-drawer-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.filter-drawer-close {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: rgba(255,255,255,0.4);
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+    line-height: 1;
+}
+
+.filter-drawer-close:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.filter-drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+}
+
+.filter-section + .filter-section {
+    margin-top: 24px;
+}
+
+.filter-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.4);
+    margin: 0 0 12px;
+}
+
+.filter-platform-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.filter-platform-option {
+    position: relative;
+}
+
+.filter-platform-option input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.filter-platform-option label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.filter-platform-option label:hover {
+    border-color: rgba(6,182,212,0.2);
+    background: rgba(6,182,212,0.04);
+}
+
+.filter-platform-option input:checked + label {
+    background: rgba(6,182,212,0.08);
     border-color: rgba(6,182,212,0.3);
-    box-shadow: 0 0 0 3px rgba(6,182,212,0.04);
+    color: var(--accent);
+    transform: translateY(-1px);
 }
 
-.filter-select option {
-    background: #000;
-    color: var(--text-2);
+.filter-segmented-control {
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.filter-segment-btn {
+    flex: 1;
+    padding: 10px 8px;
+    border: 0;
+    background: rgba(255,255,255,0.03);
+    color: rgba(255,255,255,0.5);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-segment-btn + .filter-segment-btn {
+    border-left: 1px solid rgba(255,255,255,0.06);
+}
+
+.filter-segment-btn:hover {
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.7);
+}
+
+.filter-segment-btn.is-active {
+    background: rgba(6,182,212,0.08);
+    color: var(--accent);
+}
+
+.filter-sort-list {
+    display: grid;
+    gap: 10px;
+}
+
+.filter-radio {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.filter-radio:hover {
+    border-color: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.02);
+}
+
+.filter-radio input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.filter-radio-mark {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.15);
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.filter-radio input:checked + .filter-radio-mark {
+    border-color: var(--accent);
+    background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(6,182,212,0.1);
+}
+
+.filter-radio span:last-child {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 500;
+}
+
+.filter-radio input:checked ~ span:last-child {
+    color: #fff;
+}
+
+.filter-drawer-footer {
+    padding: 16px 24px 20px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.filter-reset-btn {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-reset-btn:hover {
+    border-color: rgba(239,68,68,0.3);
+    color: #ef4444;
+    background: rgba(239,68,68,0.04);
 }
 
 .faq-list {
@@ -1535,6 +1781,7 @@ main {
 
 .scripts-filter-bar .filter-input {
     min-width: 220px;
+    width: 100%;
 }
 
 .lua-keyword { color: var(--accent); }
@@ -1907,47 +2154,20 @@ main {
 }
 
 /* Quick Filters */
-.quick-filters {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 24px 14px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.qf-btn {
-    padding: 6px 14px;
-    font-size: 11px;
-    font-weight: 600;
-    font-family: inherit;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    color: var(--text-3);
-    cursor: pointer;
-    transition: all 0.25s ease;
-}
-
-.qf-btn:hover {
-    border-color: rgba(6,182,212,0.15);
-    color: var(--text-2);
-}
-
-.qf-btn.active {
-    background: rgba(6,182,212,0.08);
-    border-color: rgba(6,182,212,0.2);
-    color: var(--accent);
-}
-
 @media (max-width: 480px) {
-    .quick-filters {
-        padding: 0 12px 10px;
-        gap: 4px;
+    .filter-toolbar {
+        padding: 0 16px 16px;
+        flex-wrap: wrap;
     }
-    .qf-btn {
-        padding: 5px 10px;
-        font-size: 10px;
+    .filter-toolbar-left {
+        width: 100%;
+    }
+    .filter-input {
+        min-width: 120px;
+        max-width: none;
+    }
+    .filter-drawer-panel {
+        width: 100%;
     }
 }
 
@@ -2303,27 +2523,8 @@ main {
         padding: 50px 20px 28px;
     }
 
-    .filter-bar {
+    .filter-toolbar {
         padding: 0 16px 20px;
-        gap: 8px;
-    }
-
-    .filter-group label {
-        font-size: 9px;
-    }
-
-    .filter-input,
-    .filter-select {
-        padding: 8px 12px;
-        font-size: 12px;
-    }
-
-    .filter-input {
-        min-width: 100%;
-    }
-
-    .filter-select {
-        min-width: 100px;
     }
 
     .compare-table {
@@ -2592,17 +2793,11 @@ main {
         font-size: 8px;
     }
 
-    .filter-bar {
+    .filter-toolbar {
         padding: 0 12px 16px;
+        flex-wrap: wrap;
     }
-
-    .filter-group {
-        width: 100%;
-    }
-
-    .filter-input,
-    .filter-select {
-        min-width: 100%;
+    .filter-toolbar-left {
         width: 100%;
     }
 

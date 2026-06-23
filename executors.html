@@ -81,61 +81,90 @@
             <p>Top-rated executors tested for performance and reliability. Click any executor to visit its official site.</p>
         </section>
 
-        <div class="quick-filters fade-up">
-            <button class="qf-btn active" onclick="quickFilter('all',this)">All</button>
-            <button class="qf-btn" onclick="quickFilter('windows-external',this)">Windows External</button>
-            <button class="qf-btn" onclick="quickFilter('windows-internal',this)">Windows Internal</button>
-            <button class="qf-btn" onclick="quickFilter('mac',this)">macOS</button>
-            <button class="qf-btn" onclick="quickFilter('android',this)">Android</button>
-            <button class="qf-btn" onclick="quickFilter('free',this)">Free</button>
-            <button class="qf-btn" onclick="quickFilter('keyless',this)">Keyless</button>
+        <div class="filter-toolbar fade-up">
+            <div class="filter-toolbar-left">
+                <input type="text" id="filterSearch" class="filter-input" placeholder="Search executors..." oninput="applyFilters()">
+                <button class="filter-trigger" id="filterTrigger" type="button">&#9776; Filters</button>
+            </div>
+            <a href="#comparison" class="btn btn-primary" style="padding:9px 18px;font-size:12px;">Compare All &#8595;</a>
         </div>
 
-        <div class="filter-bar fade-up">
-            <div class="filter-group">
-                <input type="text" id="filterSearch" class="filter-input" placeholder="Search executors..." oninput="applyFilters()">
-            </div>
-            <div class="filter-group">
-                <label>Platform</label>
-                <select id="filterPlatform" class="filter-select" onchange="applyFilters()">
-                    <option value="all">All</option>
-                    <option value="windows-external">Windows-External</option>
-                    <option value="windows-internal">Windows-Internal</option>
-                    <option value="mac">macOS</option>
-                    <option value="android">Android</option>
-                    <option value="ios">iOS</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label>Pricing</label>
-                <select id="filterPricing" class="filter-select" onchange="applyFilters()">
-                    <option value="all">All</option>
-                    <option value="free">Free</option>
-                    <option value="freemium">Free / Paid</option>
-                    <option value="paid">Paid</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label>Keyless</label>
-                <select id="filterKeyless" class="filter-select" onchange="applyFilters()">
-                    <option value="all">All</option>
-                    <option value="yes">Keyless</option>
-                    <option value="no">Keyed</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label>Sort By</label>
-                <select id="filterSort" class="filter-select" onchange="applyFilters()">
-                    <option value="name">Name</option>
-                    <option value="unc">UNC Score</option>
-                    <option value="updated">Last Updated</option>
-                </select>
-            </div>
-            <div class="filter-group" style="justify-content:flex-end;flex:1;">
-                <label>&nbsp;</label>
-                <a href="#comparison" class="btn btn-primary" style="padding:9px 18px;font-size:12px;">Compare All &#8595;</a>
+        <div class="filter-drawer" id="filterDrawer" aria-hidden="true">
+            <div class="filter-drawer-overlay" id="filterDrawerOverlay"></div>
+            <div class="filter-drawer-panel">
+                <div class="filter-drawer-header">
+                    <div class="filter-drawer-header-row">
+                        <h2 class="filter-drawer-title">Filters</h2>
+                        <button class="filter-drawer-close" id="closeFilterDrawer" type="button">&times;</button>
+                    </div>
+                </div>
+                <div class="filter-drawer-body" id="filterDrawerBody">
+                    <section class="filter-section">
+                        <h3 class="filter-section-title">Platform</h3>
+                        <div class="filter-platform-grid">
+                            <div class="filter-platform-option">
+                                <input type="checkbox" id="fp-windows" data-platform="windows" onchange="applyFilters()">
+                                <label for="fp-windows">Windows</label>
+                            </div>
+                            <div class="filter-platform-option">
+                                <input type="checkbox" id="fp-mac" data-platform="mac" onchange="applyFilters()">
+                                <label for="fp-mac">macOS</label>
+                            </div>
+                            <div class="filter-platform-option">
+                                <input type="checkbox" id="fp-android" data-platform="android" onchange="applyFilters()">
+                                <label for="fp-android">Android</label>
+                            </div>
+                            <div class="filter-platform-option">
+                                <input type="checkbox" id="fp-ios" data-platform="ios" onchange="applyFilters()">
+                                <label for="fp-ios">iOS</label>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="filter-section">
+                        <h3 class="filter-section-title">Pricing</h3>
+                        <div class="filter-segmented-control">
+                            <button class="filter-segment-btn is-active" data-filter-field="pricing" data-filter-value="all" type="button">All</button>
+                            <button class="filter-segment-btn" data-filter-field="pricing" data-filter-value="free" type="button">Free</button>
+                            <button class="filter-segment-btn" data-filter-field="pricing" data-filter-value="freemium" type="button">Free/Paid</button>
+                            <button class="filter-segment-btn" data-filter-field="pricing" data-filter-value="paid" type="button">Paid</button>
+                        </div>
+                    </section>
+                    <section class="filter-section">
+                        <h3 class="filter-section-title">Key System</h3>
+                        <div class="filter-segmented-control">
+                            <button class="filter-segment-btn is-active" data-filter-field="keyless" data-filter-value="all" type="button">All</button>
+                            <button class="filter-segment-btn" data-filter-field="keyless" data-filter-value="yes" type="button">Keyless</button>
+                            <button class="filter-segment-btn" data-filter-field="keyless" data-filter-value="no" type="button">Keyed</button>
+                        </div>
+                    </section>
+                    <section class="filter-section">
+                        <h3 class="filter-section-title">Sort By</h3>
+                        <div class="filter-sort-list">
+                            <label class="filter-radio">
+                                <input type="radio" name="filterSort" value="name" checked onchange="applyFilters()">
+                                <span class="filter-radio-mark"></span>
+                                <span>Name</span>
+                            </label>
+                            <label class="filter-radio">
+                                <input type="radio" name="filterSort" value="unc" onchange="applyFilters()">
+                                <span class="filter-radio-mark"></span>
+                                <span>UNC Score</span>
+                            </label>
+                            <label class="filter-radio">
+                                <input type="radio" name="filterSort" value="updated" onchange="applyFilters()">
+                                <span class="filter-radio-mark"></span>
+                                <span>Last Updated</span>
+                            </label>
+                        </div>
+                    </section>
+                </div>
+                <div class="filter-drawer-footer">
+                    <button class="filter-reset-btn" id="resetFilters" type="button">&#8634; Reset</button>
+                </div>
             </div>
         </div>
+
+        <div class="no-results" id="noResults">No executors match your filters</div>
 
         <section class="category-section">
             <div class="category-header">
@@ -146,12 +175,11 @@
 
                 <div class="sub-category">
                     <div class="sub-category-header">
-                        <span class="sub-category-tag">External</span>
                         <h3>User-Mode Executors</h3>
                         <div class="line"></div>
                     </div>
 
-                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-15">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-15">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/xeno.png" alt="Xeno" class="executor-img">
@@ -185,7 +213,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-18">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-18">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/solara.webp" alt="Solara" class="executor-img">
@@ -220,7 +248,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-10">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-10">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/madium-logo.webp" alt="Madium" class="executor-img">
@@ -255,7 +283,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-21">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-21">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/wave.png" alt="Wave" class="executor-img">
@@ -286,7 +314,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-19">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-19">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/sirhurt.png" alt="SirHurt" class="executor-img">
@@ -313,7 +341,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-20">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-20">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/volt.png" alt="Volt" class="executor-img">
@@ -348,7 +376,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/aimmy.png" alt="Aimmy" class="executor-img">
@@ -382,7 +410,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/matcha.png" alt="Matcha" class="executor-img">
@@ -413,7 +441,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/matrix.png" alt="Matrix" class="executor-img">
@@ -447,7 +475,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/ronin.webp" alt="Ronin" class="executor-img">
@@ -478,7 +506,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/yerba.png" alt="Yerba" class="executor-img">
@@ -509,7 +537,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-external mac" data-pricing="free" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-20">
+                <div class="executor-card fade-up" data-platform="windows mac" data-pricing="free" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-20">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/bunni.png" alt="Bunni" class="executor-img">
@@ -540,7 +568,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-external mac android ios" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows mac android ios" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/cryptic.ico" alt="Cryptic" class="executor-img">
@@ -579,12 +607,11 @@
 
                 <div class="sub-category">
                     <div class="sub-category-header">
-                        <span class="sub-category-tag">Internal</span>
                         <h3>Injection & Kernel-Level Executors</h3>
                         <div class="line"></div>
                     </div>
 
-                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="unstable" data-updated="2026-05-20">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="unstable" data-updated="2026-05-20">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/velocity.ico" alt="Velocity" class="executor-img">
@@ -615,7 +642,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="freemium" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-05-25">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="freemium" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-05-25">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/real.ico" alt="Real" class="executor-img">
@@ -646,7 +673,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-20">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-20">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/potassium.png" alt="Potassium" class="executor-img">
@@ -677,7 +704,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="broken" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="broken" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/cosmic.svg" alt="Cosmic" class="executor-img">
@@ -711,7 +738,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/exoliner.png" alt="Exoliner" class="executor-img">
@@ -745,7 +772,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/isaeva.webp" alt="Isaeva" class="executor-img">
@@ -779,7 +806,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/serotonin.png" alt="Serotonin" class="executor-img">
@@ -813,7 +840,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/volcano.svg" alt="Volcano" class="executor-img">
@@ -847,7 +874,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="free" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows" data-pricing="free" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/yubx.png" alt="YuB-x" class="executor-img">
@@ -1241,30 +1268,27 @@
         });
     }
 
-    function quickFilter(val, btn) {
-        document.querySelectorAll('.qf-btn').forEach(function(b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        if (val === 'free') {
-            document.getElementById('filterPricing').value = 'free';
-            document.getElementById('filterPlatform').value = 'all';
-        } else if (val === 'keyless') {
-            document.getElementById('filterKeyless').value = 'yes';
-            document.getElementById('filterPlatform').value = 'all';
-            document.getElementById('filterPricing').value = 'all';
-        } else {
-            document.getElementById('filterPlatform').value = val;
-            document.getElementById('filterPricing').value = 'all';
-            document.getElementById('filterKeyless').value = 'all';
-        }
-        applyFilters();
-    }
+    /* Filter drawer toggle */
+    function openFilterDrawer() { document.getElementById('filterDrawer').classList.add('is-open'); }
+    function closeFilterDrawer() { document.getElementById('filterDrawer').classList.remove('is-open'); }
 
     function applyFilters() {
         var search = document.getElementById('filterSearch').value.toLowerCase();
-        var platform = document.getElementById('filterPlatform').value;
-        var pricing = document.getElementById('filterPricing').value;
-        var keyless = document.getElementById('filterKeyless').value;
-        var sort = document.getElementById('filterSort').value;
+
+        var platform = 'all';
+        document.querySelectorAll('#filterDrawer input[data-platform]:checked').forEach(function(cb) {
+            if (platform === 'all') platform = cb.getAttribute('data-platform');
+            else platform += ' ' + cb.getAttribute('data-platform');
+        });
+
+        var pricingBtn = document.querySelector('#filterDrawer .filter-segment-btn.is-active[data-filter-field="pricing"]');
+        var pricing = pricingBtn ? pricingBtn.getAttribute('data-filter-value') : 'all';
+
+        var keylessBtn = document.querySelector('#filterDrawer .filter-segment-btn.is-active[data-filter-field="keyless"]');
+        var keyless = keylessBtn ? keylessBtn.getAttribute('data-filter-value') : 'all';
+
+        var sortRadio = document.querySelector('input[name="filterSort"]:checked');
+        var sort = sortRadio ? sortRadio.value : 'name';
 
         var lists = document.querySelectorAll('.executors-list');
         lists.forEach(function(list) {
@@ -1278,13 +1302,26 @@
 
                 var match = true;
                 if (search && name.indexOf(search) === -1 && desc.indexOf(search) === -1) match = false;
-                if (platform !== 'all' && p.split(' ').indexOf(platform) === -1) match = false;
+                if (platform !== 'all') {
+                    var selectedPlatforms = platform.split(' ');
+                    var cardPlatforms = p.split(' ');
+                    var platformMatch = selectedPlatforms.some(function(sp) { return cardPlatforms.indexOf(sp) !== -1; });
+                    if (!platformMatch) match = false;
+                }
                 if (pricing !== 'all' && pr !== pricing) match = false;
                 if (keyless !== 'all' && k !== keyless) match = false;
-                card.style.display = match ? '' : 'none';
+                card.classList.toggle('hidden', !match);
             });
 
-            var visible = cards.filter(function(c) { return c.style.display !== 'none'; });
+            /* Collapse empty sub-categories */
+            list.querySelectorAll('.sub-category').forEach(function(sub) {
+                var hasVisible = Array.from(sub.querySelectorAll('.executor-card')).some(function(c) {
+                    return !c.classList.contains('hidden');
+                });
+                sub.classList.toggle('hidden', !hasVisible);
+            });
+
+            var visible = cards.filter(function(c) { return !c.classList.contains('hidden'); });
             visible.sort(function(a, b) {
                 var va = 0, vb = 0;
                 if (sort === 'name') {
@@ -1313,7 +1350,47 @@
             });
             visible.forEach(function(c) { list.appendChild(c); });
         });
+
+        /* Collapse empty category sections (skip ones with no sub-categories, like Comparison) */
+        document.querySelectorAll('.category-section').forEach(function(section) {
+            var subs = section.querySelectorAll('.sub-category');
+            if (!subs.length) return;
+            var hasVisible = Array.from(subs).some(function(s) { return !s.classList.contains('hidden'); });
+            section.classList.toggle('hidden', !hasVisible);
+        });
+
+        /* Show/hide no-results message */
+        var anyVisible = document.querySelectorAll('.executor-card:not(.hidden)').length > 0;
+        document.getElementById('noResults').classList.toggle('visible', !anyVisible);
     }
+
+    /* Filter drawer events */
+    document.getElementById('filterTrigger').addEventListener('click', openFilterDrawer);
+    document.getElementById('closeFilterDrawer').addEventListener('click', closeFilterDrawer);
+    document.getElementById('filterDrawerOverlay').addEventListener('click', closeFilterDrawer);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeFilterDrawer(); });
+
+    /* Segmented button toggle */
+    document.querySelectorAll('.filter-segment-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var siblings = this.parentNode.querySelectorAll('.filter-segment-btn');
+            siblings.forEach(function(s) { s.classList.remove('is-active'); });
+            this.classList.add('is-active');
+            applyFilters();
+        });
+    });
+
+    /* Reset filters */
+    document.getElementById('resetFilters').addEventListener('click', function() {
+        document.querySelectorAll('#filterDrawer input[type="checkbox"]').forEach(function(cb) { cb.checked = false; });
+        document.querySelectorAll('#filterDrawer input[type="radio"]').forEach(function(rb) { rb.checked = rb.value === 'name'; });
+        document.querySelectorAll('.filter-segment-btn').forEach(function(btn) {
+            var field = btn.getAttribute('data-filter-field');
+            btn.classList.toggle('is-active', btn.getAttribute('data-filter-value') === 'all');
+        });
+        document.getElementById('filterSearch').value = '';
+        applyFilters();
+    });
 
     renderSafety();
     renderStatus();
