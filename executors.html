@@ -81,7 +81,17 @@
             <p>Top-rated executors tested for performance and reliability. Click any executor to visit its official site.</p>
         </section>
 
-        <div class="filter-bar">
+        <div class="quick-filters fade-up">
+            <button class="qf-btn active" onclick="quickFilter('all',this)">All</button>
+            <button class="qf-btn" onclick="quickFilter('windows-external',this)">Windows External</button>
+            <button class="qf-btn" onclick="quickFilter('windows-internal',this)">Windows Internal</button>
+            <button class="qf-btn" onclick="quickFilter('mac',this)">macOS</button>
+            <button class="qf-btn" onclick="quickFilter('android',this)">Android</button>
+            <button class="qf-btn" onclick="quickFilter('free',this)">Free</button>
+            <button class="qf-btn" onclick="quickFilter('keyless',this)">Keyless</button>
+        </div>
+
+        <div class="filter-bar fade-up">
             <div class="filter-group">
                 <input type="text" id="filterSearch" class="filter-input" placeholder="Search executors..." oninput="applyFilters()">
             </div>
@@ -141,7 +151,7 @@
                         <div class="line"></div>
                     </div>
 
-                <div class="executor-card" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-15">
+                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-15">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/xeno.png" alt="Xeno" class="executor-img">
@@ -175,7 +185,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-18">
+                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-18">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/solara.webp" alt="Solara" class="executor-img">
@@ -210,7 +220,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-10">
+                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="verified" data-status="working" data-updated="2026-06-10">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/madium-logo.webp" alt="Madium" class="executor-img">
@@ -245,7 +255,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-21">
+                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-21">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/wave.png" alt="Wave" class="executor-img">
@@ -275,7 +285,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-19">
+                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-19">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/sirhurt.png" alt="SirHurt" class="executor-img">
@@ -302,7 +312,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-20">
+                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-20">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/volt.png" alt="Volt" class="executor-img">
@@ -336,7 +346,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/aimmy.png" alt="Aimmy" class="executor-img">
@@ -370,7 +380,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/matcha.png" alt="Matcha" class="executor-img">
@@ -401,7 +411,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/matrix.png" alt="Matrix" class="executor-img">
@@ -435,7 +445,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/ronin.webp" alt="Ronin" class="executor-img">
@@ -466,7 +476,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows-external" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/yerba.png" alt="Yerba" class="executor-img">
@@ -497,7 +507,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-external mac" data-pricing="free" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-20">
+                <div class="executor-card fade-up" data-platform="windows-external mac" data-pricing="free" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-20">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/bunni.png" alt="Bunni" class="executor-img">
@@ -528,7 +538,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-external mac android ios" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows-external mac android ios" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/cryptic.ico" alt="Cryptic" class="executor-img">
@@ -572,7 +582,7 @@
                         <div class="line"></div>
                     </div>
 
-                <div class="executor-card" data-platform="windows-internal" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="unstable" data-updated="2026-05-20">
+                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="unstable" data-updated="2026-05-20">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/velocity.ico" alt="Velocity" class="executor-img">
@@ -603,7 +613,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-internal" data-pricing="freemium" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-05-25">
+                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="freemium" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-05-25">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/real.ico" alt="Real" class="executor-img">
@@ -634,7 +644,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-20">
+                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-20">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/potassium.png" alt="Potassium" class="executor-img">
@@ -665,7 +675,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="broken" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="broken" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/cosmic.svg" alt="Cosmic" class="executor-img">
@@ -699,7 +709,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-internal" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/exoliner.png" alt="Exoliner" class="executor-img">
@@ -733,7 +743,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/isaeva.webp" alt="Isaeva" class="executor-img">
@@ -767,7 +777,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-internal" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="paid" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/serotonin.png" alt="Serotonin" class="executor-img">
@@ -801,7 +811,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/volcano.svg" alt="Volcano" class="executor-img">
@@ -835,7 +845,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="windows-internal" data-pricing="free" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="windows-internal" data-pricing="free" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/yubx.png" alt="YuB-x" class="executor-img">
@@ -880,7 +890,7 @@
                 <h2>macOS</h2>
             </div>
             <div class="executors-list">
-                <div class="executor-card" data-platform="mac" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-18">
+                <div class="executor-card fade-up" data-platform="mac" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-18">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/hydrogen.ico" alt="Hydrogen" class="executor-img">
@@ -911,7 +921,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="mac" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="mac" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/macsploit.png" alt="Macsploit" class="executor-img">
@@ -947,7 +957,7 @@
                 <h2>Android</h2>
             </div>
             <div class="executors-list">
-                <div class="executor-card" data-platform="android" data-pricing="free" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-05">
+                <div class="executor-card fade-up" data-platform="android" data-pricing="free" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-05">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/delta.ico" alt="Delta" class="executor-img">
@@ -978,7 +988,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="android" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="unstable" data-updated="2026-05-30">
+                <div class="executor-card fade-up" data-platform="android" data-pricing="free" data-keyless="yes" data-safety="trusted" data-status="unstable" data-updated="2026-05-30">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/codex.svg" alt="Codex" class="executor-img">
@@ -1009,7 +1019,7 @@
                     </div>
                 </div>
 
-                <div class="executor-card" data-platform="android" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-15">
+                <div class="executor-card fade-up" data-platform="android" data-pricing="paid" data-keyless="no" data-safety="trusted" data-status="working" data-updated="2026-06-15">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/vegax.png" alt="Vega X" class="executor-img">
@@ -1049,7 +1059,7 @@
                 <h2>iOS</h2>
             </div>
             <div class="executors-list">
-                <div class="executor-card" data-platform="android ios" data-pricing="free" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-22">
+                <div class="executor-card fade-up" data-platform="android ios" data-pricing="free" data-keyless="no" data-safety="verified" data-status="working" data-updated="2026-06-22">
                     <div class="executor-logo">
                         <div class="logo-placeholder">
                             <img src="logos/arceusx.png" alt="Arceus X" class="executor-img">
@@ -1143,7 +1153,6 @@
         </section>
     </main>
 
-    <div class="mobile-overlay" id="mobileOverlay" onclick="closeMenu()"></div>
     <script>
     function toggleMenu() {
         document.getElementById('navLinks').classList.toggle('open');
@@ -1230,6 +1239,24 @@
         });
     }
 
+    function quickFilter(val, btn) {
+        document.querySelectorAll('.qf-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        if (val === 'free') {
+            document.getElementById('filterPricing').value = 'free';
+            document.getElementById('filterPlatform').value = 'all';
+        } else if (val === 'keyless') {
+            document.getElementById('filterKeyless').value = 'yes';
+            document.getElementById('filterPlatform').value = 'all';
+            document.getElementById('filterPricing').value = 'all';
+        } else {
+            document.getElementById('filterPlatform').value = val;
+            document.getElementById('filterPricing').value = 'all';
+            document.getElementById('filterKeyless').value = 'all';
+        }
+        applyFilters();
+    }
+
     function applyFilters() {
         var search = document.getElementById('filterSearch').value.toLowerCase();
         var platform = document.getElementById('filterPlatform').value;
@@ -1305,8 +1332,89 @@
         .catch(function() {
             if (!cached) renderBadges(null);
         });
+
+    /* Chatbot */
+    var chatResponses = {
+        'best executor': 'Delta and Xeno are top-tier right now. Delta has 98% UNC and Xeno scores 96%. Both are Windows internal executors with great stability.',
+        'free executor': 'Solara and Velocity are solid free options. Solara is keyless with 94% UNC. Velocity is also free with 91% UNC.',
+        'how to install': 'Check our <a href="guides.html" style="color:#06b6d4">Guides page</a> for step-by-step installation tutorials for every executor.',
+        'key': 'Need keys? Visit <a href="https://mss-key.xyz" style="color:#f59e0b" target="_blank">Mss-Keygen</a> for paid executor keys.',
+        'scripts': 'Browse 35+ scripts across 14 games on our <a href="scripts.html" style="color:#06b6d4">Scripts page</a>.',
+        'unc': 'UNC scores measure script function compatibility. Higher is better. Delta leads at 98%, then Xeno at 96%, Cryptic at 95%.',
+        'mobile': 'We support mobile executors too! Check Hydrogen (iOS), Arceus X (Android), and Vega X (Android) on our Executors page.',
+        'sirhurt': 'SirHurt is a classic paid external executor. Currently at 87% UNC. Still actively maintained.',
+        'discord': 'Join our Discord for updates and support! Click the Discord icon in the navbar.',
+        'hello': 'Hey there! How can I help you today? Ask me about executors, scripts, installation, or anything else!',
+        'hi': 'Hey! What can I help you with? Try asking about the best executors, free options, or how to get started.',
+        'default': "I'm not sure about that. Try asking about executors, scripts, pricing, or check our <a href='faq.html' style='color:#06b6d4'>FAQ</a>."
+    };
+    function getChatAnswer(input) {
+        var lower = input.toLowerCase();
+        for (var key in chatResponses) {
+            if (lower.includes(key)) return chatResponses[key];
+        }
+        return chatResponses['default'];
+    }
+    function toggleChat() {
+        var w = document.getElementById('chatWindow');
+        var b = document.querySelector('.chat-toggle');
+        w.classList.toggle('open');
+        b.classList.toggle('close');
+        if (w.classList.contains('open') && w.querySelector('.chat-body').children.length === 0) {
+            addChatMsg('bot', "Hi! I'm the Hey Sasin assistant. Ask me about executors, scripts, pricing, or anything else!");
+        }
+    }
+    function addChatMsg(type, text) {
+        var body = document.querySelector('.chat-body');
+        var msg = document.createElement('div');
+        msg.className = 'chat-msg ' + type;
+        msg.innerHTML = text;
+        body.appendChild(msg);
+        body.scrollTop = body.scrollHeight;
+    }
+    function sendChat() {
+        var input = document.getElementById('chatInput');
+        var text = input.value.trim();
+        if (!text) return;
+        addChatMsg('user', text);
+        input.value = '';
+        setTimeout(function() {
+            addChatMsg('bot', getChatAnswer(text));
+        }, 300 + Math.random() * 400);
+    }
+    function chatKey(e) {
+        if (e.key === 'Enter') sendChat();
+    }
+
+    /* Scroll reveal */
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+            if (e.isIntersecting) { e.target.classList.add('visible'); }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(function(el) { observer.observe(el); });
     </script>
     <div class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#9650;</div>
+    <div class="mobile-overlay" id="mobileOverlay" onclick="closeMenu()"></div>
+
+    <button class="chat-toggle" onclick="toggleChat()" aria-label="Chat">&#128172;</button>
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-head">
+            <h3><span>&#129302;</span> Sasin Assistant</h3>
+            <button class="chat-head-close" onclick="toggleChat()">&times;</button>
+        </div>
+        <div class="chat-body"></div>
+        <div class="chat-qs">
+            <span class="chat-q" onclick="document.getElementById('chatInput').value='best executor';sendChat()">Best executor?</span>
+            <span class="chat-q" onclick="document.getElementById('chatInput').value='free executor';sendChat()">Free options</span>
+            <span class="chat-q" onclick="document.getElementById('chatInput').value='how to install';sendChat()">Install help</span>
+            <span class="chat-q" onclick="document.getElementById('chatInput').value='scripts';sendChat()">Scripts</span>
+        </div>
+        <div class="chat-foot">
+            <input class="chat-input" id="chatInput" placeholder="Ask about executors..." onkeydown="chatKey(event)">
+            <button class="chat-send" onclick="sendChat()">Send</button>
+        </div>
+    </div>
     <script>
     function handleResize() {
         var w = window.innerWidth;

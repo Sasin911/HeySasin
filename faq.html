@@ -195,6 +195,24 @@
     </main>
 
     <div class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#9650;</div>
+    <button class="chat-toggle" onclick="toggleChat()" aria-label="Chat">&#128172;</button>
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-head">
+            <h3><span>&#129302;</span> Sasin Assistant</h3>
+            <button class="chat-head-close" onclick="toggleChat()">&times;</button>
+        </div>
+        <div class="chat-body"></div>
+        <div class="chat-qs">
+            <span class="chat-q" onclick="document.getElementById('chatInput').value='best executor';sendChat()">Best executor?</span>
+            <span class="chat-q" onclick="document.getElementById('chatInput').value='free executor';sendChat()">Free options</span>
+            <span class="chat-q" onclick="document.getElementById('chatInput').value='how to install';sendChat()">Install help</span>
+            <span class="chat-q" onclick="document.getElementById('chatInput').value='scripts';sendChat()">Scripts</span>
+        </div>
+        <div class="chat-foot">
+            <input class="chat-input" id="chatInput" placeholder="Ask about executors..." onkeydown="chatKey(event)">
+            <button class="chat-send" onclick="sendChat()">Send</button>
+        </div>
+    </div>
     <div class="mobile-overlay" id="mobileOverlay" onclick="closeMenu()"></div>
     <script>
     function handleResize() {
@@ -238,6 +256,66 @@
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').catch(function(){});
     }
+
+    /* Chatbot */
+    var chatResponses = {
+        'best executor': 'Delta and Xeno are top-tier right now. Delta has 98% UNC and Xeno scores 96%. Both are Windows internal executors with great stability.',
+        'free executor': 'Solara and Velocity are solid free options. Solara is keyless with 94% UNC. Velocity is also free with 91% UNC.',
+        'how to install': 'Check our <a href="guides.html" style="color:#06b6d4">Guides page</a> for step-by-step installation tutorials for every executor.',
+        'key': 'Need keys? Visit <a href="https://mss-key.xyz" style="color:#f59e0b" target="_blank">Mss-Keygen</a> for paid executor keys.',
+        'scripts': 'Browse 35+ scripts across 14 games on our <a href="scripts.html" style="color:#06b6d4">Scripts page</a>.',
+        'unc': 'UNC scores measure script function compatibility. Higher is better. Delta leads at 98%, then Xeno at 96%, Cryptic at 95%.',
+        'mobile': 'We support mobile executors too! Check Hydrogen (iOS), Arceus X (Android), and Vega X (Android) on our Executors page.',
+        'sirhurt': 'SirHurt is a classic paid external executor. Currently at 87% UNC. Still actively maintained.',
+        'discord': 'Join our Discord for updates and support! Click the Discord icon in the navbar.',
+        'hello': 'Hey there! How can I help you today? Ask me about executors, scripts, installation, or anything else!',
+        'hi': 'Hey! What can I help you with? Try asking about the best executors, free options, or how to get started.',
+        'default': "I'm not sure about that. Try asking about executors, scripts, pricing, or check our <a href='faq.html' style='color:#06b6d4'>FAQ</a>."
+    };
+    function getChatAnswer(input) {
+        var lower = input.toLowerCase();
+        for (var key in chatResponses) {
+            if (lower.includes(key)) return chatResponses[key];
+        }
+        return chatResponses['default'];
+    }
+    function toggleChat() {
+        var w = document.getElementById('chatWindow');
+        var b = document.querySelector('.chat-toggle');
+        w.classList.toggle('open');
+        b.classList.toggle('close');
+        if (w.classList.contains('open') && w.querySelector('.chat-body').children.length === 0) {
+            addChatMsg('bot', "Hi! I'm the Hey Sasin assistant. Ask me about executors, scripts, pricing, or anything else!");
+        }
+    }
+    function addChatMsg(type, text) {
+        var body = document.querySelector('.chat-body');
+        var msg = document.createElement('div');
+        msg.className = 'chat-msg ' + type;
+        msg.innerHTML = text;
+        body.appendChild(msg);
+        body.scrollTop = body.scrollHeight;
+    }
+    function sendChat() {
+        var input = document.getElementById('chatInput');
+        var text = input.value.trim();
+        if (!text) return;
+        addChatMsg('user', text);
+        input.value = '';
+        setTimeout(function() {
+            addChatMsg('bot', getChatAnswer(text));
+        }, 300 + Math.random() * 400);
+    }
+    function chatKey(e) {
+        if (e.key === 'Enter') sendChat();
+    }
+    /* Scroll reveal */
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+            if (e.isIntersecting) { e.target.classList.add('visible'); }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(function(el) { observer.observe(el); });
     </script>
     <footer class="footer">
         <p>&copy; 2026 Hey Sasin Gaming. Not affiliated with Roblox Corporation.</p>
