@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hey Sasin Gaming - Scripts</title>
-    <meta name="description" content="Roblox scripts for popular games. Sorted by game, updated when new ones drop.">
+    <meta name="description" content="We don't host scripts anymore. Visit rscripts.net for a curated collection of working Roblox scripts.">
     <meta property="og:title" content="Hey Sasin Gaming - Scripts">
-    <meta property="og:description" content="Working Roblox scripts for popular games.">
+    <meta property="og:description" content="We don't host scripts anymore. Visit rscripts.net for working Roblox scripts.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://heysasingaming.github.io/scripts.html">
+    <meta property="og:url" content="https://heysasingaming.github.io">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="manifest" href="manifest.json">
     <link rel="search" type="application/opensearchdescription+xml" title="Hey Sasin Gaming" href="opensearch.xml">
@@ -34,7 +34,7 @@
         <div class="splash-content">
             <img src="logos/chill.gif" alt="" class="splash-gif">
             <div class="splash-logo">Hey Sasin Gaming</div>
-            <p class="splash-tagline">Roblox executors, scripts, and guides</p>
+            <p class="splash-tagline">Roblox executors and guides</p>
             <button class="splash-btn" onclick="event.stopPropagation();enterSite()">Click to Enter</button>
         </div>
         <span class="splash-hint">&#9660; Click anywhere to enter</span>
@@ -58,7 +58,7 @@
             <div class="nav-links" id="navLinks">
                 <a href="index.html">Home</a>
                 <a href="executors.html">Executors</a>
-                <a href="scripts.html" class="active">Scripts</a>
+                <a href="https://rscripts.net" target="_blank" class="active">Scripts</a>
                 <a href="benchmarks.html">Benchmarks</a>
                 <a href="guides.html">Guides</a>
                 <a href="faq.html">FAQ</a>
@@ -78,600 +78,20 @@
         <section class="page-header">
             <div class="glow"></div>
             <h1>Roblox <span class="highlight">Scripts</span></h1>
-            <p>Working scripts for popular Roblox games. Copy and execute them in your favorite executor.</p>
+            <p>We don't host scripts here anymore. Head over to <a href="https://rscripts.net" target="_blank" style="color:var(--accent)">rscripts.net</a> — they've got a solid collection of working scripts for all the big Roblox games, sorted and tested.</p>
         </section>
 
-        <div class="scripts-filter-bar">
-            <div class="filter-group">
-                <input type="text" id="scriptSearch" class="filter-input" placeholder="Search scripts by name, game, or type..." oninput="filterScripts()">
+        <section class="scripts-external-bar" style="margin-top: 0;">
+            <div class="bar-box">
+                <h2>Need Roblox Scripts?</h2>
+                <p>We used to host scripts here, but now we send people to <strong>rscripts.net</strong> instead. They've got a solid collection of working scripts for all the big Roblox games — pasted, tested, and sorted by game. Way more than we could ever keep up with ourselves.</p>
+                <a href="https://rscripts.net" target="_blank" class="btn">Browse rscripts.net &#8599;</a>
             </div>
-        </div>
-
-        <section class="scripts-list">
-
-            <div class="category-header">
-                <span class="category-icon">&#9889;</span>
-                <h2>Universal</h2>
-            </div>
-
-            <div class="script-card" data-game="Universal" data-name="Universal Aimbot + ESP">
-                <div class="script-header">
-                    <div>
-                        <h2>Universal Aimbot + ESP</h2>
-                        <span class="script-game">Works in most FPS games</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://pastebin.com/raw/3J6ss7y4"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Universal" data-name="Universal ESP">
-                <div class="script-header">
-                    <div>
-                        <h2>Remote Spy</h2>
-                        <span class="script-game">Universal - Spy on remote events</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/NoTwistedHere/Roblox/main/RemoteSpy.lua"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Universal" data-name="Infinity Yield Admin">
-                <div class="script-header">
-                    <div>
-                        <h2>Infinity Yield Admin</h2>
-                        <span class="script-game">Universal admin commands</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infinityyield/master/source'))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Universal" data-name="Dex Explorer v4">
-                <div class="script-header">
-                    <div>
-                        <h2>Dex Explorer v4</h2>
-                        <span class="script-game">Universal game explorer</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/infy-scripts/Dex/main/loader.lua"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Universal" data-name="Orion Library">
-                <div class="script-header">
-                    <div>
-                        <h2>Orion Library</h2>
-                        <span class="script-game">Universal UI library</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Orion/main/source'))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Universal" data-name="OwlHub Universal">
-                <div class="script-header">
-                    <div>
-                        <h2>OwlHub Universal</h2>
-                        <span class="script-game">Universal script hub</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Universal" data-name="Darkrai Hub X">
-                <div class="script-header">
-                    <div>
-                        <h2>Darkrai Hub X</h2>
-                        <span class="script-game">Universal script hub</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/DarkraiHub/DarkraiHubX/main/Loader.lua"))()</code></pre>
-            </div>
-
-            <div class="category-header" style="margin-top: 8px;">
-                <span class="category-icon">&#127918;</span>
-                <h2>Arsenal</h2>
-            </div>
-
-            <div class="script-card" data-game="Arsenal" data-name="Arsenal Aimbot + ESP">
-                <div class="script-header">
-                    <div>
-                        <h2>Arsenal Aimbot + ESP</h2>
-                        <span class="script-game">Arsenal</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/Rollimonster/Aimbot/main/Aimbot"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Arsenal" data-name="Arsenal Hitbox Expander">
-                <div class="script-header">
-                    <div>
-                        <h2>Arsenal Hitbox Expander</h2>
-                        <span class="script-game">Arsenal</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/Rollimonster/Arsenal-Hitbox-Expander/main/Arsenal-Hitbox-Expander", true))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Arsenal" data-name="Arsenal Chams">
-                <div class="script-header">
-                    <div>
-                        <h2>Arsenal Chams</h2>
-                        <span class="script-game">Arsenal</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/Rollimonster/Roblox-Cham/main/Roblox-Cham", true))()</code></pre>
-            </div>
-
-            <div class="category-header" style="margin-top: 8px;">
-                <span class="category-icon">&#127822;</span>
-                <h2>Blox Fruits</h2>
-            </div>
-
-            <div class="script-card" data-game="Blox Fruits" data-name="Speed Hub X - Auto Farm">
-                <div class="script-header">
-                    <div>
-                        <h2>Speed Hub X - Auto Farm</h2>
-                        <span class="script-game">Blox Fruits</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua", true))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Blox Fruits" data-name="redz Hub - Auto Farm">
-                <div class="script-header">
-                    <div>
-                        <h2>redz Hub - Auto Farm</h2>
-                        <span class="script-game">Blox Fruits</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>local Settings={JoinTeam="Pirates",Translator=true} loadstring(game:HttpGet("https://raw.githubusercontent.com/newredz/BloxFruits/refs/heads/main/Source.luau"))(Settings)</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Blox Fruits" data-name="Blox Fruit Stat Refunder">
-                <div class="script-header">
-                    <div>
-                        <h2>Swan Hub - Auto Farm</h2>
-                        <span class="script-game">Blox Fruits</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/Swfan1/SwanHub/main/Script.lua", true))()</code></pre>
-            </div>
-
-            <div class="category-header" style="margin-top: 8px;">
-                <span class="category-icon">&#128049;</span>
-                <h2>Pet Simulator 99</h2>
-            </div>
-
-            <div class="script-card" data-game="Pet Simulator" data-name="PS99 6FootScripts Hub">
-                <div class="script-header">
-                    <div>
-                        <h2>PS99 6FootScripts Hub</h2>
-                        <span class="script-game">Pet Simulator 99</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet('https://raw.githubusercontent.com/SlamminPig/6FootScripts/main/Scripts/PetSimulator99.lua'))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Pet Simulator" data-name="PS99 Auto Click">
-                <div class="script-header">
-                    <div>
-                        <h2>PS99 Auto Click</h2>
-                        <span class="script-game">Pet Simulator 99</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/bubblescripts/scripts/refs/heads/main/PS99/psgo"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Pet Simulator" data-name="PS99 Reaper Hub">
-                <div class="script-header">
-                    <div>
-                        <h2>PS99 Reaper Hub</h2>
-                        <span class="script-game">Pet Simulator 99</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/AyoReaper/Reaper-Hub/refs/heads/main/loader.lua"))()</code></pre>
-            </div>
-
-            <div class="category-header" style="margin-top: 8px;">
-                <span class="category-icon">&#128526;</span>
-                <h2>Tower of Hell</h2>
-            </div>
-
-            <div class="script-card" data-game="Tower of Hell" data-name="ToH SprinHub">
-                <div class="script-header">
-                    <div>
-                        <h2>ToH SprinHub</h2>
-                        <span class="script-game">Tower of Hell</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/dqvh/dqvh/main/SprinHub",true))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Tower of Hell" data-name="ToH Auto Finish">
-                <div class="script-header">
-                    <div>
-                        <h2>ToH Auto Finish</h2>
-                        <span class="script-game">Tower of Hell</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/centerepic/sasware_TowerOfHell/main/TowerOfHell_sw.lua"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Tower of Hell" data-name="ToH YHUB">
-                <div class="script-header">
-                    <div>
-                        <h2>ToH YHUB</h2>
-                        <span class="script-game">Tower of Hell</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/Luarmor123/YHUB-Community/refs/heads/main/Tower-of-hell.lua"))()</code></pre>
-            </div>
-
-            <div class="category-header" style="margin-top: 8px;">
-                <span class="category-icon">&#129504;</span>
-                <h2>Doors</h2>
-            </div>
-
-            <div class="script-card" data-game="Doors" data-name="Doors OP Script">
-                <div class="script-header">
-                    <div>
-                        <h2>Doors OP Script</h2>
-                        <span class="script-game">Doors</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/U-ziii/Doors-op-script/refs/heads/main/Doors%20op%20script.lua"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Doors" data-name="Doors Vynixius Hack">
-                <div class="script-header">
-                    <div>
-                        <h2>Doors Vynixius Hack</h2>
-                        <span class="script-game">Doors</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Vynixius/main/Door/Hack.lua"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Doors" data-name="Doors Skipper">
-                <div class="script-header">
-                    <div>
-                        <h2>Doors Room Skipper</h2>
-                        <span class="script-game">Doors</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/LHking123456/DOORS-SCRIPT/main/Doors.lua"))()</code></pre>
-            </div>
-
-            <div class="category-header" style="margin-top: 8px;">
-                <span class="category-icon">&#128298;</span>
-                <h2>Murder Mystery 2</h2>
-            </div>
-
-            <div class="script-card" data-game="Murder Mystery 2" data-name="MM2 FourHub">
-                <div class="script-header">
-                    <div>
-                        <h2>MM2 FourHub</h2>
-                        <span class="script-game">Murder Mystery 2</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/jokerbiel13/FourHub/refs/heads/main/MM2.lua",true))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Murder Mystery 2" data-name="MM2 Script V2">
-                <div class="script-header">
-                    <div>
-                        <h2>MM2 Script V2</h2>
-                        <span class="script-game">Murder Mystery 2</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/D11Scripts/d3d11mm2/refs/heads/main/d3d11mm2scriptv2.txt"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Murder Mystery 2" data-name="MM2 Auto Farm">
-                <div class="script-header">
-                    <div>
-                        <h2>MM2 Auto Farm</h2>
-                        <span class="script-game">Murder Mystery 2</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/Aura-56/MurderMystery2/refs/heads/main/Autofarm.lua", true))()</code></pre>
-            </div>
-
-            <div class="category-header" style="margin-top: 8px;">
-                <span class="category-icon">&#9876;</span>
-                <h2>Your Bizarre Adventure</h2>
-            </div>
-
-            <div class="script-card" data-game="Your Bizarre Adventure" data-name="YBA Auto Farm">
-                <div class="script-header">
-                    <div>
-                        <h2>YBA Auto Farm</h2>
-                        <span class="script-game">Your Bizarre Adventure</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/MidnightKittenCat/script-idk/main/YBA.lua"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Your Bizarre Adventure" data-name="YBA Julman Script">
-                <div class="script-header">
-                    <div>
-                        <h2>YBA Julman Script</h2>
-                        <span class="script-game">Your Bizarre Adventure</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>pcall(loadstring(game:HttpGet("https://cdn.julman.fr/scripts/35.lua")))</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Your Bizarre Adventure" data-name="YBA RAILhub">
-                <div class="script-header">
-                    <div>
-                        <h2>YBA RAILhub</h2>
-                        <span class="script-game">Your Bizarre Adventure</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Vynixius/main/YBA/Loader.lua"))()</code></pre>
-            </div>
-
-            <div class="category-header" style="margin-top: 8px;">
-                <span class="category-icon">&#128176;</span>
-                <h2>King Legacy</h2>
-            </div>
-
-            <div class="script-card" data-game="King Legacy" data-name="King Legacy Tsuo Hub">
-                <div class="script-header">
-                    <div>
-                        <h2>King Legacy Tsuo Hub</h2>
-                        <span class="script-game">King Legacy</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/Tsuo7/TsuoHub/main/king%20legacy"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="King Legacy" data-name="King Legacy Auto Farm">
-                <div class="script-header">
-                    <div>
-                        <h2>King Legacy Auto Farm</h2>
-                        <span class="script-game">King Legacy</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/sannin9000/scripts/main/kinglegacy.lua"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="King Legacy" data-name="King Legacy Zee Hub">
-                <div class="script-header">
-                    <div>
-                        <h2>King Legacy Zee Hub</h2>
-                        <span class="script-game">King Legacy</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet('https://zuwz.me/Ls-Zee-Hub-KL'))()</code></pre>
-            </div>
-
-            <div class="category-header" style="margin-top: 8px;">
-                <span class="category-icon">&#129504;</span>
-                <h2>Steal a Brainrot</h2>
-            </div>
-
-            <div class="script-card" data-game="Steal a Brainrot" data-name="Brainrot ESP + Auto Steal">
-                <div class="script-header">
-                    <div>
-                        <h2>Brainrot ESP + Auto Steal</h2>
-                        <span class="script-game">Steal a Brainrot</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet('https://raw.githubusercontent.com/KaspikScriptsRb/steal-a-brainrot/refs/heads/main/.lua'))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Steal a Brainrot" data-name="Brainrot Auto Collect MOD">
-                <div class="script-header">
-                    <div>
-                        <h2>Brainrot Auto Collect MOD</h2>
-                        <span class="script-game">Steal a Brainrot</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/StealaBrainrotMOD"))()</code></pre>
-            </div>
-
-            <div class="category-header" style="margin-top: 8px;">
-                <span class="category-icon">&#9876;</span>
-                <h2>Blade Ball</h2>
-            </div>
-
-            <div class="script-card" data-game="Blade Ball" data-name="Blade Ball LyraHub">
-                <div class="script-header">
-                    <div>
-                        <h2>Blade Ball LyraHub</h2>
-                        <span class="script-game">Blade Ball</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/LyraHubxxx/Game-Utilities/refs/heads/main/Blade_Ball.lua"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Blade Ball" data-name="Blade Ball ClockHub Keyless">
-                <div class="script-header">
-                    <div>
-                        <h2>Blade Ball ClockHub Keyless</h2>
-                        <span class="script-game">Blade Ball</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/WindsHub/WInds/refs/heads/main/Loader"))()</code></pre>
-            </div>
-
-            <div class="category-header" style="margin-top: 8px;">
-                <span class="category-icon">&#128128;</span>
-                <h2>Forsaken</h2>
-            </div>
-
-            <div class="script-card" data-game="Forsaken" data-name="Forsaken Voidware">
-                <div class="script-header">
-                    <div>
-                        <h2>Forsaken Voidware</h2>
-                        <span class="script-game">Forsaken</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/forsaken.lua", true))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Forsaken" data-name="Forsaken SNT Hub">
-                <div class="script-header">
-                    <div>
-                        <h2>Forsaken SNT Hub</h2>
-                        <span class="script-game">Forsaken</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/Snowt69/SNT-HUB/refs/heads/main/Forsaken"))()</code></pre>
-            </div>
-
-            <div class="category-header" style="margin-top: 8px;">
-                <span class="category-icon">&#128031;</span>
-                <h2>Fisch</h2>
-            </div>
-
-            <div class="script-card" data-game="Fisch" data-name="Fisch Black Hub">
-                <div class="script-header">
-                    <div>
-                        <h2>Fisch Black Hub</h2>
-                        <span class="script-game">Fisch</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/Skibidiking123/Fisch1/refs/heads/main/FischMain"))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Fisch" data-name="Fisch FryzerHub">
-                <div class="script-header">
-                    <div>
-                        <h2>Fisch FryzerHub</h2>
-                        <span class="script-game">Fisch</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/FryzerHub/Scripts/refs/heads/main/Fisch.lua"))()</code></pre>
-            </div>
-
-            <div class="category-header" style="margin-top: 8px;">
-                <span class="category-icon">&#127760;</span>
-                <h2>Other Games</h2>
-            </div>
-
-            <div class="script-card" data-game="Other" data-name="BedWars Vape V4">
-                <div class="script-header">
-                    <div>
-                        <h2>BedWars Vape V4</h2>
-                        <span class="script-game">BedWars (Roblox)</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/NewMainScript.lua", true))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Other" data-name="Natural Disaster Survival">
-                <div class="script-header">
-                    <div>
-                        <h2>NDS Garfield Hub</h2>
-                        <span class="script-game">Natural Disaster Survival</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/2dgeneralspam1/scripts-and-stuff/master/scripts/garfield%20hub", true))()</code></pre>
-            </div>
-
-            <div class="script-card" data-game="Other" data-name="Da Hood Closet Cheat">
-                <div class="script-header">
-                    <div>
-                        <h2>Da Hood Closet Cheat</h2>
-                        <span class="script-game">Da Hood</span>
-                    </div>
-                    <span class="script-copy" onclick="copyScript(this)">Copy</span>
-                </div>
-                <pre class="script-code"><code>loadstring(game:HttpGet("https://raw.githubusercontent.com/Rollimonster/Da-Hood-Closet-Cheat/main/Da-Hood-Closet-Cheat", true))()</code></pre>
-            </div>
-
         </section>
 
-        <section class="scripts-footer">
-            <p>More scripts coming soon. Join our Discord to request specific scripts or report broken ones.</p>
-            <a href="https://discord.gg/qVHWC4xk7w" target="_blank" class="btn btn-primary">Request a Script</a>
-        </section>
     </main>
 
     <script>
-    function copyScript(el) {
-        var code = el.parentElement.nextElementSibling.querySelector('code').textContent;
-        navigator.clipboard.writeText(code).then(function() {
-            var orig = el.textContent;
-            el.textContent = 'Copied!';
-            el.classList.add('copied');
-            showToast('Copied to clipboard!', 'success');
-            setTimeout(function() {
-                el.textContent = orig;
-                el.classList.remove('copied');
-            }, 1500);
-        }).catch(function() {
-            showToast('Failed to copy', 'error');
-        });
-    }
-
-    function showToast(msg, type) {
-        var container = document.getElementById('toastContainer');
-        if (!container) return;
-        var t = document.createElement('div');
-        t.className = 'toast' + (type ? ' ' + type : '');
-        t.textContent = msg;
-        container.appendChild(t);
-        requestAnimationFrame(function() { t.classList.add('show'); });
-        setTimeout(function() {
-            t.classList.remove('show');
-            setTimeout(function() { t.remove(); }, 400);
-        }, 2500);
-    }
-
-    function filterScripts() {
-        var q = document.getElementById('scriptSearch').value.toLowerCase();
-        document.querySelectorAll('.script-card').forEach(function(card) {
-            var name = card.getAttribute('data-name').toLowerCase();
-            var game = card.getAttribute('data-game').toLowerCase();
-            var desc = (card.querySelector('.script-game') || {}).textContent.toLowerCase() || '';
-            var code = card.querySelector('code').textContent.toLowerCase();
-            var match = name.indexOf(q) > -1 || game.indexOf(q) > -1 || desc.indexOf(q) > -1 || code.indexOf(q) > -1;
-            card.style.display = match ? '' : 'none';
-        });
-    }
-
     function toggleMenu() {
         document.getElementById('navLinks').classList.toggle('open');
         document.querySelector('.menu-toggle').classList.toggle('active');
@@ -682,13 +102,6 @@
         document.querySelector('.menu-toggle').classList.remove('active');
         document.getElementById('mobileOverlay').classList.remove('show');
     }
-    document.addEventListener('keydown', function(e) {
-        if ((e.key === '/' || (e.ctrlKey && e.key === 'k')) && !['INPUT','TEXTAREA'].includes(e.target.tagName)) {
-            e.preventDefault();
-            var input = document.querySelector('.filter-input');
-            if (input) input.focus();
-        }
-    });
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').catch(function(){});
     }
@@ -702,7 +115,7 @@
         'paid': 'Best sites for buying paid executor keys: <a href="https://key-empire.com" style="color:#06b6d4" target="_blank">key-empire.com</a> and <a href="https://wyv.gg" style="color:#06b6d4" target="_blank">wyv.gg</a>. Both are trusted marketplaces with instant delivery.',
         'key-empire': '<a href="https://key-empire.com" style="color:#06b6d4" target="_blank">Key Empire</a> is a top marketplace for discounted premium executor keys. Instant delivery, supports multiple executors.',
         'wyv': '<a href="https://wyv.gg" style="color:#06b6d4" target="_blank">wyv.gg</a> is a trusted marketplace for buying paid executor keys at great prices with instant delivery.',
-        'scripts': 'Browse 35+ scripts across 14 games on our <a href="scripts.html" style="color:#06b6d4">Scripts page</a>.',
+        'scripts': 'We don\'t host scripts here anymore. Check <a href="https://rscripts.net" style="color:#06b6d4" target="_blank">rscripts.net</a> for a curated collection of working Roblox scripts.',
         'unc': 'UNC scores measure script function compatibility. Higher is better. Delta leads at 98%, then Xeno at 96%, Cryptic at 95%.',
         'mobile': 'We support mobile executors too! Check Hydrogen (iOS), Arceus X (Android), and Vega X (Android) on our Executors page.',
         'sirhurt': 'SirHurt is a classic paid external executor. Currently at 87% UNC. Still actively maintained.',
@@ -830,7 +243,7 @@
                 <ul class="footer-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="executors.html">Executors</a></li>
-                    <li><a href="scripts.html">Scripts</a></li>
+                    <li><a href="https://rscripts.net" target="_blank">rscripts.net</a></li>
                     <li><a href="guides.html">Guides</a></li>
                     <li><a href="benchmarks.html">Benchmarks</a></li>
                 </ul>
