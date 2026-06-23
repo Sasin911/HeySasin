@@ -6,3 +6,10 @@ node_modules/
 Thumbs.db
 roblox-executor-mcp-main/
 APP/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
