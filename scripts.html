@@ -59,6 +59,7 @@
                 <a href="index.html">Home</a>
                 <a href="executors.html">Executors</a>
                 <a href="scripts.html" class="active">Scripts</a>
+                <a href="benchmarks.html">Benchmarks</a>
                 <a href="guides.html">Guides</a>
                 <a href="faq.html">FAQ</a>
                 <a href="changelog.html">Changelog</a>
@@ -680,6 +681,8 @@
     <div class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#9650;</div>
     <script>
     window.addEventListener('scroll', function() {
+        var nav = document.querySelector('.navbar');
+        if (nav) { nav.classList.toggle('scrolled', window.scrollY > 20); }
         var btn = document.querySelector('.back-to-top');
         if (window.scrollY > 300) { btn.classList.add('visible'); } else { btn.classList.remove('visible'); }
     });

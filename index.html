@@ -60,6 +60,7 @@
                 <a href="index.html" class="active">Home</a>
                 <a href="executors.html">Executors</a>
                 <a href="scripts.html">Scripts</a>
+                <a href="benchmarks.html">Benchmarks</a>
                 <a href="guides.html">Guides</a>
                 <a href="faq.html">FAQ</a>
                 <a href="changelog.html">Changelog</a>
@@ -116,6 +117,8 @@
     <div class="mobile-overlay" id="mobileOverlay" onclick="closeMenu()"></div>
     <script>
     window.addEventListener('scroll', function() {
+        var nav = document.querySelector('.navbar');
+        if (nav) { nav.classList.toggle('scrolled', window.scrollY > 20); }
         var btn = document.querySelector('.back-to-top');
         if (window.scrollY > 300) { btn.classList.add('visible'); } else { btn.classList.remove('visible'); }
     });
