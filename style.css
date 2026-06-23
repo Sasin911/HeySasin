@@ -1424,6 +1424,7 @@ main {
 }
 
 .mobile-overlay.show {
+    display: block;
     opacity: 1;
 }
 
@@ -1433,13 +1434,21 @@ main {
     padding: 0 24px 32px;
 }
 
+.compare-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+}
+
+.compare-wrapper .compare-table {
+    border: none;
+}
+
 .compare-table {
     width: 100%;
     border-collapse: collapse;
-    border-radius: var(--radius);
-    overflow: hidden;
     background: var(--surface);
-    border: 1px solid var(--border);
     font-size: 13px;
 }
 
@@ -1533,6 +1542,11 @@ main {
         font-size: 14px;
     }
 
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
     .features {
         padding: 40px 20px;
     }
@@ -1579,6 +1593,7 @@ main {
 
     .executor-info h2 {
         justify-content: center;
+        flex-wrap: wrap;
     }
 
     .nav-container {
@@ -1587,6 +1602,11 @@ main {
 
     .logo {
         font-size: 18px;
+    }
+
+    .logo-img {
+        width: 24px;
+        height: 24px;
     }
 
     .nav-links a {
@@ -1607,12 +1627,36 @@ main {
         gap: 8px;
     }
 
+    .filter-group label {
+        font-size: 9px;
+    }
+
+    .filter-input,
+    .filter-select {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
     .filter-input {
         min-width: 100%;
     }
 
     .filter-select {
         min-width: 100px;
+    }
+
+    .compare-table {
+        min-width: 700px;
+    }
+
+    .compare-table th,
+    .compare-table td {
+        padding: 8px 6px;
+        font-size: 11px;
+    }
+
+    .compare-table .cmp-platform {
+        font-size: 9px;
     }
 
     .splash-logo {
@@ -1702,34 +1746,344 @@ main {
     }
 
     .nav-links a {
-        padding: 12px 16px;
-        font-size: 14px;
+        padding: 14px 16px;
+        font-size: 15px;
         width: 100%;
         text-align: left;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
     }
 
     .nav-links .discord-link,
     .nav-links .youtube-link,
     .nav-links .promo-link {
-        padding: 12px 16px !important;
+        padding: 14px 16px !important;
         width: 100%;
         justify-content: flex-start;
+        min-height: 48px;
     }
 
     .nav-links a.active {
         background: rgba(6,182,212,0.08);
     }
 
-    .compare-table {
+    .faq-question {
+        padding: 14px 16px;
+        font-size: 13px;
+    }
+
+    .faq-answer p {
+        font-size: 12px;
+    }
+
+    .guide-step {
+        font-size: 12px;
+    }
+
+    .guide-step code {
+        font-size: 11px;
+    }
+
+    .guide-body {
+        padding: 12px 16px 16px;
+    }
+
+    .guide-header {
+        padding: 14px 16px 0;
+    }
+
+    .scripts-list,
+    .executors-list,
+    .faq-list,
+    .changelog-list,
+    .guides-list {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .compare-section {
+        padding: 0 16px 24px;
+    }
+
+    .category-header h2 {
+        font-size: 20px;
+    }
+
+    .sub-category-header h3 {
+        font-size: 13px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+
+    .copy-btn, .script-copy {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 24px;
+        letter-spacing: -0.3px;
+    }
+
+    .hero {
+        padding: 56px 16px 40px;
+    }
+
+    .hero p {
+        font-size: 13px;
+    }
+
+    .hero-badge {
+        font-size: 9px;
+        padding: 3px 12px;
+    }
+
+    .features {
+        padding: 28px 16px;
+    }
+
+    .section-head h2 {
+        font-size: 20px;
+    }
+
+    .feature-card {
+        padding: 20px 16px;
+    }
+
+    .feature-card h3 {
+        font-size: 15px;
+    }
+
+    .feature-card p {
+        font-size: 12px;
+    }
+
+    .page-header h1 {
+        font-size: 22px;
+    }
+
+    .page-header p {
+        font-size: 13px;
+    }
+
+    .page-header {
+        padding: 44px 16px 24px;
+    }
+
+    .executor-card {
+        padding: 16px;
+        gap: 14px;
+    }
+
+    .executor-logo {
+        flex-shrink: 0;
+    }
+
+    .executor-img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .logo-placeholder svg {
+        width: 60px;
+        height: 60px;
+    }
+
+    .executor-info h2 {
+        font-size: 17px;
+    }
+
+    .executor-desc {
+        font-size: 12px;
+    }
+
+    .stat-value {
+        font-size: 13px;
+    }
+
+    .stat-label {
+        font-size: 8px;
+    }
+
+    .filter-bar {
+        padding: 0 12px 16px;
+    }
+
+    .filter-group {
+        width: 100%;
+    }
+
+    .filter-input,
+    .filter-select {
+        min-width: 100%;
+        width: 100%;
+    }
+
+    .category-header h2 {
+        font-size: 18px;
+    }
+
+    .sub-category-header h3 {
+        font-size: 12px;
+    }
+
+    .splash-logo {
+        font-size: 22px;
+    }
+
+    .splash-gif {
+        max-width: 100px;
+    }
+
+    .splash-btn {
+        padding: 10px 24px;
+        font-size: 13px;
+    }
+
+    .splash-content {
+        padding: 24px 16px;
+    }
+
+    .splash-tagline {
+        font-size: 13px;
+    }
+
+    .cl-content h3 {
+        font-size: 13px;
+    }
+
+    .cl-content p {
+        font-size: 11px;
+    }
+
+    .script-code code {
         font-size: 10px;
+        padding: 6px 8px;
+        word-break: break-all;
+    }
+
+    .script-header h2 {
+        font-size: 13px;
+    }
+
+    .scripts-footer p {
+        font-size: 12px;
+    }
+
+    .nav-container {
+        padding: 8px 12px;
+    }
+
+    .logo {
+        font-size: 16px;
+    }
+
+    .logo-img {
+        width: 22px;
+        height: 22px;
+    }
+
+    .nav-links {
+        width: 220px;
+        padding: 64px 16px 20px;
+    }
+
+    .compare-table {
+        font-size: 9px;
+        min-width: 600px;
     }
 
     .compare-table th,
     .compare-table td {
-        padding: 6px 4px;
+        padding: 5px 4px;
     }
 
-    .compare-table .cmp-platform {
-        font-size: 9px;
+    .compare-table .cmp-name {
+        font-size: 10px;
+    }
+
+    .faq-question {
+        padding: 12px 14px;
+        font-size: 12px;
+    }
+
+    .faq-answer p {
+        font-size: 11px;
+    }
+
+    .guide-header h2 {
+        font-size: 14px;
+    }
+
+    .guide-step {
+        font-size: 11px;
+    }
+
+    .guide-step strong {
+        font-size: 11px;
+    }
+
+    .guide-step code {
+        font-size: 10px;
+    }
+
+    .guide-tip {
+        font-size: 11px;
+        padding: 8px 12px;
+    }
+
+    .guide-header {
+        padding: 12px 14px 0;
+    }
+
+    .guide-body {
+        padding: 10px 14px 14px;
+    }
+
+    .btn {
+        padding: 9px 16px;
+        font-size: 12px;
+    }
+
+    .copy-btn, .script-copy {
+        padding: 5px 10px;
+        font-size: 10px;
+        min-height: 36px;
+    }
+
+    .back-to-top {
+        bottom: 12px;
+        right: 12px;
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+
+    .footer p {
+        font-size: 11px;
+    }
+
+    .promo-link {
+        font-size: 12px !important;
+        padding: 5px 12px !important;
+    }
+
+    .scripts-list,
+    .executors-list,
+    .faq-list,
+    .changelog-list,
+    .guides-list {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .compare-section {
+        padding: 0 12px 20px;
     }
 }
