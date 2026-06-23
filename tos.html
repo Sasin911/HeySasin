@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hey Sasin Gaming - Terms of Service</title>
+<meta name="description" content="Terms of Service for Hey Sasin Gaming. Please read these terms carefully before using our site.">
+<meta property="og:title" content="Hey Sasin Gaming - Terms of Service">
+<meta property="og:description" content="Terms governing the use of Hey Sasin Gaming.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://heysasingaming.github.io/tos.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="manifest" href="manifest.json">
+<link rel="search" type="application/opensearchdescription+xml" title="Hey Sasin Gaming" href="opensearch.xml">
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+"@context": "https://schema.org",
+"@type": "WebSite",
+"name": "Hey Sasin Gaming",
+"url": "https://sasin911.github.io/HeySasin/",
+"description": "Your trusted Roblox executor directory"
+}
+</script>
+</head>
+<body>
+<div id="splash" class="splash-screen" onclick="enterSite()">
+<div class="splash-content">
+<img src="logos/chill.gif" alt="" class="splash-gif">
+<div class="splash-logo">Hey Sasin Gaming</div>
+<p class="splash-tagline">Your trusted Roblox executor directory</p>
+<button class="splash-btn" onclick="event.stopPropagation();enterSite()">Click to Enter</button>
+</div>
+<span class="splash-hint">&#9660; Click anywhere to enter</span>
+</div>
+<script>
+if (sessionStorage.getItem('entered')) {
+document.getElementById('splash').classList.add('hidden');
+}
+function enterSite() {
+sessionStorage.setItem('entered', '1');
+document.getElementById('splash').classList.add('hidden');
+}
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+</script>
+<nav class="navbar">
+<div class="nav-container">
+<a href="index.html" class="logo"><img src="logos/logo.svg" alt="" class="logo-img"> Hey Sasin Gaming</a>
+<button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">
+<span></span><span></span><span></span>
+</button>
+<div class="nav-links" id="navLinks">
+<a href="index.html">Home</a>
+<a href="executors.html">Executors</a>
+<a href="scripts.html">Scripts</a>
+<a href="benchmarks.html">Benchmarks</a>
+<a href="guides.html">Guides</a>
+<a href="faq.html">FAQ</a>
+<a href="changelog.html">Changelog</a>
+<a href="https://mss-key.xyz" target="_blank" class="promo-link">Mss-Keygen</a>
+<a href="https://discord.gg/qVHWC4xk7w" target="_blank" class="discord-link" title="Join our Discord">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+</a>
+<a href="https://www.youtube.com/@sasin699" target="_blank" class="youtube-link" title="YouTube">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+</a>
+</div>
+</div>
+</nav>
+<main>
+<section class="page-header">
+<div class="glow"></div>
+<h1>Terms of Service</h1>
+<p>Last updated: June 23, 2026</p>
+</section>
+<section style="max-width: 800px; margin: 0 auto; padding: 0 20px 60px;">
+<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:32px;">
+<h2 style="font-size:18px;margin-top:0;">Acceptance of Terms</h2>
+<p style="font-size:14px;color:var(--text-2);line-height:1.7;">By accessing and using Hey Sasin Gaming, you agree to be bound by these Terms of Service. If you do not agree, please do not use our site.</p>
+<h2 style="font-size:18px;margin-top:24px;">Use of Service</h2>
+<p style="font-size:14px;color:var(--text-2);line-height:1.7;">Our site provides information about Roblox executors for educational and informational purposes only. You agree not to use this information for any illegal activities or violations of Roblox's Terms of Service.</p>
+<h2 style="font-size:18px;margin-top:24px;">Disclaimer</h2>
+<p style="font-size:14px;color:var(--text-2);line-height:1.7;">All information on this site is provided "as is" without warranty. Executor status, links, and prices may change at any time. We are not responsible for any damages arising from the use of third-party software linked on this site.</p>
+<h2 style="font-size:18px;margin-top:24px;">External Links</h2>
+<p style="font-size:14px;color:var(--text-2);line-height:1.7;">We link to third-party websites and services. We have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites.</p>
+<h2 style="font-size:18px;margin-top:24px;">Intellectual Property</h2>
+<p style="font-size:14px;color:var(--text-2);line-height:1.7;">All content on this site, including text, graphics, logos, and code, is the property of Hey Sasin Gaming unless otherwise noted. You may not reproduce, distribute, or modify our content without permission.</p>
+<h2 style="font-size:18px;margin-top:24px;">Changes to Terms</h2>
+<p style="font-size:14px;color:var(--text-2);line-height:1.7;">We reserve the right to update these terms at any time. Continued use of the site after changes constitutes acceptance of the new terms.</p>
+<h2 style="font-size:18px;margin-top:24px;">Contact</h2>
+<p style="font-size:14px;color:var(--text-2);line-height:1.7;">For questions about these terms, please <a href="contact.html" style="color:var(--accent);">contact us</a>.</p>
+</div>
+</section>
+</main>
+<div class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#9650;</div>
+<button class="chat-toggle" onclick="toggleChat()" aria-label="Chat">&#128172;</button>
+<div class="chat-window" id="chatWindow">
+<div class="chat-head">
+<h3><span>&#129302;</span> Sasin Assistant</h3>
+<button class="chat-head-close" onclick="toggleChat()">&times;</button>
+</div>
+<div class="chat-body"></div>
+<div class="chat-qs">
+<span class="chat-q" onclick="document.getElementById('chatInput').value='best executor';sendChat()">Best executor?</span>
+<span class="chat-q" onclick="document.getElementById('chatInput').value='free executor';sendChat()">Free options</span>
+<span class="chat-q" onclick="document.getElementById('chatInput').value='how to install';sendChat()">Install help</span>
+<span class="chat-q" onclick="document.getElementById('chatInput').value='scripts';sendChat()">Scripts</span>
+</div>
+<div class="chat-foot">
+<input class="chat-input" id="chatInput" placeholder="Ask about executors..." onkeydown="chatKey(event)">
+<button class="chat-send" onclick="sendChat()">Send</button>
+</div>
+</div>
+<div class="mobile-overlay" id="mobileOverlay" onclick="closeMenu()"></div>
+<script>
+function handleResize() {
+var w = window.innerWidth;
+var nav = document.querySelector('.nav-links');
+var toggle = document.querySelector('.menu-toggle');
+if (w > 768) { closeMenu(); if (nav) nav.style.display = 'flex'; if (toggle) toggle.style.display = 'none'; }
+else { if (nav) nav.style.display = ''; if (toggle) toggle.style.display = ''; }
+}
+window.addEventListener('resize', handleResize);
+handleResize();
+window.addEventListener('scroll', function() {
+var nav = document.querySelector('.navbar');
+if (nav) { nav.classList.toggle('scrolled', window.scrollY > 20); }
+var btn = document.querySelector('.back-to-top');
+if (window.scrollY > 300) { btn.classList.add('visible'); } else { btn.classList.remove('visible'); }
+});
+function toggleMenu() {
+document.getElementById('navLinks').classList.toggle('open');
+document.querySelector('.menu-toggle').classList.toggle('active');
+document.getElementById('mobileOverlay').classList.toggle('show');
+}
+function closeMenu() {
+document.getElementById('navLinks').classList.remove('open');
+document.querySelector('.menu-toggle').classList.remove('active');
+document.getElementById('mobileOverlay').classList.remove('show');
+}
+document.addEventListener('keydown', function(e) {
+if ((e.key === '/' || (e.ctrlKey && e.key === 'k')) && !['INPUT','TEXTAREA'].includes(e.target.tagName)) {
+e.preventDefault();
+var input = document.querySelector('.filter-input');
+if (input) input.focus();
+}
+});
+if ('serviceWorker' in navigator) {
+navigator.serviceWorker.register('sw.js').catch(function(){});
+}
+var chatResponses = {
+'best executor': 'Delta and Xeno are top-tier right now. Delta has 98% UNC and Xeno scores 96%. Both are Windows internal executors with great stability.',
+'free executor': 'Solara and Velocity are solid free options. Solara is keyless with 94% UNC. Velocity is also free with 91% UNC.',
+'how to install': 'Check our <a href="guides.html" style="color:#06b6d4">Guides page</a> for step-by-step installation tutorials for every executor.',
+'key': 'Want premium executors for free? Visit <a href="https://mss-key.xyz" style="color:#f59e0b" target="_blank">Mss-Keygen</a> to generate free keys for paid executors.',
+'paid': 'Best sites for buying paid executor keys: <a href="https://key-empire.com" style="color:#06b6d4" target="_blank">key-empire.com</a> and <a href="https://wyv.gg" style="color:#06b6d4" target="_blank">wyv.gg</a>. Both are trusted marketplaces with instant delivery.',
+'key-empire': '<a href="https://key-empire.com" style="color:#06b6d4" target="_blank">Key Empire</a> is a top marketplace for discounted premium executor keys. Instant delivery, supports multiple executors.',
+'wyv': '<a href="https://wyv.gg" style="color:#06b6d4" target="_blank">wyv.gg</a> is a trusted marketplace for buying paid executor keys at great prices with instant delivery.',
+'scripts': 'Browse 35+ scripts across 14 games on our <a href="scripts.html" style="color:#06b6d4">Scripts page</a>.',
+'unc': 'UNC scores measure script function compatibility. Higher is better. Delta leads at 98%, then Xeno at 96%, Cryptic at 95%.',
+'mobile': 'We support mobile executors too! Check Hydrogen (iOS), Arceus X (Android), and Vega X (Android) on our Executors page.',
+'sirhurt': 'SirHurt is a classic paid external executor. Currently at 87% UNC. Still actively maintained.',
+'discord': 'Join our Discord for updates and support! Click the Discord icon in the navbar.',
+'hello': 'Hey there! How can I help you today? Ask me about executors, scripts, installation, or anything else!',
+'hi': 'Hey! What can I help you with? Try asking about the best executors, free options, or how to get started.',
+'default': "I'm not sure about that. Try asking about executors, scripts, pricing, or check our <a href='faq.html' style='color:#06b6d4'>FAQ</a>."
+};
+function getChatAnswer(input) {
+var lower = input.toLowerCase();
+for (var key in chatResponses) { if (lower.includes(key)) return chatResponses[key]; }
+return chatResponses['default'];
+}
+function toggleChat() {
+var w = document.getElementById('chatWindow');
+var b = document.querySelector('.chat-toggle');
+w.classList.toggle('open');
+b.classList.toggle('close');
+if (w.classList.contains('open') && w.querySelector('.chat-body').children.length === 0) {
+addChatMsg('bot', "Hi! I'm the Hey Sasin assistant. Ask me about executors, scripts, pricing, or anything else!");
+}
+}
+function addChatMsg(type, text) {
+var body = document.querySelector('.chat-body');
+var msg = document.createElement('div');
+msg.className = 'chat-msg ' + type;
+msg.innerHTML = text;
+body.appendChild(msg);
+body.scrollTop = body.scrollHeight;
+}
+function sendChat() {
+var input = document.getElementById('chatInput');
+var text = input.value.trim();
+if (!text) return;
+addChatMsg('user', text);
+input.value = '';
+setTimeout(function() { addChatMsg('bot', getChatAnswer(text)); }, 300 + Math.random() * 400);
+}
+function chatKey(e) { if (e.key === 'Enter') sendChat(); }
+var observer = new IntersectionObserver(function(entries) {
+entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(function(el) { observer.observe(el); });
+</script>
+<footer class="footer">
+<div class="footer-grid">
+<div class="footer-brand">
+<h3>Hey Sasin Gaming</h3>
+<p>Your trusted Roblox executor directory since 2024. We curate and verify the best executors, scripts, and guides to keep you safe.</p>
+<div class="footer-social">
+<a href="https://discord.gg/qVHWC4xk7w" target="_blank" aria-label="Discord"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg></a>
+<a href="https://www.youtube.com/@sasin699" target="_blank" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+<a href="contact.html" aria-label="Contact">&#9993;</a>
+</div>
+</div>
+<div>
+<h4>Quick Links</h4>
+<ul class="footer-links">
+<li><a href="index.html">Home</a></li>
+<li><a href="executors.html">Executors</a></li>
+<li><a href="scripts.html">Scripts</a></li>
+<li><a href="guides.html">Guides</a></li>
+<li><a href="benchmarks.html">Benchmarks</a></li>
+</ul>
+</div>
+<div>
+<h4>Resources</h4>
+<ul class="footer-links">
+<li><a href="faq.html">FAQ</a></li>
+<li><a href="changelog.html">Changelog</a></li>
+<li><a href="https://mss-key.xyz" target="_blank">Mss-Keygen</a></li>
+<li><a href="https://key-empire.com" target="_blank">Key Empire</a></li>
+<li><a href="https://wyv.gg" target="_blank">wyv.gg</a></li>
+</ul>
+</div>
+<div>
+<h4>Policies</h4>
+<ul class="footer-links">
+<li><a href="privacy.html">Privacy Policy</a></li>
+<li><a href="tos.html">Terms of Service</a></li>
+<li><a href="dmca.html">DMCA</a></li>
+<li><a href="contact.html">Contact Us</a></li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom">
+<div class="footer-badges">
+<span class="footer-badge verified">&#10003; Verified Links</span>
+<span class="footer-badge safe">&#128274; HTTPS Secured</span>
+<span class="footer-badge secure">&#9733; Community Trusted</span>
+</div>
+<p>&copy; 2024-2026 Hey Sasin Gaming. Not affiliated with Roblox Corporation. All trademarks belong to their respective owners.</p>
+</div>
+    </footer>
+<div class="toast-container" id="toastContainer"></div>
+<div class="cookie-consent" id="cookieConsent">
+    <p>This site does not use cookies or collect personal data. By continuing, you agree to our <a href="tos.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</p>
+    <button class="btn" onclick="dismissCookie()">Got it</button>
+</div>
+<script>
+function dismissCookie() { document.getElementById('cookieConsent').classList.remove('show'); localStorage.setItem('hsg_cookie','1'); }
+if (!localStorage.getItem('hsg_cookie')) { setTimeout(function(){ document.getElementById('cookieConsent').classList.add('show'); }, 1000); }
+function showToast(msg,type) { var c=document.getElementById('toastContainer'); if(!c)return; var t=document.createElement('div'); t.className='toast'+(type?' '+type:''); t.textContent=msg; c.appendChild(t); requestAnimationFrame(function(){t.classList.add('show');}); setTimeout(function(){t.classList.remove('show');setTimeout(function(){t.remove();},400);},2500); }
+</script>
+</body>
+</html>
