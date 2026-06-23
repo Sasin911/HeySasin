@@ -197,6 +197,21 @@
     <div class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#9650;</div>
     <div class="mobile-overlay" id="mobileOverlay" onclick="closeMenu()"></div>
     <script>
+    function handleResize() {
+        var w = window.innerWidth;
+        var nav = document.querySelector('.nav-links');
+        var toggle = document.querySelector('.menu-toggle');
+        if (w > 768) {
+            closeMenu();
+            if (nav) nav.style.display = 'flex';
+            if (toggle) toggle.style.display = 'none';
+        } else {
+            if (nav) nav.style.display = '';
+            if (toggle) toggle.style.display = '';
+        }
+    }
+    window.addEventListener('resize', handleResize);
+    handleResize();
     window.addEventListener('scroll', function() {
         var nav = document.querySelector('.navbar');
         if (nav) { nav.classList.toggle('scrolled', window.scrollY > 20); }
